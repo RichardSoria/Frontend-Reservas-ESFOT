@@ -36,7 +36,7 @@ const Login = () => {
       setGeneralError('')
     }
   }
-  , [watchedFields.email, watchedFields.password])
+    , [watchedFields.email, watchedFields.password])
 
   const onSubmit = async (data) => {
     const valid = validate(data)
@@ -61,9 +61,9 @@ const Login = () => {
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>
-            <h2 className="text-center mb-4 fw-bold text-white">
+            {/*<h2 className="text-center mb-4 fw-bold text-white">
               Sistema de Gestión de Reservas y Laboratorios - ESFOT
-            </h2>
+            </h2>*/}
             <CCardGroup>
               <CCard className="p-4 bg-white">
                 <CCardBody>
@@ -79,17 +79,17 @@ const Login = () => {
                   )}
                   <CForm onSubmit={handleSubmit(onSubmit)}>
                     <CRow>
-                      <CCol xs={6}>
+                      <CCol xs={12} md={6} className="text-md-start text-center">
                         <h1 className="titulos-esfot">Iniciar Sesión</h1>
                         <p className="subtitulos-esfot">
-                          Ingresa tus credenciales para iniciar sesión
+                          Sistema de Gestión de Reservas y Laboratorios
                         </p>
                       </CCol>
-                      <CCol xs={6} className="text-end">
+                      <CCol xs={12} md={6} className="text-md-end text-center mb-3">
                         <img
                           src="https://esfot.epn.edu.ec/images/logo_esfot_buho.png"
                           alt="Logo"
-                          style={{ width: '50%', maxWidth: '180px', height: 'auto' }}
+                          style={{ width: '50%', maxWidth: '200px', height: 'auto' }}
                         />
                       </CCol>
                     </CRow>
@@ -100,7 +100,7 @@ const Login = () => {
                       <CFormInput
                         placeholder="Correo Electrónico"
                         autoComplete="email"
-                        className={`bg-light border-secondary text-secondary custom-input" ${errors.email ? 'border-danger' : ''}`}
+                        className={`bg-light border-secondary text-secondary custom-input ${errors.email ? 'border-danger' : ''}`}
                         invalid={!!errors.email}
                         {...register('email')}
                       />
@@ -115,7 +115,7 @@ const Login = () => {
                         type="password"
                         placeholder="Contraseña"
                         autoComplete="current-password"
-                        className={`bg-light border-secondary text-secondary custom-input" ${errors.password ? 'border-danger' : ''}`}
+                        className={`bg-light border-secondary text-secondary custom-input ${errors.password ? 'border-danger' : ''}`}
                         invalid={!!errors.password}
                         {...register('password')}
                       />
