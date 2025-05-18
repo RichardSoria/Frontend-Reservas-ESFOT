@@ -5,11 +5,12 @@ import addFormats from 'ajv-formats'
 import ajvErrors from 'ajv-errors'
 import { loginSchema } from '../../../validations/loginSchema.js'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
-import { CButton, CCard, CCardBody, CCardGroup, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow, CAlert, } from '@coreui/react'
+import { NavLink } from 'react-router-dom'
+import { CButton, CCard, CCardBody, CCardGroup, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow, CAlert, CFormSelect, } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked } from '@coreui/icons'
-import { CiMail } from 'react-icons/ci'
+import { CiMail, CiUser } from 'react-icons/ci'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 
 
 const ajv = new Ajv({ allErrors: true })
@@ -26,14 +27,15 @@ const Login = () => {
     formState: { errors },
   } = useForm()
 
-  const [generalError, setGeneralError] = React.useState('')
+  const [generalMessage, setgeneralMessage] = React.useState('')
+  const [showPassword, setShowPassword] = React.useState(false)
 
   const watchedFields = watch()
 
   // si hay cambios en el correo o contraseña, se limpia el error general
   React.useEffect(() => {
     if (watchedFields.email || watchedFields.password) {
-      setGeneralError('')
+      setgeneralMessage('')
     }
   }
     , [watchedFields.email, watchedFields.password])
@@ -49,18 +51,26 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/admin/login`, data)
-      setGeneralError('Inicio de sesión exitoso')
-      // Aquí puedes redirigir o guardar el token
+      if (data.role === 'admin') {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/admin/login`, data)
+        localStorage.setItem('token', response.data.tokenJWT)
+      } else if (data.role === 'docente') {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/docente/login`, data)
+        localStorage.setItem('token', response.data.tokenJWT)
+      }
+      else if (data.role === 'estudiante') {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/estudiante/login`, data)
+        localStorage.setItem('token', response.data.tokenJWT)
+      }
     } catch (error) {
-      setGeneralError(error.response?.data?.message || 'Error en el inicio de sesión')
+      setgeneralMessage(error.response?.data?.message || 'Error en el inicio de sesión')
     }
   }
   return (
     <div className="bg-esfot min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
-          <CCol md={8}>
+          <CCol md={12} >
             {/*<h2 className="text-center mb-4 fw-bold text-white">
               Sistema de Gestión de Reservas y Laboratorios - ESFOT
             </h2>*/}
@@ -72,20 +82,20 @@ const Login = () => {
                       {err.message}
                     </CAlert>
                   ))}
-                  {generalError && (
+                  {generalMessage && (
                     <CAlert color="danger">
-                      {generalError}
+                      {generalMessage}
                     </CAlert>
                   )}
                   <CForm onSubmit={handleSubmit(onSubmit)}>
                     <CRow>
-                      <CCol xs={12} md={6} className="text-md-start text-center">
+                      <CCol xs={12} md={7} className="text-md-start text-center">
                         <h1 className="titulos-esfot">Iniciar Sesión</h1>
                         <p className="subtitulos-esfot">
-                          Sistema de Gestión de Reservas y Laboratorios
+                          Sistema de Gestión de Reservas de Aulas y Laboratorios
                         </p>
                       </CCol>
-                      <CCol xs={12} md={6} className="text-md-end text-center mb-3">
+                      <CCol xs={12} md={5} className="text-md-end text-center mb-3">
                         <img
                           src="https://esfot.epn.edu.ec/images/logo_esfot_buho.png"
                           alt="Logo"
@@ -104,33 +114,55 @@ const Login = () => {
                         invalid={!!errors.email}
                         {...register('email')}
                       />
-
                     </CInputGroup>
 
-                    <CInputGroup className={`mb-4 ${errors.password ? 'is-invalid' : ''}`}>
+                    <CInputGroup className={`mb-3 ${errors.password ? 'is-invalid' : ''}`}>
                       <CInputGroupText className={`bg-secondary border-secondary ${errors.password ? 'border-danger bg-danger' : ''}`}>
                         <CIcon icon={cilLockLocked} />
                       </CInputGroupText>
                       <CFormInput
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         placeholder="Contraseña"
                         autoComplete="current-password"
                         className={`bg-light border-secondary text-secondary custom-input ${errors.password ? 'border-danger' : ''}`}
                         invalid={!!errors.password}
                         {...register('password')}
                       />
+                      <CInputGroupText
+                        className={`bg-secondary border-secondary ${errors.password ? 'border-danger bg-danger' : ''}`}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => setShowPassword((prev) => !prev)}
+                      >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                      </CInputGroupText>
                     </CInputGroup>
 
+                    {<CInputGroup className={`mb-4 ${errors.role ? 'is-invalid' : ''}`}>
+                      <CInputGroupText className={`bg-secondary border-secondary ${errors.role ? 'border-danger bg-danger' : ''}`}>
+                        <CiUser />
+                      </CInputGroupText>
+                      <CFormSelect
+                        className={`bg-light border-secondary text-secondary custom-input ${errors.role ? 'border-danger' : ''}`}
+                        invalid={!!errors.role}
+                        {...register('role')}
+                      >
+                        <option value="">Selecciona un rol</option>
+                        <option value="admin">Administrador</option>
+                        <option value="docente">Docente</option>
+                        <option value="estudiante">Estudiante</option>
+                      </CFormSelect>
+                    </CInputGroup>}
+
                     <CRow>
-                      <CCol xs={6}>
+                      <CCol md={6} xs={12} className='text-md-start text-center'>
                         <CButton type='submit' className="btn-esfot px-4">Iniciar Sesión</CButton>
                       </CCol>
-                      <CCol xs={6}>
-                        <div className="text-end">
-                          <CButton color="link" className="px-0 text-secondary">
-                            ¿Olvidaste tu contraseña?
-                          </CButton>
-                        </div>
+                      <CCol md={6} xs={12} className='text-md-end text-center'>
+                        <CButton color="link"
+                          className="px-0 text-secondary"
+                          to="/recover-password" as={NavLink}>
+                          ¿Olvidaste tu contraseña?
+                        </CButton>
                       </CCol>
                     </CRow>
                   </CForm>
