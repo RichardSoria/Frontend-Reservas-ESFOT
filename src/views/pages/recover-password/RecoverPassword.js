@@ -3,14 +3,11 @@ import { useForm } from 'react-hook-form'
 import Ajv from 'ajv'
 import addFormats from 'ajv-formats'
 import ajvErrors from 'ajv-errors'
-import { recoverPasswordSchema } from '../../../validations/recoverPasswordSchema.js'
+import { recoverPasswordSchema } from '../../../validations/authenticationSchema.js'
 import axios from 'axios'
 import { NavLink } from 'react-router-dom'
 import { CButton, CCard, CCardBody, CCardGroup, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow, CAlert, CFormSelect, } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilLockLocked } from '@coreui/icons'
 import { CiMail, CiUser } from 'react-icons/ci'
-import { FaEye, FaEyeSlash } from 'react-icons/fa'
 
 
 const ajv = new Ajv({ allErrors: true })
