@@ -52,15 +52,17 @@ const Login = () => {
 
     try {
       if (data.role === 'admin') {
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/admin/login`, data)
-        localStorage.setItem('token', response.data.tokenJWT)
+        await axios.post(`${import.meta.env.VITE_API_URL}/admin/login`, data, {
+          withCredentials: true,
+        })
       } else if (data.role === 'docente') {
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/docente/login`, data)
-        localStorage.setItem('token', response.data.tokenJWT)
-      }
-      else if (data.role === 'estudiante') {
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/estudiante/login`, data)
-        localStorage.setItem('token', response.data.tokenJWT)
+        await axios.post(`${import.meta.env.VITE_API_URL}/docente/login`, data, {
+          withCredentials: true,
+        })
+      } else if (data.role === 'estudiante') {
+        await axios.post(`${import.meta.env.VITE_API_URL}/estudiante/login`, data, {
+          withCredentials: true,
+        })
       }
     } catch (error) {
       setgeneralMessage(error.response?.data?.message || 'Error en el inicio de sesión')
