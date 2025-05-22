@@ -1,5 +1,5 @@
 import React from 'react'
-import { useForm } from 'react-hook-form'
+import { set, useForm } from 'react-hook-form'
 import Ajv from 'ajv'
 import addFormats from 'ajv-formats'
 import ajvErrors from 'ajv-errors'
@@ -34,11 +34,11 @@ const Login = () => {
 
   // si hay cambios en el correo o contraseña, se limpia el error general
   React.useEffect(() => {
-    if (watchedFields.email || watchedFields.password) {
+    if (watchedFields.email || watchedFields.password || watchedFields.role) {
       setgeneralMessage('')
     }
   }
-    , [watchedFields.email, watchedFields.password])
+    , [watchedFields.email, watchedFields.password, watchedFields.role])
 
   const onSubmit = async (data) => {
     const valid = validate(data)
@@ -55,14 +55,17 @@ const Login = () => {
         await axios.post(`${import.meta.env.VITE_API_URL}/admin/login`, data, {
           withCredentials: true,
         })
+        setgeneralMessage('')
       } else if (data.role === 'docente') {
         await axios.post(`${import.meta.env.VITE_API_URL}/docente/login`, data, {
           withCredentials: true,
         })
+        setgeneralMessage('')
       } else if (data.role === 'estudiante') {
         await axios.post(`${import.meta.env.VITE_API_URL}/estudiante/login`, data, {
           withCredentials: true,
         })
+        setgeneralMessage('')
       }
     } catch (error) {
       setgeneralMessage(error.response?.data?.message || 'Error en el inicio de sesión')
