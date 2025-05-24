@@ -5,7 +5,7 @@ import addFormats from 'ajv-formats'
 import ajvErrors from 'ajv-errors'
 import { loginSchema } from '../../../validations/authenticationSchema.js'
 import axios from 'axios'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { CButton, CCard, CCardBody, CCardGroup, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow, CAlert, CFormSelect, } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked } from '@coreui/icons'
@@ -19,6 +19,9 @@ ajvErrors(ajv)
 const validate = ajv.compile(loginSchema)
 
 const Login = () => {
+
+  const navigate = useNavigate()
+
   const {
     register,
     handleSubmit,
@@ -41,6 +44,7 @@ const Login = () => {
     , [watchedFields.email, watchedFields.password, watchedFields.role])
 
   const onSubmit = async (data) => {
+
     const valid = validate(data)
     if (!valid) {
       validate.errors.forEach((err) => {
@@ -56,6 +60,7 @@ const Login = () => {
           withCredentials: true,
         })
         setgeneralMessage('')
+        navigate('/dashboard')
       } else if (data.role === 'docente') {
         await axios.post(`${import.meta.env.VITE_API_URL}/docente/login`, data, {
           withCredentials: true,
@@ -165,7 +170,7 @@ const Login = () => {
                       <CCol md={6} xs={12} className='text-md-end text-center'>
                         <CButton color="link"
                           className="px-0 text-secondary"
-                          to="/recover-password" as={NavLink}>
+                          to="/recuperar-contraseña" as={NavLink}>
                           ¿Olvidaste tu contraseña?
                         </CButton>
                       </CCol>

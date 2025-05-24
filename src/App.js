@@ -1,23 +1,22 @@
 import React, { Suspense, useEffect } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import { CSpinner, useColorModes } from '@coreui/react'
 import './scss/style.scss'
-
-// We use those styles to show code examples, you should remove them in your application.
 import './scss/examples.scss'
 
-// Containers
-const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
-
-// Pages
+// Pages públicas
 const Login = React.lazy(() => import('./views/pages/login/Login'))
 const RecoverPassword = React.lazy(() => import('./views/pages/recover-password/RecoverPassword'))
-const VerfiyToken = React.lazy(() => import('./views/pages/verfiy-token/VerfiyToken'))
-const Register = React.lazy(() => import('./views/pages/register/Register'))
+const VerifyToken = React.lazy(() => import('./views/pages/verfiy-token/VerfiyToken'))
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
+
+// Layout protegido y páginas internas
+const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
+const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
+const Auth = React.lazy(() => import('./layout/Auth'))
 
 const App = () => {
   const { isColorModeSet, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
@@ -25,36 +24,37 @@ const App = () => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.href.split('?')[1])
-    const theme = urlParams.get('theme') && urlParams.get('theme').match(/^[A-Za-z0-9\s]+/)[0]
+    const theme = urlParams.get('theme')?.match(/^[A-Za-z0-9\s]+/)?.[0]
     if (theme) {
       setColorMode(theme)
     }
-
-    if (isColorModeSet()) {
-      return
+    if (!isColorModeSet()) {
+      setColorMode(storedTheme)
     }
-
-    setColorMode(storedTheme)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-return (
+  return (
     <BrowserRouter>
-      <Suspense
-        fallback={
-          <div className="pt-3 text-center">
-            <CSpinner color="primary" variant="grow" />
-          </div>
-        }
-      >
+      <Suspense fallback={<div className="pt-3 text-center"><CSpinner color="primary" variant="grow" /></div>}>
         <Routes>
-          <Route exact path='/' name="Login Page" index element={<Login />} />
-          <Route exact path="/recover-password" name="Recover Password Page" element={<RecoverPassword />} />
-          <Route exact path="/verify-token/:token" name="Verfiy Token Page" element={<VerfiyToken />} />
-          <Route exact path="/dashboard/*" name="Home" element={<DefaultLayout />} />
-          <Route exact path="/register" name="Register Page" element={<Register />} />
-          <Route exact path="/500" name="Page 500" element={<Page500 />} />
-          
-          <Route exact path="*" name="Page 404" element={<Page404 />} />
+
+          {/* Rutas públicas */}
+          <Route path="/" element={<Navigate to="/iniciar-sesión" replace />} />
+          <Route path="/iniciar-sesión" element={<Login />} />
+          <Route path="/recuperar-contraseña" element={<RecoverPassword />} />
+          <Route path="/enviar-contraseña-recuperación/:token" element={<VerifyToken />} />
+          <Route path="/404" element={<Page404 />} />
+
+
+          {/* Rutas protegidas */}
+          <Route element={<Auth />}>
+            <Route element={<DefaultLayout />}>
+              <Route path="/*" element={<Dashboard />} />
+            </Route>
+          </Route>
+
+          {/* Página 404 */}
+          <Route path="*" element={<Navigate to="/404" replace />} />
 
         </Routes>
       </Suspense>
