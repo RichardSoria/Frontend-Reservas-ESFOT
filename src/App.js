@@ -35,7 +35,26 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <Suspense fallback={<div className="pt-3 text-center"><CSpinner color="primary" variant="grow" /></div>}>
+      <Suspense fallback={<div className="d-flex flex-column justify-content-center align-items-center min-vh-100 px-3 bg-light text-center">
+        <img
+          src="https://esfot.epn.edu.ec/images/logo_esfot_buho.png"
+          alt="Cargando..."
+          className="img-fluid"
+          style={{ maxWidth: '150px', marginBottom: '20px' }}
+        />
+        <CSpinner
+          variant="grow"
+          style={{
+            width: '3rem',
+            height: '3rem',
+            color: '#0e4c71',
+          }}
+        />
+        <p className="mt-4 fw-semibold fs-6 fs-md-5" style={{ color: '#e72f2b' }}>
+          Cargando Sistema de Reservas de Aulas y Laboratorios ESFOT...
+        </p>
+      </div>}>
+      
         <Routes>
 
           {/* Rutas públicas */}
@@ -43,7 +62,7 @@ const App = () => {
           <Route path="/iniciar-sesión" element={<Login />} />
           <Route path="/recuperar-contraseña" element={<RecoverPassword />} />
           <Route path="/enviar-contraseña-recuperación/:token" element={<VerifyToken />} />
-          <Route path="/404" element={<Page404 />} />
+
 
 
           {/* Rutas protegidas */}
