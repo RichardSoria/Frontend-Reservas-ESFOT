@@ -15,7 +15,7 @@ const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 
 // Layout protegido y páginas internas
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
-const ModulosAdmin = React.lazy(() => import('./views/dashboard/ModulosAdmin'))
+const Modulos = React.lazy(() => import('./views/dashboard/Modulos'))
 const Auth = React.lazy(() => import('./layout/Auth'))
 
 const App = () => {
@@ -68,7 +68,7 @@ const App = () => {
           {/* Rutas protegidas */}
           <Route element={<Auth />}>
             <Route element={<DefaultLayout />}>
-              <Route path="/*" element={<ModulosAdmin />} />
+              <Route path="/*" element={<Modulos />} />
             </Route>
           </Route>
 

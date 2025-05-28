@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ModulosAdmin = React.lazy(() => import('./views/dashboard/ModulosAdmin'))
+const Modulos = React.lazy(() => import('./views/dashboard/Modulos'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
@@ -52,7 +52,7 @@ const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 const routes = [
-  { path: '/modulos', name: 'Módulos', element: ModulosAdmin },
+  { path: '/modulos', name: 'Módulos', element: Modulos },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },

@@ -1,4 +1,3 @@
-import React from 'react'
 import { useSelector } from 'react-redux'
 import navigation from '../_nav'
 import { AppSidebarNav } from './AppSidebarNav'
