@@ -19,9 +19,20 @@ body {
   min-height: calc(4rem + 1px); // stylelint-disable-line function-disallowed-list
 }
 
-.sidebar {
-  --cui-sidebar-bg: #0e4c71;
+.sidebar-dark {
+  --cui-body-color: rgba(255, 255, 255, 0.92);        
+  --cui-body-bg: #0e4c71;                            
+  --cui-emphasis-color: #ffffff;                      
+  --cui-secondary-color: rgba(255, 255, 255, 0.65);    
+  --cui-secondary-bg: #14547d;                        
+  --cui-tertiary-color: rgba(255, 255, 255, 0.4);      
+  --cui-tertiary-bg: #0c3d5a;                         
+  --cui-border-color: #0e4c71;                        
+  --cui-link-color: #63b3ed;                          
+  --cui-link-hover-color: #90cdf4;                   
+  --cui-active-bg: #15689f;                           
 }
+
 
 .sidebar-brand-full {
   margin-left: 3px;
@@ -40,9 +51,18 @@ body {
   }
 }
 
+.sidebar .nav-icon {
+  color: #fff;
+}
+
 .sidebar .nav-link {
   color: #fff;
-  font-weight: bold;
+  font-size: 1.25rem;  
+}
+
+.sidebar .nav-title {
+  color: #fff;
+  font-size: 1.10rem; 
 }
 
 .sidebar .nav-link:hover {
@@ -55,6 +75,11 @@ body {
 
 .sidebar-toggler {
   margin-inline-start: auto;
+  --cui-sidebar-toggler-color: white;
+  --cui-sidebar-toggler-active-bg: white;
+  --cui-sidebar-toggler-hover-color: white;
+  --cui-sidebar-toggler-focus-color: white;
+  
 }
 
 .sidebar-narrow,

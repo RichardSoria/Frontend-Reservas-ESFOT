@@ -34,6 +34,7 @@ const AppHeader = () => {
 
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
+  const user = useSelector ((state) => state.user)
 
   useEffect(() => {
     document.addEventListener('scroll', () => {
@@ -53,15 +54,9 @@ const AppHeader = () => {
         </CHeaderToggler>
         <CHeaderNav className="d-none d-md-flex">
           <CNavItem>
-            <CNavLink to="/dashboard" as={NavLink}>
-              Dashboard
+            <CNavLink>
+              Bienvenido <span style={{ color: '#e72f2b', fontWeight:'bold'}}>{user.name} {user.lastName}</span> al Sistema de Reservas de Aulas y Laboratorios ESFOT
             </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">Users</CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">Settings</CNavLink>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav className="ms-auto">

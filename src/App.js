@@ -15,7 +15,7 @@ const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 
 // Layout protegido y páginas internas
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
-const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
+const ModulosAdmin = React.lazy(() => import('./views/dashboard/ModulosAdmin'))
 const Auth = React.lazy(() => import('./layout/Auth'))
 
 const App = () => {
@@ -58,22 +58,22 @@ const App = () => {
         <Routes>
 
           {/* Rutas públicas */}
-          <Route path="/" element={<Navigate to="/iniciar-sesión" replace />} />
-          <Route path="/iniciar-sesión" element={<Login />} />
-          <Route path="/recuperar-contraseña" element={<RecoverPassword />} />
-          <Route path="/enviar-contraseña-recuperación/:token" element={<VerifyToken />} />
+          <Route path="/" element={<Navigate to="/iniciar-sesion" replace />} />
+          <Route path="/iniciar-sesion" element={<Login />} />
+          <Route path="/recuperar-contrasena" element={<RecoverPassword />} />
+          <Route path="/enviar-contrasena-recuperacion/:token" element={<VerifyToken />} />
 
 
 
           {/* Rutas protegidas */}
           <Route element={<Auth />}>
             <Route element={<DefaultLayout />}>
-              <Route path="/*" element={<Dashboard />} />
+              <Route path="/*" element={<ModulosAdmin />} />
             </Route>
           </Route>
 
           {/* Página 404 */}
-          <Route path="*" element={<Navigate to="/404" replace />} />
+          <Route path="/" element={<Navigate to="/404" replace />} />
 
         </Routes>
       </Suspense>

@@ -3,6 +3,7 @@ import { legacy_createStore as createStore } from 'redux'
 const initialState = {
   sidebarShow: true,
   theme: 'light',
+
 }
 
 const changeState = (state = initialState, { type, ...rest }) => {
@@ -13,6 +14,8 @@ const changeState = (state = initialState, { type, ...rest }) => {
       return state
   }
 }
+
+export const set = (payload) => ({ type: 'set', ...payload })
 
 const store = createStore(changeState)
 export default store

@@ -130,7 +130,7 @@ const VerfiyToken = () => {
                                                 <CButton
                                                     color="link"
                                                     className="px-0 text-secondary"
-                                                    to={`${showButtonPassword ? "/" : "/recuperar-contraseña"}`} as={NavLink}>
+                                                    to={`${showButtonPassword ? "/" : "/recuperar-contrasena"}`} as={NavLink}>
                                                     {`${showButtonPassword ? "¿Recuperaste tu contraseña? Iniciar sesión" : "¿No puedes verificar tu enlace de recuperación? Enviar correo de recuperación"}`}
                                                 </CButton>
                                             </CCol>

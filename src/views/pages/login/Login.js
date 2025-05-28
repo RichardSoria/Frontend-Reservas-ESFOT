@@ -60,17 +60,19 @@ const Login = () => {
           withCredentials: true,
         })
         setgeneralMessage('')
-        navigate('/dashboard')
+        navigate('/modulos')
       } else if (data.role === 'docente') {
         await axios.post(`${import.meta.env.VITE_API_URL}/docente/login`, data, {
           withCredentials: true,
         })
         setgeneralMessage('')
+        navigate('/dashboard')
       } else if (data.role === 'estudiante') {
         await axios.post(`${import.meta.env.VITE_API_URL}/estudiante/login`, data, {
           withCredentials: true,
         })
         setgeneralMessage('')
+        navigate('/modulos')
       }
     } catch (error) {
       setgeneralMessage(error.response?.data?.message || 'Error en el inicio de sesión')
@@ -170,7 +172,7 @@ const Login = () => {
                       <CCol md={6} xs={12} className='text-md-end text-center'>
                         <CButton color="link"
                           className="px-0 text-secondary"
-                          to="/recuperar-contraseña" as={NavLink}>
+                          to="/recuperar-contrasena" as={NavLink}>
                           ¿Olvidaste tu contraseña?
                         </CButton>
                       </CCol>

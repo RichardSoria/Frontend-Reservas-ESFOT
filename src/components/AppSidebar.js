@@ -12,11 +12,10 @@ import {
 import CIcon from '@coreui/icons-react'
 
 import { AppSidebarNav } from './AppSidebarNav'
+import AppSidebarNavFiltered from './AppSidebarNavFiltered'
 
 import { logo } from 'src/assets/brand/logo'
 
-// sidebar nav config
-import navigation from '../_nav'
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
@@ -44,7 +43,7 @@ const AppSidebar = () => {
           onClick={() => dispatch({ type: 'set', sidebarShow: false })}
         />
       </CSidebarHeader>
-      <AppSidebarNav items={navigation} />
+      <AppSidebarNavFiltered />
       <CSidebarFooter className="border-top d-none d-lg-flex">
         <CSidebarToggler
           onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
