@@ -2,12 +2,11 @@ import React from 'react'
 import { CNavItem, CNavTitle } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
-// Iconos de react-icons
-import { RiAdminLine } from "react-icons/ri"
-import { PiStudent, PiChalkboardTeacherLight } from "react-icons/pi"
-import { SiGoogleclassroom } from "react-icons/si"
-import { BsPcDisplay } from "react-icons/bs"
-import { CiCalendar } from "react-icons/ci"
+import { RiAdminLine } from 'react-icons/ri'
+import { PiStudent, PiChalkboardTeacherLight } from 'react-icons/pi'
+import { SiGoogleclassroom } from 'react-icons/si'
+import { BsPcDisplay } from 'react-icons/bs'
+import { CiCalendar } from 'react-icons/ci'
 import { cilSpeedometer } from '@coreui/icons'
 
 const _nav = [
@@ -20,44 +19,61 @@ const _nav = [
   {
     component: CNavTitle,
     name: 'Usuarios',
-    role: 'Admin',
+    roles: ['Admin'], // Solo admins ven este título
   },
   {
     component: CNavItem,
     name: 'Administradores',
-    to: '/administradores',
+    routes: {
+      Admin: '/admin/administradores',
+    },
     icon: <RiAdminLine className="nav-icon" />,
-    role: 'Admin',
+    roles: ['Admin'],
   },
   {
     component: CNavItem,
     name: 'Docentes',
-    to: '/docentes',
+    routes: {
+      Admin: '/admin/docentes',
+    },
     icon: <PiChalkboardTeacherLight className="nav-icon" />,
-    role: 'Admin',
+    roles: ['Admin'],
   },
   {
     component: CNavItem,
     name: 'Estudiantes',
-    to: '/estudiantes',
+    routes: {
+      Admin: '/admin/estudiantes',
+    },
     icon: <PiStudent className="nav-icon" />,
-    role: 'Admin',
+    roles: ['Admin'],
   },
   {
     component: CNavTitle,
     name: 'Espacios Académicos',
+    // Visible para todos los roles, por eso no tiene roles definido
   },
   {
     component: CNavItem,
     name: 'Aulas',
-    to: '/aulas',
+    routes: {
+      Admin: '/admin/aulas',
+      Docente: '/aulas',
+      Estudiante: '/aulas',
+    },
     icon: <SiGoogleclassroom className="nav-icon" />,
+    roles: ['Admin', 'Docente', 'Estudiante'],
   },
   {
     component: CNavItem,
     name: 'Laboratorios',
-    to: '/laboratorios',
+    routes: {
+      Admin: '/admin/laboratorios',
+      Docente: '/laboratorios',
+      Estudiante: '/laboratorios',
+    },
     icon: <BsPcDisplay className="nav-icon" />,
+    roles: ['Admin', 'Docente', 'Estudiante'],
   },
   {
     component: CNavTitle,
@@ -66,8 +82,13 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Reservas',
-    to: '/reservas',
+    routes: {
+      Admin: '/admin/reservas',
+      Docente: '/reservas',
+      Estudiante: '/reservas',
+    },
     icon: <CiCalendar className="nav-icon" />,
+    roles: ['Admin', 'Docente', 'Estudiante'],
   },
 ]
 
