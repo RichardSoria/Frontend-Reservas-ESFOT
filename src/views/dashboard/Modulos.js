@@ -93,6 +93,7 @@ const Modulos = () => {
 
   const handleCardClick = (route) => {
     navigate(route)
+    console.log(route)
   }
 
   return (
@@ -117,7 +118,7 @@ const Modulos = () => {
                 <CCard
                   className="h-100 border-0 shadow-sm"
                   style={{
-                    minHeight: '315px',
+                    minHeight: '330px',
                     cursor: 'pointer',
                     backgroundColor: isHovered ? hoverColor : baseColor,
                     color: isHovered ? 'white' : 'black',

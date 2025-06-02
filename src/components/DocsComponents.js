@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 
-import ComponentsImg from 'src/assets/images/components.webp'
 
 const DocsComponents = (props) => (
   <div className="bg-primary bg-opacity-10 border border-2 border-primary rounded mb-4">
@@ -9,7 +8,6 @@ const DocsComponents = (props) => (
       <div className="col-xl-auto col-12 d-none d-xl-block p-0">
         <img
           className="img-fluid"
-          src={ComponentsImg}
           width="160px"
           height="160px"
           alt="CoreUI PRO hexagon"

@@ -18,6 +18,7 @@ const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 const Modulos = React.lazy(() => import('./views/dashboard/Modulos'))
 const Auth = React.lazy(() => import('./layout/Auth'))
 
+
 const App = () => {
   const { isColorModeSet, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
   const storedTheme = useSelector((state) => state.theme)
