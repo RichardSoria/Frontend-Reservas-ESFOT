@@ -1,41 +1,65 @@
 export const adminSchema = {
     type: 'object',
-    required: ['cedula', 'name', 'lastName', 'email', 'phone'],
+    required: ['name', 'lastName','cedula', 'email', 'phone'],
     properties: {
-        cedula: {
-            type: 'string',
-            pattern: '^[0-9]{10}$',
-            errorMessage: 'La cédula debe tener 10 dígitos numéricos',
-        },
         name: {
             type: 'string',
-            minLength: 2,
-            errorMessage: 'El nombre es obligatorio y debe tener al menos 2 caracteres',
+            minLength: 1,
+            pattern: '^[a-zA-Z]{1,20}$',
+            errorMessage: {
+                pattern: 'El nombre solo puede contener letras y tener hasta 20 caracteres',
+                minLength: 'El campo de nombre es obligatorio'
+            }
         },
         lastName: {
             type: 'string',
-            minLength: 2,
-            errorMessage: 'El apellido es obligatorio y debe tener al menos 2 caracteres',
+            minLength: 1,
+            pattern: '^[a-zA-Z]{1,20}$',
+            errorMessage: {
+                pattern: 'El apellido solo puede contener letras y tener hasta 20 caracteres',
+                minLength: 'El campo de apellido es obligatorio'
+            }
         },
         email: {
             type: 'string',
-            format: 'email',
-            errorMessage: 'El correo debe tener un formato válido',
+            minLength: 1,
+            pattern: '^[a-z]+\\.[a-z]+((0[1-9]|[1-9][0-9])?)@epn\\.edu\\.ec$',
+            errorMessage: {
+                pattern: 'El correo debe ser institucional (nombre.apellido##@epn.edu.ec)',
+                minLength: 'El campo de correo es obligatorio'
+            }
+        },
+        cedula: {
+            type: 'string',
+            minLength: 10,
+            maxLength: 10,
+            pattern: '^[0-9]{10}$',
+            errorMessage: {
+                pattern: 'La cédula debe tener exactamente 10 dígitos numéricos',
+                minLength: 'La cédula debe tener 10 dígitos',
+                maxLength: 'La cédula debe tener 10 dígitos'
+            }
         },
         phone: {
             type: 'string',
-            pattern: '^[0-9]{10}$',
-            errorMessage: 'El teléfono debe tener 10 dígitos numéricos',
-        },
+            minLength: 10,
+            maxLength: 10,
+            pattern: '^09[89][0-9]{7}$',
+            errorMessage: {
+                pattern: 'El número debe empezar con 098 o 099 y tener 10 dígitos',
+                minLength: 'El teléfono debe tener 10 dígitos',
+                maxLength: 'El teléfono debe tener 10 dígitos'
+            }
+        }
     },
     additionalProperties: false,
     errorMessage: {
         required: {
-            cedula: 'La cédula es obligatoria',
             name: 'El nombre es obligatorio',
             lastName: 'El apellido es obligatorio',
             email: 'El correo es obligatorio',
+            cedula: 'La cédula es obligatoria',
             phone: 'El teléfono es obligatorio',
-        },
-    },
-}
+        }
+    }
+};
