@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import Ajv from 'ajv'
@@ -9,9 +9,17 @@ import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { set } from '../../store'
 import { adminSchema } from '../../validations/adminSchema'
-import {CButton, CCard, CCardBody, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow,
+import {
+    CButton, CCard, CCardBody, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow,
 } from '@coreui/react'
 import { CiUser } from 'react-icons/ci'
+import {
+    UserPlus,
+    Pencil,
+    UserCheck,
+    UserX,
+    Eraser,
+} from 'lucide-react'
 import { MdEmail, MdPhoneAndroid, MdFingerprint } from 'react-icons/md'
 import useAdministradores from '../../hooks/useAdministradores'
 
@@ -45,15 +53,15 @@ const FormularioAdministrador = () => {
             })
         }
     }, [administradorSeleccionado, reset])
-    
+
 
     React.useEffect(() => {
         Object.entries(errors).forEach(([field, error]) => {
-            toast.error(error.message, {autoClose: 4000})
+            toast.error(error.message, { autoClose: 4000 })
         })
     }, [errors])
 
-    const onSubmit = async (data) => {
+    const onSubmitRegister = async (data) => {
         const valid = validate(data)
         if (!valid) {
             validate.errors.forEach(err => {
@@ -70,6 +78,67 @@ const FormularioAdministrador = () => {
             resetForm()
         } catch (err) {
             toast.error(err.response?.data?.message || 'Error al registrar administrador', { autoClose: 5000 })
+        }
+    }
+
+    const onSubmitUpdate = async (data) => {
+        const valid = validate(data)
+        if (!valid) {
+            validate.errors.forEach(err => {
+                const field = err.instancePath.replace('/', '')
+                setError(field, { type: 'manual', message: err.message })
+            })
+            return
+        }
+        try {
+            if (!administradorSeleccionado) {
+                toast.error('Debe seleccionar un administrador para actualizar', { autoClose: 4000 })
+                return
+            }
+            await axios.put(`${import.meta.env.VITE_API_URL}/admin/update/${administradorSeleccionado._id}`, data, { withCredentials: true })
+            await listarAdministradores()
+            toast.success('¡Administrador actualizado con éxito!')
+            resetForm()
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Error al actualizar administrador', { autoClose: 5000 })
+        }
+    }
+
+    const onSubmitEnable = async () => {
+        if (!administradorSeleccionado) {
+            toast.error('Debe seleccionar un administrador para habilitar', { autoClose: 4000 })
+            return
+        }
+        if (administradorSeleccionado.status) {
+            toast.error('El administrador ya está habilitado', { autoClose: 4000 })
+            return
+        }
+        try {
+            await axios.put(`${import.meta.env.VITE_API_URL}/admin/enable/${administradorSeleccionado._id}`, {}, { withCredentials: true })
+            await listarAdministradores()
+            toast.success('¡Administrador habilitado con éxito!')
+            resetForm()
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Error al habilitar administrador', { autoClose: 5000 })
+        }
+    }
+
+    const onSubmitDisable = async () => {
+        if (!administradorSeleccionado) {
+            toast.error('Debe seleccionar un administrador para deshabilitar', { autoClose: 4000 })
+            return
+        }
+        if (!administradorSeleccionado.status) {
+            toast.error('El administrador ya está deshabilitado', { autoClose: 4000 })
+            return
+        }
+        try {
+            await axios.put(`${import.meta.env.VITE_API_URL}/admin/disable/${administradorSeleccionado._id}`, {}, { withCredentials: true })
+            await listarAdministradores()
+            toast.success('¡Administrador deshabilitado con éxito!')
+            resetForm()
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Error al deshabilitar administrador', { autoClose: 5000 })
         }
     }
 
@@ -90,7 +159,7 @@ const FormularioAdministrador = () => {
                 <CCol>
                     <CCard className="border-0 shadow-sm">
                         <CCardBody>
-                            <CForm onSubmit={handleSubmit(onSubmit)} className="row g-3">
+                            <CForm className="row g-3">
                                 {/* Nombre */}
                                 <CCol md={6}>
                                     <CInputGroup className={`${errors.name ? 'is-invalid' : ''}`}>
@@ -98,14 +167,11 @@ const FormularioAdministrador = () => {
                                             <CiUser className={`${errors.name ? 'text-white' : ''}`} />
                                         </CInputGroupText>
                                         <CFormInput
-                                            placeholder="Nombre"
-                                            className={`${errors.name ? 'border-danger' : ''}`}
+                                            placeholder={errors.name ? errors.name.message : "Nombre"}
+                                            className={`${errors.name ? 'border-danger text-danger' : ''}`}
                                             invalid={!!errors.name}
                                             {...register('name')}
                                         />
-                                        {errors.name && (
-                                            <div className="invalid-feedback">{errors.name.message}</div>
-                                        )}
                                     </CInputGroup>
                                 </CCol>
 
@@ -116,14 +182,11 @@ const FormularioAdministrador = () => {
                                             <CiUser className={`${errors.lastName ? 'text-white' : ''}`} />
                                         </CInputGroupText>
                                         <CFormInput
-                                            placeholder="Apellido"
-                                            className={`${errors.lastName ? 'border-danger' : ''}`}
+                                            placeholder={errors.lastName ? errors.lastName.message : "Apellido"}
+                                            className={`${errors.lastName ? 'border-danger text-danger' : ''}`}
                                             invalid={!!errors.lastName}
                                             {...register('lastName')}
                                         />
-                                        {errors.lastName && (
-                                            <div className="invalid-feedback">{errors.lastName.message}</div>
-                                        )}
                                     </CInputGroup>
                                 </CCol>
 
@@ -135,14 +198,11 @@ const FormularioAdministrador = () => {
                                         </CInputGroupText>
                                         <CFormInput
                                             type="email"
-                                            placeholder="Correo"
-                                            className={`${errors.email ? 'border-danger' : ''}`}
+                                            placeholder={errors.email ? errors.email.message : "Correo"}
+                                            className={`${errors.email ? 'border-danger text-danger' : ''}`}
                                             invalid={!!errors.email}
                                             {...register('email')}
                                         />
-                                        {errors.email && (
-                                            <div className="invalid-feedback">{errors.email.message}</div>
-                                        )}
                                     </CInputGroup>
                                 </CCol>
 
@@ -153,14 +213,11 @@ const FormularioAdministrador = () => {
                                             <MdFingerprint className={`${errors.cedula ? 'text-white' : ''}`} />
                                         </CInputGroupText>
                                         <CFormInput
-                                            placeholder="Cédula"
-                                            className={`${errors.cedula ? 'border-danger' : ''}`}
+                                            placeholder={errors.cedula ? errors.cedula.message : "Cédula"}
+                                            className={`${errors.cedula ? 'border-danger text-danger' : ''}`}
                                             invalid={!!errors.cedula}
                                             {...register('cedula')}
                                         />
-                                        {errors.cedula && (
-                                            <div className="invalid-feedback">{errors.cedula.message}</div>
-                                        )}
                                     </CInputGroup>
                                 </CCol>
 
@@ -171,26 +228,53 @@ const FormularioAdministrador = () => {
                                             <MdPhoneAndroid className={`${errors.phone ? 'text-white' : ''}`} />
                                         </CInputGroupText>
                                         <CFormInput
-                                            placeholder="Teléfono"
-                                            className={`${errors.phone ? 'border-danger' : ''}`}
+                                            placeholder={errors.phone ? errors.phone.message : "Teléfono"}
+                                            className={`${errors.phone ? 'border-danger text-danger' : ''}`}
                                             invalid={!!errors.phone}
                                             {...register('phone')}
                                         />
-                                        {errors.phone && (
-                                            <div className="invalid-feedback">{errors.phone.message}</div>
-                                        )}
                                     </CInputGroup>
                                 </CCol>
 
+
                                 {/* Botones */}
-                                <CCol xs={12} className="text-center">
-                                    <CButton type="submit" color="primary" className="me-2">
-                                        Registrar
-                                    </CButton>
-                                    <CButton type="button" color="secondary" onClick={resetForm}>
-                                        Limpiar
-                                    </CButton>
+                                <CCol className="d-flex flex-wrap justify-content-between gap-2 mt-3">
+                                    <div className="flex-fill text-center">
+                                        <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={handleSubmit(onSubmitRegister)}>
+                                            <UserPlus size={20} className="me-2" />
+                                            Crear Administrador
+                                        </CButton>
+                                    </div>
+
+                                    <div className="flex-fill text-center">
+                                        <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={handleSubmit(onSubmitUpdate)}>
+                                            <Pencil size={18} className="me-2" />
+                                            Actualizar Administrador
+                                        </CButton>
+                                    </div>
+
+                                    <div className="flex-fill text-center">
+                                        <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={onSubmitEnable} >
+                                            <UserCheck size={18} className="me-2" />
+                                            Habilitar Administrador
+                                        </CButton>
+                                    </div>
+
+                                    <div className="flex-fill text-center">
+                                        <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={onSubmitDisable}>
+                                            <UserX size={18} className="me-2" />
+                                            Deshabilitar Administrador
+                                        </CButton>
+                                    </div>
+
+                                    <div className="flex-fill text-center">
+                                        <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={resetForm}>
+                                            <Eraser size={18} className="me-2" />
+                                            Limpiar Formulario
+                                        </CButton>
+                                    </div>
                                 </CCol>
+
                             </CForm>
                         </CCardBody>
                     </CCard>

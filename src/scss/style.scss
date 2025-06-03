@@ -20,17 +20,17 @@ body {
 }
 
 .sidebar-dark {
-  --cui-body-color: rgba(255, 255, 255, 0.92);        
-  --cui-body-bg: #0e4c71;                            
-  --cui-emphasis-color: #ffffff;                      
-  --cui-secondary-color: rgba(255, 255, 255, 0.65);    
-  --cui-secondary-bg: #14547d;                        
-  --cui-tertiary-color: rgba(255, 255, 255, 0.4);      
-  --cui-tertiary-bg: #0c3d5a;                         
-  --cui-border-color: #0e4c71;                        
-  --cui-link-color: #63b3ed;                          
-  --cui-link-hover-color: #90cdf4;                   
-  --cui-active-bg: #15689f;                           
+  --cui-body-color: rgba(255, 255, 255, 0.92);
+  --cui-body-bg: #0e4c71;
+  --cui-emphasis-color: #ffffff;
+  --cui-secondary-color: rgba(255, 255, 255, 0.65);
+  --cui-secondary-bg: #14547d;
+  --cui-tertiary-color: rgba(255, 255, 255, 0.4);
+  --cui-tertiary-bg: #0c3d5a;
+  --cui-border-color: #0e4c71;
+  --cui-link-color: #63b3ed;
+  --cui-link-hover-color: #90cdf4;
+  --cui-active-bg: #15689f;
 }
 
 
@@ -57,12 +57,12 @@ body {
 
 .sidebar .nav-link {
   color: #fff;
-  font-size: 1.25rem;  
+  font-size: 1.25rem;
 }
 
 .sidebar .nav-title {
   color: #fff;
-  font-size: 1.10rem; 
+  font-size: 1.10rem;
 }
 
 .sidebar .nav-link:hover {
@@ -79,7 +79,7 @@ body {
   --cui-sidebar-toggler-active-bg: white;
   --cui-sidebar-toggler-hover-color: white;
   --cui-sidebar-toggler-focus-color: white;
-  
+
 }
 
 .sidebar-narrow,
@@ -108,12 +108,33 @@ body {
   color: #0e4c71;
 }
 
+.subtitulos-esfot:hover {
+  color: #e72f2b;
+}
+
+.textos-esfot {
+  color: #f8ad25;
+  font-weight: bold;
+}
+
 .btn-esfot {
   background-color: #e72f2b;
   border-color: #e72f2b;
   color: white;
   font-size: 20px;
   font-weight: bold;
+}
+
+.btn-esfot-form {
+  background-color: #e72f2b;
+  border-color: #e72f2b;
+  color: white;
+  font-weight: bold;
+}
+
+.btn-esfot-form:hover {
+  background-color: #f8ad25;
+  border-color: #f8ad25;
 }
 
 .btn-esfot:hover {
@@ -125,9 +146,39 @@ body {
   background-color: #0e4c71 !important;
 }
 
+.bg-esfot th {
+  background-color: #0e4c71 !important;
+  color: white !important;
+  border-top: 3px !important;
+}
+
 .custom-input::placeholder {
   color: #6c757d;
   opacity: 1;
+}
+
+.text-danger::placeholder {
+  color: #dc3545 !important;
+  opacity: 1;
+}
+
+.table-container::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Edge */
+}
+
+.table-container {
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Sticky header para los th */
+.table-container thead th {
+  position: sticky;
+  top: 0;
+  background-color: #0e4c71;
+  /* color similar a table-dark */
+  z-index: 10;
 }
 
 

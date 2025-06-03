@@ -1,14 +1,28 @@
 import FormularioAdministrador from '../../../components/admin/FormularioAdministrador'
 import TablaAdministradores from '../../../components/admin/TablaAdministrador'
-import { CCard } from '@coreui/react'
+import { CCard, CCardBody } from '@coreui/react'
 
 const Administradores = () => {
     return (
+        <CCard className="shadow-sm border-0 mt-3 mb-3">
+            <CCardBody>
+                {/* Encabezado */}
+                <div className="ms-3 me-3">
+                    <h1 className="text-4xl textos-esfot">Gestionar Administradores</h1>
+                    <hr/>
+                    <p className="text-muted">Este módulo permite la gestión de los usuarios administradores del sistema.</p>
+                </div>
 
-        <CCard className="mb-4">
-            <h2>Gestión de Administradores</h2>
-            <TablaAdministradores />
-            <FormularioAdministrador />
+                {/* Tabla */}
+                <div>
+                    <TablaAdministradores />
+                </div>
+
+                {/* Formulario */}
+                <div>
+                    <FormularioAdministrador />
+                </div>
+            </CCardBody>
         </CCard>
     )
 }
