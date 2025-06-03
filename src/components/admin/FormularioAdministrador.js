@@ -27,7 +27,7 @@ const FormularioAdministrador = () => {
     const { listarAdministradores } = useAdministradores()
 
     const {
-        register, handleSubmit, setError, clearErrors, reset,
+        register, handleSubmit, setError, reset,
         formState: { errors }
     } = useForm()
 
@@ -42,21 +42,16 @@ const FormularioAdministrador = () => {
                 email: '',
                 cedula: '',
                 phone: ''
-            }),
-            listarAdministradores()
+            })
         }
     }, [administradorSeleccionado, reset])
+    
 
     React.useEffect(() => {
         Object.entries(errors).forEach(([field, error]) => {
-            toast.error(error.message, {
-                autoClose: 4000,
-                onClose: () => {
-                    clearErrors(field)
-                },
-            })
+            toast.error(error.message, {autoClose: 4000})
         })
-    }, [errors, clearErrors])
+    }, [errors])
 
     const onSubmit = async (data) => {
         const valid = validate(data)
@@ -70,6 +65,7 @@ const FormularioAdministrador = () => {
 
         try {
             await axios.post(`${import.meta.env.VITE_API_URL}/admin/register`, data, { withCredentials: true })
+            await listarAdministradores()
             toast.success('¡Administrador registrado con éxito!')
             resetForm()
         } catch (err) {
@@ -191,7 +187,7 @@ const FormularioAdministrador = () => {
                                     <CButton type="submit" color="primary" className="me-2">
                                         Registrar
                                     </CButton>
-                                    <CButton color="secondary" onClick={resetForm}>
+                                    <CButton type="button" color="secondary" onClick={resetForm}>
                                         Limpiar
                                     </CButton>
                                 </CCol>
