@@ -118,7 +118,7 @@ const Modulos = () => {
                 <CCard
                   className="h-100 border-0 shadow-sm"
                   style={{
-                    minHeight: '330px',
+                    minHeight: '315px',
                     cursor: 'pointer',
                     backgroundColor: isHovered ? hoverColor : baseColor,
                     color: isHovered ? 'white' : 'black',
