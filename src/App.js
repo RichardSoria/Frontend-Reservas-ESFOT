@@ -48,14 +48,7 @@ const App = () => {
                 className="img-fluid"
                 style={{ maxWidth: '150px', marginBottom: '20px' }}
               />
-              <CSpinner
-                variant="grow"
-                style={{
-                  width: '3rem',
-                  height: '3rem',
-                  color: '#0e4c71',
-                }}
-              />
+              <CSpinner style={{ color: '#0e4c71' }}/>
               <p className="mt-4 fw-semibold fs-6 fs-md-5" style={{ color: '#e72f2b' }}>
                 Cargando Sistema de Reservas de Aulas y Laboratorios ESFOT...
               </p>

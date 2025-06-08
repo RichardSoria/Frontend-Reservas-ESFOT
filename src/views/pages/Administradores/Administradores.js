@@ -1,21 +1,44 @@
 import FormularioAdministrador from '../../../components/admin/FormularioAdministrador'
 import TablaAdministradores from '../../../components/admin/TablaAdministrador'
-import { CCard, CCardBody } from '@coreui/react'
+import { CCard, CCardBody, CRow, CCol, CFormInput, CInputGroup, CInputGroupText } from '@coreui/react'
+import { useState } from 'react'
+import { Search } from 'lucide-react'
 
 const Administradores = () => {
+    const [filtroCedula, setFiltroCedula] = useState('')
     return (
-        <CCard className="shadow-sm border-0 mt-3 mb-3">
+        <CCard className="shadow-sm mb-3 border-0">
             <CCardBody>
                 {/* Encabezado */}
                 <div className="ms-3 me-3">
                     <h1 className="text-4xl textos-esfot">Gestionar Administradores</h1>
-                    <hr/>
-                    <p className="text-muted">Este módulo permite la gestión de los usuarios administradores del sistema.</p>
+                    <hr />
+                    <CRow className="align-items-center">
+                        <CCol md={9}>
+                            <p className="text-muted mb-0">
+                                Este módulo permite la gestión de los usuarios administradores del sistema.
+                            </p>
+                        </CCol>
+                        <CCol md={3}>
+                            <CInputGroup>
+                                <CFormInput
+                                    type="number"
+                                    placeholder="Buscar por cédula"
+                                    aria-label="Buscar por cédula"
+                                    value={filtroCedula}
+                                    onChange={(e) => setFiltroCedula(e.target.value)}
+                                />
+                                <CInputGroupText className='bg-esfot text-white'>
+                                    <Search size={20} />
+                                </CInputGroupText>
+                            </CInputGroup>
+                        </CCol>
+                    </CRow>
                 </div>
 
                 {/* Tabla */}
                 <div>
-                    <TablaAdministradores />
+                    <TablaAdministradores filtroCedula={filtroCedula} />
                 </div>
 
                 {/* Formulario */}

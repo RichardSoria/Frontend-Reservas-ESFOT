@@ -12,7 +12,7 @@ import {
 import { Info } from 'lucide-react';
 
 
-const TablaAdministradores = () => {
+const TablaAdministradores = ({ filtroCedula }) => {
     const dispatch = useDispatch()
     const { listarAdministradores } = useAdministradores()
     const { administradores = [] } = useSelector((state) => state)
@@ -22,6 +22,10 @@ const TablaAdministradores = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    const administradoresFiltrados = administradores.filter((admin) =>
+        admin.cedula?.toLowerCase().includes(filtroCedula.toLowerCase())
+    )
+
     return (
         <CContainer className='mt-3 mb-3' fluid>
             <CRow className="justify-content-center">
@@ -30,9 +34,9 @@ const TablaAdministradores = () => {
                         <CCardBody className="p-0">
                             <div
                                 style={{
-                                    maxHeight: '270px',
+                                    maxHeight: '268px',
                                     overflowY: 'auto',
-                                    scrollbarWidth: 'none', // Firefox
+                                    scrollbarWidth: 'none',
                                 }}
                                 className="table-container"
                             >
@@ -50,17 +54,17 @@ const TablaAdministradores = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {administradores.length === 0 ? (
+                                        {administradoresFiltrados.length === 0 ? (
                                             <tr>
-                                                <td colSpan="7" className="text-center py-3">
-                                                    No hay administradores registrados.
+                                                <td className='text-center' colSpan="8">
+                                                    No se encontraron coincidencias.
                                                 </td>
                                             </tr>
                                         ) : (
-                                            administradores.map((admin) => (
+                                            administradoresFiltrados.map((admin) => (
                                                 <tr
                                                     key={admin._id}
-                                                    onClick={() => dispatch(set({ administradorSeleccionado: admin }))}
+                                                    onClick={() => dispatch(set({ administradorSeleccionado: { ...admin } }))}
                                                     style={{ cursor: 'pointer' }}
                                                     className="text-center"
                                                 >
@@ -83,9 +87,9 @@ const TablaAdministradores = () => {
                                                     </td>
                                                     <td>
                                                         {admin.status ? (
-                                                            <span className="badge bg-success">Activo</span>
+                                                            <span className="badge bg-success">Habilitado</span>
                                                         ) : (
-                                                            <span className="badge bg-danger">Inactivo</span>
+                                                            <span className="badge bg-danger">Deshabilitado</span>
                                                         )}
                                                     </td>
                                                     <td>
@@ -93,8 +97,8 @@ const TablaAdministradores = () => {
                                                             className="subtitulos-esfot rounded-circle border-0 bg-transparent justify-content-center align-items-center"
                                                             title="Ver detalles"
                                                             onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                dispatch(set({ administradorSeleccionado: admin }));
+                                                                e.stopPropagation()
+                                                                dispatch(set({ administradorSeleccionado: admin }))
                                                             }}
                                                         >
                                                             <Info size={25} />
