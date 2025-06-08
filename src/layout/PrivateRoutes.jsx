@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { set } from '../store'
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
 
-const Auth = () => {
+const PrivateRoutes = () => {
     const [auth, setAuth] = useState(null)
     const dispatch = useDispatch()
 
@@ -24,10 +25,10 @@ const Auth = () => {
             })
     }, [dispatch])
 
-    if (auth === null) return 
+    if (auth === null) return <LoadingSpinner />
     if (auth === false) return <Navigate to="/iniciar-sesion" replace />
 
-    return <Outlet />
+    return <Outlet /> 
 }
 
-export default Auth
+export default PrivateRoutes

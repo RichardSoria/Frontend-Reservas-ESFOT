@@ -1,4 +1,3 @@
-import React from 'react'
 import { CNavItem, CNavTitle } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 

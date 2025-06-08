@@ -11,7 +11,6 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
-import { AppSidebarNav } from './AppSidebarNav'
 import AppSidebarNavFiltered from './AppSidebarNavFiltered'
 
 import { logo } from 'src/assets/brand/logo'
