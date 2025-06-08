@@ -93,7 +93,6 @@ const Modulos = () => {
 
   const handleCardClick = (route) => {
     navigate(route)
-    console.log(route)
   }
 
   return (

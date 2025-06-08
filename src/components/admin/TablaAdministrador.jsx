@@ -37,7 +37,7 @@ const TablaAdministradores = ({ filtroCedula }) => {
                         <CCardBody className="p-0">
                             <div
                                 style={{
-                                    maxHeight: '268px',
+                                    maxHeight: '265px',
                                     overflowY: 'auto',
                                     scrollbarWidth: 'none',
                                 }}
@@ -99,9 +99,12 @@ const TablaAdministradores = ({ filtroCedula }) => {
                                                         <button
                                                             className="iconos-esfot rounded-circle border-0 bg-transparent justify-content-center align-items-center"
                                                             title="Ver detalles"
-                                                            onClick={(e) => { navigate(`/admin/administradores/${admin._id}`); e.stopPropagation(); }}
+                                                            onClick={(e) => { 
+                                                                navigate(`/admin/administradores/${admin._id}`); e.stopPropagation();
+                                                                dispatch(set({ administradorSeleccionado: null }));
+                                                            }}
                                                         >
-                                                        <Info size={25} />
+                                                        <Info/>
                                                     </button>
                                                 </td>
                                                 </tr>

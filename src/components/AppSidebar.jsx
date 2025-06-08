@@ -45,6 +45,7 @@ const AppSidebar = () => {
       <AppSidebarNavFiltered />
       <CSidebarFooter className="border-top d-none d-lg-flex">
         <CSidebarToggler
+          className="nav-toggler"
           onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
         />
       </CSidebarFooter>

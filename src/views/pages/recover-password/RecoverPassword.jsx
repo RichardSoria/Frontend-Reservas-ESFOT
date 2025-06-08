@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import Ajv from 'ajv'
 import addFormats from 'ajv-formats'
 import ajvErrors from 'ajv-errors'
-import { recoverPasswordSchema } from '../../../validations/authenticationSchema.js'
+import { recoverPasswordSchema } from '../../../validations/authenticationSchema.jsx'
 import axios from 'axios'
 import { NavLink } from 'react-router-dom'
 import {

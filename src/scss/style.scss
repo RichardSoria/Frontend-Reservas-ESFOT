@@ -12,6 +12,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 /* Firefox */
 input[type=number] {
+  appearance: textfield;
   -moz-appearance: textfield;
 }
 
@@ -33,19 +34,9 @@ body {
 }
 
 .sidebar-dark {
-  --cui-body-color: rgba(255, 255, 255, 0.92);
   --cui-body-bg: #0e4c71;
-  --cui-emphasis-color: #ffffff;
-  --cui-secondary-color: rgba(255, 255, 255, 0.65);
-  --cui-secondary-bg: #14547d;
-  --cui-tertiary-color: rgba(255, 255, 255, 0.4);
-  --cui-tertiary-bg: #0c3d5a;
   --cui-border-color: #0e4c71;
-  --cui-link-color: #63b3ed;
-  --cui-link-hover-color: #90cdf4;
-  --cui-active-bg: #15689f;
 }
-
 
 .sidebar-brand-full {
   margin-left: 3px;
@@ -64,13 +55,16 @@ body {
   }
 }
 
-.sidebar .nav-icon {
-  color: #fff;
-}
 
 .sidebar .nav-link {
   color: #fff;
   font-size: 1.25rem;
+}
+
+.sidebar-nav {
+  --cui-sidebar-nav-link-icon-width: 2rem;
+  --cui-sidebar-nav-link-icon-height: 2rem;
+  --cui-sidebar-nav-link-icon-font-size: 2rem;
 }
 
 .sidebar .nav-title {
@@ -85,6 +79,7 @@ body {
 .sidebar .nav-link.active {
   background-color: #e72f2b;
 }
+
 
 .sidebar-toggler {
   margin-inline-start: auto;
@@ -104,6 +99,26 @@ body {
 
 .header>.container-fluid+.container-fluid {
   min-height: 3rem;
+}
+
+.nav-icon {
+  background-color: transparent;
+  color: white !important;
+  width: 2.0rem !important;
+  height: 2.0rem !important;
+}
+
+.nav-toggler {
+  background-color: transparent;
+  color: white;
+  width: 1.0rem;
+  height: 1.0rem;
+  transition: background-color 0.3s ease;
+}
+
+.nav-toggler:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  /* Efecto hover suave */
 }
 
 .footer {

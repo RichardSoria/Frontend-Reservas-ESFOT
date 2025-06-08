@@ -10,19 +10,19 @@ import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { set } from '../../store'
 import { adminSchema } from '../../validations/adminSchema'
+import { CButton, CCard, CCardBody, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow } from '@coreui/react'
 import {
-    CButton, CCard, CCardBody, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow,
-    CSpinner
-} from '@coreui/react'
-import { CiUser } from 'react-icons/ci'
-import {
+    FileUser,
+    BookUser,
+    Mail,
+    Fingerprint,
+    Smartphone,
     UserPlus,
-    Pencil,
+    UserRoundPen,
     UserCheck,
     UserX,
     Eraser,
 } from 'lucide-react'
-import { MdEmail, MdPhoneAndroid, MdFingerprint } from 'react-icons/md'
 import useAdministradores from '../../hooks/useAdministradores'
 import { ConfirmModal } from '../modals/ConfirmModal'
 import { LoadingModal } from '../modals/LoadingModal'
@@ -301,7 +301,7 @@ const FormularioAdministrador = () => {
                                     <CCol md={6}>
                                         <CInputGroup className={`${errors.name ? 'is-invalid' : ''}`}>
                                             <CInputGroupText className={`${errors.name ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                                <CiUser className={`${errors.name ? 'text-white' : ''}`} />
+                                                <FileUser className={`${errors.name ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
                                                 placeholder={errors.name ? errors.name.message : "Nombre"}
@@ -316,7 +316,7 @@ const FormularioAdministrador = () => {
                                     <CCol md={6}>
                                         <CInputGroup className={`${errors.lastName ? 'is-invalid' : ''}`}>
                                             <CInputGroupText className={`${errors.lastName ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                                <CiUser className={`${errors.lastName ? 'text-white' : ''}`} />
+                                                <BookUser className={`${errors.lastName ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
                                                 placeholder={errors.lastName ? errors.lastName.message : "Apellido"}
@@ -331,7 +331,7 @@ const FormularioAdministrador = () => {
                                     <CCol md={12}>
                                         <CInputGroup className={`${errors.email ? 'is-invalid' : ''}`}>
                                             <CInputGroupText className={`${errors.email ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                                <MdEmail className={`${errors.email ? 'text-white' : ''}`} />
+                                                <Mail className={`${errors.email ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
                                                 type="email"
@@ -347,7 +347,7 @@ const FormularioAdministrador = () => {
                                     <CCol md={6}>
                                         <CInputGroup className={`${errors.cedula ? 'is-invalid' : ''}`}>
                                             <CInputGroupText className={`${errors.cedula ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                                <MdFingerprint className={`${errors.cedula ? 'text-white' : ''}`} />
+                                                <Fingerprint className={`${errors.cedula ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
                                                 placeholder={errors.cedula ? errors.cedula.message : "Cédula"}
@@ -362,7 +362,7 @@ const FormularioAdministrador = () => {
                                     <CCol md={6}>
                                         <CInputGroup className={`${errors.phone ? 'is-invalid' : ''}`}>
                                             <CInputGroupText className={`${errors.phone ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                                <MdPhoneAndroid className={`${errors.phone ? 'text-white' : ''}`} />
+                                                <Smartphone className={`${errors.phone ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
                                                 placeholder={errors.phone ? errors.phone.message : "Teléfono"}
@@ -389,38 +389,38 @@ const FormularioAdministrador = () => {
                                     />
 
                                     {/* Botones */}
-                                    <CCol className="d-flex flex-wrap justify-content-between gap-2 mt-3">
+                                    <CCol className="d-flex flex-wrap justify-content-between gap-1 mt-3">
                                         <div className="flex-fill text-center">
                                             <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={handleSubmit(confirmRegister)} >
-                                                <UserPlus size={20} className="me-2" />
+                                                <UserPlus className="me-2" />
                                                 Crear Administrador
                                             </CButton>
                                         </div>
 
                                         <div className="flex-fill text-center">
                                             <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={handleSubmit(confirmUpdate)}>
-                                                <Pencil size={20} className="me-2" />
+                                                <UserRoundPen className="me-2" />
                                                 Actualizar Administrador
                                             </CButton>
                                         </div>
 
                                         <div className="flex-fill text-center">
                                             <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={confirmEnable} >
-                                                <UserCheck size={20} className="me-2" />
+                                                <UserCheck className="me-2" />
                                                 Habilitar Administrador
                                             </CButton>
                                         </div>
 
                                         <div className="flex-fill text-center">
                                             <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={confirmDisable}>
-                                                <UserX size={20} className="me-2" />
+                                                <UserX className="me-2" />
                                                 Deshabilitar Administrador
                                             </CButton>
                                         </div>
 
                                         <div className="flex-fill text-center">
                                             <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={resetForm}>
-                                                <Eraser size={20} className="me-2" />
+                                                <Eraser className="me-2" />
                                                 Limpiar Formulario
                                             </CButton>
                                         </div>

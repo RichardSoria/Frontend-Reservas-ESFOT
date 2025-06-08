@@ -1,11 +1,11 @@
 // src/App.jsx
 import React, { Suspense, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 
 import { ToastContainer } from 'react-toastify'
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner'
-import { useColorModes } from '@coreui/react'
+
+// Estilos globales
 import './scss/style.scss'
 import './scss/examples.scss'
 
@@ -20,23 +20,9 @@ const PrivateRoutes = React.lazy(() => import('./layout/PrivateRoutes'))
 
 // Layout protegido y páginas internas
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
-const Modulos = React.lazy(() => import('./views/dashboard/Modulos'))
 
 
 const App = () => {
-  const { isColorModeSet, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
-  const storedTheme = useSelector((state) => state.theme)
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.href.split('?')[1])
-    const theme = urlParams.get('theme')?.match(/^[A-Za-z0-9\s]+/)?.[0]
-    if (theme) {
-      setColorMode(theme)
-    }
-    if (!isColorModeSet()) {
-      setColorMode(storedTheme)
-    }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>

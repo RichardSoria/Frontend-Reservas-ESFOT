@@ -6,14 +6,14 @@ import { PiStudent, PiChalkboardTeacherLight } from 'react-icons/pi'
 import { SiGoogleclassroom } from 'react-icons/si'
 import { BsPcDisplay } from 'react-icons/bs'
 import { CiCalendar } from 'react-icons/ci'
-import { cilSpeedometer } from '@coreui/icons'
+import { GrCluster } from "react-icons/gr";
 
 const _nav = [
   {
     component: CNavItem,
     name: 'Módulos',
     to: '/modulos',
-    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+    icon: <GrCluster className="nav-icon" />,
   },
   {
     component: CNavTitle,

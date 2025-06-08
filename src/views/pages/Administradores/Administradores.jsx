@@ -29,7 +29,7 @@ const Administradores = () => {
                                     onChange={(e) => setFiltroCedula(e.target.value)}
                                 />
                                 <CInputGroupText className='bg-esfot text-white'>
-                                    <Search size={20} />
+                                    <Search/>
                                 </CInputGroupText>
                             </CInputGroup>
                         </CCol>
