@@ -14,7 +14,19 @@ const useAdministradores = () => {
         }
     }
 
-    return { listarAdministradores }
+    const consultAdministrador = async (id) => {
+        try {
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/admin/admins/${id}`, { withCredentials: true })
+            dispatch(set({ userConsult: data }))
+        } catch (err) {
+            console.error('Error al consultar administrador', err)
+        }
+    };
+
+    return {
+        listarAdministradores,
+        consultAdministrador
+    }
 }
 
 export default useAdministradores

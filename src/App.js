@@ -54,8 +54,7 @@ const App = () => {
 
             {/* Rutas protegidas */}
             <Route element={<PrivateRoutes />}>
-              <Route element={<DefaultLayout />}>
-                <Route path="/*" element={<Modulos />} />
+              <Route path="/*" element={<DefaultLayout />}>
               </Route>
             </Route>
           </Routes>

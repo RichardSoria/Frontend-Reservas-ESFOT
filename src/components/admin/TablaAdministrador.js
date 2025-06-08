@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from "react-router-dom";
 import useAdministradores from '../../hooks/useAdministradores'
 import { set } from '../../store'
 import {
@@ -16,6 +17,8 @@ const TablaAdministradores = ({ filtroCedula }) => {
     const dispatch = useDispatch()
     const { listarAdministradores } = useAdministradores()
     const { administradores = [] } = useSelector((state) => state)
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         listarAdministradores()
@@ -94,27 +97,24 @@ const TablaAdministradores = ({ filtroCedula }) => {
                                                     </td>
                                                     <td>
                                                         <button
-                                                            className="subtitulos-esfot rounded-circle border-0 bg-transparent justify-content-center align-items-center"
+                                                            className="iconos-esfot rounded-circle border-0 bg-transparent justify-content-center align-items-center"
                                                             title="Ver detalles"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation()
-                                                                dispatch(set({ administradorSeleccionado: admin }))
-                                                            }}
+                                                            onClick={(e) => { navigate(`/admin/administradores/${admin._id}`); e.stopPropagation(); }}
                                                         >
-                                                            <Info size={25} />
-                                                        </button>
-                                                    </td>
+                                                        <Info size={25} />
+                                                    </button>
+                                                </td>
                                                 </tr>
-                                            ))
+                                    ))
                                         )}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </CCardBody>
-                    </CCard>
-                </CCol>
-            </CRow>
-        </CContainer>
+                                </tbody>
+                            </table>
+                        </div>
+                    </CCardBody>
+                </CCard>
+            </CCol>
+        </CRow>
+        </CContainer >
     )
 }
 

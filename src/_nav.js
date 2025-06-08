@@ -18,7 +18,7 @@ const _nav = [
   {
     component: CNavTitle,
     name: 'Usuarios',
-    roles: ['Admin'], // Solo admins ven este título
+    roles: ['Admin'],
   },
   {
     component: CNavItem,

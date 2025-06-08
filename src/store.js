@@ -5,7 +5,8 @@ const initialState = {
   theme: 'light',
   user: null,
   administradores: [],
-  administradorSeleccionado: null
+  administradorSeleccionado: null,
+  userConsult: null
 }
 
 const changeState = (state = initialState, { type, ...rest }) => {

@@ -1,31 +1,62 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
-
 import routes from '../routes'
-
 import { CBreadcrumb, CBreadcrumbItem } from '@coreui/react'
+import { useSelector } from 'react-redux'
+
+// Función para hacer matching de rutas con parámetros
+const matchRoute = (pathname, routes) => {
+  for (const route of routes) {
+    // Convertir ruta con :param a regex, por ejemplo '/admin/administradores/:id' -> /^\/admin\/administradores\/[^/]+$/
+    const pathRegex = new RegExp(
+      '^' +
+      route.path
+        .replace(/:[^\s/]+/g, '([^/]+)') // Reemplaza :param por grupo capturador
+        .replace(/\//g, '\\/') +
+      '$'
+    )
+    if (pathRegex.test(pathname)) {
+      return route
+    }
+  }
+  return null
+}
 
 const AppBreadcrumb = () => {
   const currentLocation = useLocation().pathname
-
-  const getRouteName = (pathname, routes) => {
-    const currentRoute = routes.find((route) => route.path === pathname)
-    return currentRoute ? currentRoute.name : false
-  }
+  const { userConsult } = useSelector((state) => state)
 
   const getBreadcrumbs = (location) => {
     const breadcrumbs = []
+
     location.split('/').reduce((prev, curr, index, array) => {
+      if (!curr) return prev
       const currentPathname = `${prev}/${curr}`
-      const routeName = getRouteName(currentPathname, routes)
-      routeName &&
+
+      const matchedRoute = matchRoute(currentPathname, routes)
+
+      const isLast = index + 1 === array.length
+
+      if (matchedRoute) {
+        let name = matchedRoute.name
+        if (
+          matchedRoute.path.includes(':') &&
+          isLast &&
+          userConsult &&
+          userConsult.name &&
+          userConsult.lastName
+        ) {
+          name = `${userConsult.name} ${userConsult.lastName}`
+        }
         breadcrumbs.push({
           pathname: currentPathname,
-          name: routeName,
-          active: index + 1 === array.length ? true : false,
+          name,
+          active: isLast,
         })
+      }
       return currentPathname
-    })
+    }, '')
+
     return breadcrumbs
   }
 
@@ -34,16 +65,14 @@ const AppBreadcrumb = () => {
   return (
     <CBreadcrumb className="my-0">
       <CBreadcrumbItem href="/modulos">Inicio</CBreadcrumbItem>
-      {breadcrumbs.map((breadcrumb, index) => {
-        return (
-          <CBreadcrumbItem
-            {...(breadcrumb.active ? { active: true } : { href: breadcrumb.pathname })}
-            key={index}
-          >
-            {breadcrumb.name}
-          </CBreadcrumbItem>
-        )
-      })}
+      {breadcrumbs.map((breadcrumb, index) => (
+        <CBreadcrumbItem
+          key={index}
+          {...(breadcrumb.active ? { active: true } : { href: breadcrumb.pathname })}
+        >
+          {breadcrumb.name}
+        </CBreadcrumbItem>
+      ))}
     </CBreadcrumb>
   )
 }
