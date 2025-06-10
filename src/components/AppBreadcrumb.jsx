@@ -1,8 +1,9 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
-import routes from '../routes'
+import { useRoutesByRole } from '../routes'
 import { CBreadcrumb, CBreadcrumbItem } from '@coreui/react'
 import { useSelector } from 'react-redux'
+
 
 // Función para hacer matching de rutas con parámetros
 const matchRoute = (pathname, routes) => {
@@ -25,6 +26,7 @@ const matchRoute = (pathname, routes) => {
 const AppBreadcrumb = () => {
   const currentLocation = useLocation().pathname
   const { userConsult } = useSelector((state) => state)
+  const routes = useRoutesByRole()
 
   const getBreadcrumbs = (location) => {
     const breadcrumbs = []

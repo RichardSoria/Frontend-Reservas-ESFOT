@@ -35,7 +35,7 @@ const App = () => {
               <Route path="/" element={<Navigate to="/iniciar-sesion" replace />} />
               <Route path="/iniciar-sesion" element={<Login />} />
               <Route path="/recuperar-contrasena" element={<RecoverPassword />} />
-              <Route path="/verificar-token" element={<VerifyToken />} />
+              <Route path="/enviar-contrasena-recuperacion/:token" element={<VerifyToken />} />
             </Route>
 
             {/* Rutas protegidas */}

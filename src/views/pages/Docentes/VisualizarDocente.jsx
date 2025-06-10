@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
-import useAdministradores from '../../../hooks/useAdministradores'
+import useDocente from '../../../hooks/useDocente'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -15,16 +15,18 @@ import clsx from 'clsx'
 import { set } from '../../../store'
 import { ArrowBigLeft } from 'lucide-react';
 
-const VisualizarAdministrador = () => {
+const VisualizarDocente = () => {
     const dispatch = useDispatch()
-    const { consultAdministrador } = useAdministradores()
+    const { consultDocente } = useDocente()
     const { userConsult } = useSelector((state) => state)
     const { id } = useParams()
     const navigate = useNavigate()
 
     useEffect(() => {
-        consultAdministrador(id)
+        consultDocente(id)
     }, [])
+    
+
 
     if (!userConsult) return null
 
@@ -47,24 +49,24 @@ const VisualizarAdministrador = () => {
             <CCardBody>
                 {/* Título */}
                 <div className="mb-3 ms-3 me-3">
-                    <h1 className="text-4xl textos-esfot ">Visualizar Administrador</h1>
+                    <h1 className="text-4xl textos-esfot ">Visualizar Docente</h1>
                     <hr />
                     <CRow className="align-items-center">
                         <CCol md={9} className="mt-2">
                             <p className="text-muted">
-                                Este módulo permite visualizar a detalle los datos del Administrador seleccionado.
+                                Este módulo permite visualizar a detalle los datos del Docente seleccionado.
                             </p>
                         </CCol>
                         <CCol md={3} className={clsx('text-md-end', 'text-center')}>
                             <CButton
                                 className="btn-esfot-form "
                                 onClick={() => {
-                                    navigate('/admin/administradores');
+                                    navigate('/admin/docentes');
                                     dispatch(set({ userConsult: null }));
                                 }}
                             >
                                 <ArrowBigLeft className="me-2" />
-                                Volver a Administradores
+                                Volver a Docentes
                             </CButton>
                         </CCol>
                     </CRow>
@@ -90,7 +92,7 @@ const VisualizarAdministrador = () => {
                                 {userConsult.status ? 'Habilitado' : 'Deshabilitado'}
                             </CBadge>
                         </p>
-                        <p><strong>Rol:</strong> {userConsult.rol ? 'Administrador' : ''}</p>
+                        <p><strong>Rol:</strong> {userConsult.rol ? 'Docente' : ''}</p>
                         <p><strong>Último Acceso:</strong> {formatFecha(userConsult.lastLogin)}</p>
                         <p><strong>Intentos fallidos:</strong> {userConsult.loginAttempts ?? 0}</p>
                         <p><strong>Fecha de bloqueo:</strong> {formatFecha(userConsult.blockedDate)}</p>
@@ -119,4 +121,4 @@ const VisualizarAdministrador = () => {
     )
 }
 
-export default VisualizarAdministrador
+export default VisualizarDocente

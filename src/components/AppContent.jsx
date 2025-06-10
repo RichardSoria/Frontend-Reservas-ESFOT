@@ -2,11 +2,10 @@ import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { CContainer } from '@coreui/react'
 
-
-// routes config
-import routes from '../routes'
+import { useRoutesByRole } from '../routes'
 
 const AppContent = () => {
+  const routes = useRoutesByRole()
   return (
     <CContainer className="px-4" lg>
       <Routes>
