@@ -75,7 +75,6 @@ export const docenteSchema = {
             minLength: 1,
             maxLength: 50,
             pattern: '^[a-zA-Z\\s]+$',
-            nullable: true,
             errorMessage: {
                 pattern: 'El campo de otra facultad solo puede contener letras y espacios',
                 minLength: 'El campo de otra facultad es obligatorio',

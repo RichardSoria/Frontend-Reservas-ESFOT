@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react'
 import {
   CCard,
@@ -7,13 +8,14 @@ import {
   CContainer,
 } from '@coreui/react'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { RiAdminLine } from 'react-icons/ri'
 import { PiStudent, PiChalkboardTeacherLight } from 'react-icons/pi'
 import { SiGoogleclassroom } from 'react-icons/si'
 import { BsPcDisplay } from 'react-icons/bs'
 import { CiCalendar } from 'react-icons/ci'
+import { limpiarSeleccionados } from '../../store'
 
 const baseColor = '#f8ad25'
 const hoverColor = '#0e4c71'
@@ -76,9 +78,14 @@ const allModules = [
 ];
 
 const Modulos = () => {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const userRole = useSelector((state) => state.user?.rol)
+
+  React.useEffect(() => {
+    dispatch(limpiarSeleccionados())
+  }, [])
 
   // Filtrar módulos por rol
   const filteredModules = allModules.filter((module) => module.roles.includes(userRole))

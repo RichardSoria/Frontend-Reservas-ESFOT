@@ -28,7 +28,7 @@ const PrivateRoutes = () => {
     if (auth === null) return <LoadingSpinner />
     if (auth === false) return <Navigate to="/iniciar-sesion" replace />
 
-    return <Outlet /> 
+    return <Outlet />
 }
 
 export default PrivateRoutes

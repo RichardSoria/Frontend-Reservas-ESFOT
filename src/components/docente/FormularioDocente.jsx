@@ -9,6 +9,7 @@ import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { set } from '../../store'
+import { limpiarSeleccionados } from '../../store'
 import { docenteSchema } from '../../validations/docenteSchema'
 import { CButton, CCard, CCardBody, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow, CFormSelect } from '@coreui/react'
 import {
@@ -83,6 +84,12 @@ const FormularioDocente = () => {
         return true
     }
 
+    // Función para limpiar el formulario
+
+    React.useEffect(() => {
+        dispatch(limpiarSeleccionados())
+    }, [])
+
     // Cargar datos del administrador seleccionado al formulario
 
     React.useEffect(() => {
@@ -97,7 +104,14 @@ const FormularioDocente = () => {
     const careerValue = watch('career')
 
     React.useEffect(() => {
-        if (careerValue !== 'No pertenece a ninguna carrera dentro de la facultad') {
+        if (careerValue === 'No pertenece a ninguna carrera dentro de la facultad') {
+            setValue('otherFaculty', '')
+            errors.otherFaculty && delete errors.otherFaculty
+
+        } else if (careerValue && careerValue !== '') {
+            setValue('otherFaculty', 'ESFOT')
+            errors.otherFaculty && delete errors.otherFaculty
+        } else {
             setValue('otherFaculty', '')
         }
     }, [careerValue, setValue])
@@ -261,9 +275,6 @@ const FormularioDocente = () => {
     // Funciones de confirmación
 
     const confirmRegister = (data) => {
-        if (data.career !== 'No pertenece a ninguna carrera dentro de la facultad') {
-            delete data.otherFaculty;
-        }
         if (!validateForm(data)) {
             return
         }
@@ -274,9 +285,6 @@ const FormularioDocente = () => {
         if (!docenteSeleccionado) {
             toast.error('Debe seleccionar un docente para actualizar', { autoClose: 4000 })
             return
-        }
-        if (data.career !== 'No pertenece a ninguna carrera dentro de la facultad') {
-            delete data.otherFaculty;
         }
         if (!validateForm(data)) {
             return
@@ -403,7 +411,7 @@ const FormularioDocente = () => {
                                                 invalid={!!errors.career}
                                                 {...register('career')}
                                             >
-                                                <option value="">{`${errors.career ? errors.career.message : 'Selecciona una carrera'}`}</option>
+                                                <option value="">{`${errors.career ? errors.career.message : 'Seleccione una carrera'}`}</option>
                                                 <option value="Tecnología Superior en Agua y Saneamiento Ambiental">Tecnología Superior en Agua y Saneamiento Ambiental</option>
                                                 <option value="Tecnología Superior en Desarrollo de Software">Tecnología Superior en Desarrollo de Software</option>
                                                 <option value="Tecnología Superior en Electromecánica">Tecnología Superior en Electromecánica</option>

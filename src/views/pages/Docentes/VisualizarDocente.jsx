@@ -81,6 +81,8 @@ const VisualizarDocente = () => {
                         <p><strong>Cédula:</strong> {userConsult.cedula}</p>
                         <p><strong>Correo:</strong> {userConsult.email}</p>
                         <p><strong>Teléfono:</strong> {userConsult.phone}</p>
+                        <p><strong>Carrera:</strong> {userConsult.career}</p>
+                        <p><strong>Facultad:</strong> {userConsult.otherFaculty ? userConsult.otherFaculty : 'ESFOT'}</p>
                     </CCol>
 
                     {/* Cuenta */}

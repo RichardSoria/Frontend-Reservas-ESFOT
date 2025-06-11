@@ -9,6 +9,7 @@ import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { set } from '../../store'
+import { limpiarSeleccionados } from '../../store'
 import { adminSchema } from '../../validations/adminSchema'
 import { CButton, CCard, CCardBody, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow } from '@coreui/react'
 import {
@@ -39,8 +40,8 @@ const FormularioAdministrador = () => {
     // Hooks y estados
 
     const dispatch = useDispatch()
-    const { administradorSeleccionado } = useSelector(state => state)
     const { listarAdministradores } = useAdministradores()
+    const { administradorSeleccionado } = useSelector(state => state)
     const [confirmVisible, setConfirmVisible] = React.useState(false)
     const [pendingAction, setPendingAction] = React.useState(null)
     const [operation, setOperation] = React.useState('')
@@ -79,6 +80,12 @@ const FormularioAdministrador = () => {
         }
         return true
     }
+    
+    // Función para limpiar el formulario
+
+    React.useEffect(() => {
+        dispatch(limpiarSeleccionados())
+    }, [])
 
     // Cargar datos del administrador seleccionado al formulario
 
