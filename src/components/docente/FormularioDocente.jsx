@@ -19,6 +19,7 @@ import {
     Fingerprint,
     Smartphone,
     GraduationCap,
+    School,
     UserPlus,
     UserRoundPen,
     UserCheck,
@@ -102,9 +103,10 @@ const FormularioDocente = () => {
     }, [docenteSeleccionado, reset])
 
     const careerValue = watch('career')
+    const otherFacultyValue = watch('otherFaculty')
 
     React.useEffect(() => {
-        if (careerValue === 'No pertenece a ninguna carrera dentro de la facultad') {
+        if (careerValue === 'No pertenece a ninguna carrera dentro de la facultad' && otherFacultyValue === '') {
             setValue('otherFaculty', '')
             errors.otherFaculty && delete errors.otherFaculty
 
@@ -427,7 +429,7 @@ const FormularioDocente = () => {
                                     <CCol md={3}>
                                         <CInputGroup className={`${errors.otherFaculty ? 'is-invalid' : ''}`}>
                                             <CInputGroupText className={`${errors.otherFaculty ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                                <Mail className={`${errors.otherFaculty ? 'text-white' : ''}`} />
+                                                <School className={`${errors.otherFaculty ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
                                                 placeholder={errors.otherFaculty ? errors.otherFaculty.message : "Facultad (opcional)"}
