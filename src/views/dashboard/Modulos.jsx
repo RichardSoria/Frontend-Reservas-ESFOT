@@ -105,7 +105,7 @@ const Modulos = () => {
   return (
     <CContainer
       fluid
-      className="px-4 py-4 bg-dark"
+      className="px-4 py-4"
       style={{
         minHeight: '650px',
         display: 'flex',
