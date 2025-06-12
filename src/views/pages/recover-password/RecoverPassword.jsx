@@ -20,7 +20,7 @@ import {
     CRow,
     CFormSelect,
 } from '@coreui/react'
-import { CiMail, CiUser } from 'react-icons/ci'
+import { Mail, User } from 'lucide-react'
 import { toast } from 'react-toastify'
 
 const ajv = new Ajv({ allErrors: true })
@@ -80,19 +80,19 @@ const RecoverPassword = () => {
         <div className="bg-esfot min-vh-100 d-flex flex-row align-items-center">
             <CContainer>
                 <CRow className="justify-content-center">
-                    <CCol md={12}>
+                    <CCol md={5}>
                         <CCardGroup>
                             <CCard className="p-4 bg-white">
                                 <CCardBody>
                                     <CForm onSubmit={handleSubmit(onSubmit)}>
                                         <CRow>
-                                            <CCol xs={12} md={8} className="text-md-start text-center">
+                                            <CCol md={12} className="text-center">
                                                 <h1 className="titulos-esfot">Enviar Correo de Recuperación</h1>
                                                 <p className="subtitulos-esfot">
                                                     Sistema de Gestión de Reservas de Aulas y Laboratorios
                                                 </p>
                                             </CCol>
-                                            <CCol xs={12} md={4} className="text-md-end text-center mb-3">
+                                            <CCol md={12} className="text-center mb-3">
                                                 <img
                                                     src="https://esfot.epn.edu.ec/images/logo_esfot_buho.png"
                                                     alt="Logo"
@@ -103,10 +103,10 @@ const RecoverPassword = () => {
 
                                         <CInputGroup className={`mb-3 ${errors.email ? 'is-invalid' : ''}`}>
                                             <CInputGroupText
-                                                className={`bg-secondary border-secondary ${errors.email ? 'border-danger bg-danger' : ''
+                                                className={`bg-secondary border-secondary ${errors.email ? 'border-danger bg-danger' : 'text-white bg-esfot'
                                                     }`}
                                             >
-                                                <CiMail />
+                                                <Mail className={`${errors.email ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
                                                 placeholder="Correo Electrónico"
@@ -120,10 +120,10 @@ const RecoverPassword = () => {
 
                                         <CInputGroup className={`mb-4 ${errors.role ? 'is-invalid' : ''}`}>
                                             <CInputGroupText
-                                                className={`bg-secondary border-secondary ${errors.role ? 'border-danger bg-danger' : ''
+                                                className={`bg-secondary border-secondary ${errors.role ? 'border-danger bg-danger' : 'text-white bg-esfot'
                                                     }`}
                                             >
-                                                <CiUser />
+                                                <User className={`${errors.role ? 'text-white' : ''}`}/>
                                             </CInputGroupText>
                                             <CFormSelect
                                                 className={`bg-light border-secondary text-secondary custom-input ${errors.role ? 'border-danger' : ''
@@ -139,12 +139,12 @@ const RecoverPassword = () => {
                                         </CInputGroup>
 
                                         <CRow>
-                                            <CCol md={6} xs={12} className="text-md-start text-center">
+                                            <CCol md={12} className="text-center">
                                                 <CButton type="submit" className="btn-esfot px-4">
                                                     Enviar Correo de Recuperación
                                                 </CButton>
                                             </CCol>
-                                            <CCol md={6} xs={12} className="text-md-end text-center">
+                                            <CCol md={12} className="text-center mt-3">
                                                 <CButton color="link" className="px-0 text-secondary" to="/" as={NavLink}>
                                                     ¿Recordaste tu contraseña? Iniciar sesión
                                                 </CButton>

@@ -68,22 +68,21 @@ const VerfiyToken = () => {
         <div className="bg-esfot min-vh-100 d-flex flex-row align-items-center">
             <CContainer>
                 <CRow className="justify-content-center">
-                    <CCol md={12}>
+                    <CCol md={5}>
                         <CCardGroup>
                             <CCard className="p-4 bg-white">
                                 <CCardBody>
                                     <CForm>
                                         <CRow>
-                                            <CCol xs={12} md={8} className="text-md-start text-center">
+                                            <CCol md={12} className="text-center">
                                                 <h1 className="titulos-esfot">Recuperar Contraseña</h1>
                                                 <p className="subtitulos-esfot">
                                                     Sistema de Gestión de Reservas de Aulas y Laboratorios
                                                 </p>
                                             </CCol>
                                             <CCol
-                                                xs={12}
-                                                md={4}
-                                                className="text-md-end text-center mb-3"
+                                                md={12}
+                                                className="text-center mb-3"
                                             >
                                                 <img
                                                     src="https://esfot.epn.edu.ec/images/logo_esfot_buho.png"
@@ -93,23 +92,19 @@ const VerfiyToken = () => {
                                             </CCol>
                                         </CRow>
                                         <CRow>
-                                            <CCol md={6} xs={12} className="text-md-start text-center">
+                                            <CCol md={12} className="text-center">
                                                 {showButtonPassword && (
                                                     <CButton
                                                         onClick={sendRecoverEmail}
-                                                        className="btn-esfot px-4"
+                                                        className="btn-esfot px-4 mb-3"
                                                     >
                                                         Enviar Contraseña de Recuperación
                                                     </CButton>
                                                 )}
                                             </CCol>
                                             <CCol
-                                                md={showButtonPassword ? 6 : 12}
-                                                xs={12}
-                                                className={`${showButtonPassword
-                                                    ? 'text-md-end text-center'
-                                                    : 'text-start'
-                                                    } `}
+                                                md={12}
+                                                className={'text-center'}
                                             >
                                                 <CButton
                                                     color="link"

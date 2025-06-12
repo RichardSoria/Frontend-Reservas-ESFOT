@@ -19,10 +19,7 @@ import {
   CRow,
   CFormSelect,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilLockLocked } from '@coreui/icons'
-import { CiMail, CiUser } from 'react-icons/ci'
-import { FaEye, FaEyeSlash } from 'react-icons/fa'
+import { Mail, LockKeyhole, User, Eye, EyeOff } from 'lucide-react'
 import { toast } from 'react-toastify'
 
 const ajv = new Ajv({ allErrors: true })
@@ -112,19 +109,19 @@ const Login = () => {
   return (
     <div className="bg-esfot min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
-        <CRow className="justify-content-center">
-          <CCol md={12}>
+        <CRow className="justify-content-center ">
+          <CCol md={5}>
             <CCardGroup>
               <CCardBody className="p-4 bg-white">
                 <CForm onSubmit={handleSubmit(onSubmit)}>
                   <CRow>
-                    <CCol xs={12} md={7} className="text-md-start text-center">
+                    <CCol md={12} className="text-center">
                       <h1 className="titulos-esfot">Iniciar Sesión</h1>
                       <p className="subtitulos-esfot">
                         Sistema de Gestión de Reservas de Aulas y Laboratorios
                       </p>
                     </CCol>
-                    <CCol xs={12} md={5} className="text-md-end text-center mb-3">
+                    <CCol md={12} className="text-center mb-3">
                       <img
                         src="https://esfot.epn.edu.ec/images/logo_esfot_buho.png"
                         alt="Logo"
@@ -135,10 +132,10 @@ const Login = () => {
 
                   <CInputGroup className={`mb-3 ${errors.email ? 'is-invalid' : ''}`}>
                     <CInputGroupText
-                      className={`bg-secondary border-secondary ${errors.email ? 'border-danger bg-danger' : ''
+                      className={`bg-secondary border-secondary ${errors.email ? 'border-danger bg-danger' : 'text-white bg-esfot'
                         }`}
                     >
-                      <CiMail />
+                      <Mail className={`${errors.email}` ? 'text-white' : ''}/>
                     </CInputGroupText>
                     <CFormInput
                       placeholder="Correo Electrónico"
@@ -152,10 +149,10 @@ const Login = () => {
 
                   <CInputGroup className={`mb-3 ${errors.password ? 'is-invalid' : ''}`}>
                     <CInputGroupText
-                      className={`bg-secondary border-secondary ${errors.password ? 'border-danger bg-danger' : ''
+                      className={`bg-secondary border-secondary ${errors.password ? 'border-danger bg-danger' : 'text-white bg-esfot'
                         }`}
                     >
-                      <CIcon icon={cilLockLocked} />
+                      <LockKeyhole  className={`${errors.password}` ? 'text-white' : ''}/>
                     </CInputGroupText>
                     <CFormInput
                       type={showPassword ? 'text' : 'password'}
@@ -167,21 +164,21 @@ const Login = () => {
                       {...register('password')}
                     />
                     <CInputGroupText
-                      className={`bg-secondary border-secondary ${errors.password ? 'border-danger bg-danger' : ''
+                      className={`bg-secondary border-secondary ${errors.password ? 'border-danger bg-danger' : 'text-white bg-esfot'
                         }`}
                       style={{ cursor: 'pointer' }}
                       onClick={() => setShowPassword((prev) => !prev)}
                     >
-                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                      {showPassword ? <EyeOff  className={`${errors.password}` ? 'text-white' : ''}/> : <Eye  className={`${errors.password}` ? 'text-white' : ''}/>}
                     </CInputGroupText>
                   </CInputGroup>
 
                   <CInputGroup className={`mb-4 ${errors.role ? 'is-invalid' : ''}`}>
                     <CInputGroupText
-                      className={`bg-secondary border-secondary ${errors.role ? 'border-danger bg-danger' : ''
+                      className={`bg-secondary border-secondary ${errors.role ? 'border-danger bg-danger' : 'text-white bg-esfot'
                         }`}
                     >
-                      <CiUser />
+                      <User  className={`${errors.role}` ? 'text-white' : ''}/>
                     </CInputGroupText>
                     <CFormSelect
                       className={`bg-light border-secondary text-secondary custom-input ${errors.role ? 'border-danger' : ''
