@@ -105,7 +105,7 @@ const Modulos = () => {
   return (
     <CContainer
       fluid
-      className="px-4 py-4 mt-2"
+      className="px-4 py-4 bg-dark"
       style={{
         minHeight: '650px',
         display: 'flex',
@@ -113,43 +113,45 @@ const Modulos = () => {
         justifyContent: isAdmin ? 'flex-start' : 'center',
       }}
     >
-      {filas.map((fila, filaIndex) => (
-        <CRow className="g-4 justify-content-center mb-4" key={filaIndex}>
-          {fila.map(({ title, Icon, routes }, colIndex) => {
-            const globalIndex = filaIndex * 3 + colIndex
-            const isHovered = hoveredIndex === globalIndex
-            const route = routes[userRole] || '/'
-            return (
-              <CCol md="4" sm="6" key={globalIndex}>
-                <CCard
-                  className="h-100 border-0 shadow-sm"
-                  style={{
-                    minHeight: '315px',
-                    cursor: 'pointer',
-                    backgroundColor: isHovered ? hoverColor : baseColor,
-                    color: isHovered ? 'white' : 'black',
-                  }}
-                  onClick={() => handleCardClick(route)}
-                  onMouseEnter={() => setHoveredIndex(globalIndex)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      handleCardClick(route)
-                    }
-                  }}
-                >
-                  <CCardBody className="text-center d-flex flex-column justify-content-center align-items-center">
-                    <Icon size={200} className="mb-3" />
-                    <h5 style={{ fontWeight: 'bold', fontSize: '1.25rem' }}>{title}</h5>
-                  </CCardBody>
-                </CCard>
-              </CCol>
-            )
-          })}
-        </CRow>
-      ))}
+      <div className='d-flex flex-column gap-4'>
+        {filas.map((fila, filaIndex) => (
+          <CRow className="gy-4" key={filaIndex}>
+            {fila.map(({ title, Icon, routes }, colIndex) => {
+              const globalIndex = filaIndex * 3 + colIndex
+              const isHovered = hoveredIndex === globalIndex
+              const route = routes[userRole] || '/'
+              return (
+                <CCol md="4" sm="12" key={globalIndex}>
+                  <CCard
+                    className="h-100 border-0 shadow-sm"
+                    style={{
+                      minHeight: '315px',
+                      cursor: 'pointer',
+                      backgroundColor: isHovered ? hoverColor : baseColor,
+                      color: isHovered ? 'white' : 'black',
+                    }}
+                    onClick={() => handleCardClick(route)}
+                    onMouseEnter={() => setHoveredIndex(globalIndex)}
+                    onMouseLeave={() => setHoveredIndex(null)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        handleCardClick(route)
+                      }
+                    }}
+                  >
+                    <CCardBody className="text-center d-flex flex-column justify-content-center align-items-center">
+                      <Icon size={200} className="mb-3" />
+                      <h5 style={{ fontWeight: 'bold', fontSize: '1.25rem' }}>{title}</h5>
+                    </CCardBody>
+                  </CCard>
+                </CCol>
+              )
+            })}
+          </CRow>
+        ))}
+      </div>
     </CContainer>
   )
 }

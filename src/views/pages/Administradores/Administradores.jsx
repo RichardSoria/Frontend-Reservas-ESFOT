@@ -7,7 +7,7 @@ import { Search } from 'lucide-react'
 const Administradores = () => {
     const [filtroCedula, setFiltroCedula] = useState('')
     return (
-        <CCard className="shadow-sm mb-3 border-0">
+        <CCard className="shadow-smborder-0">
             <CCardBody>
                 {/* Encabezado */}
                 <div className="ms-3 me-3">

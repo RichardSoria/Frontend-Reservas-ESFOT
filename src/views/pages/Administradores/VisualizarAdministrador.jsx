@@ -43,7 +43,7 @@ const VisualizarAdministrador = () => {
 
 
     return (
-        <CCard className="shadow-sm border-0 mb-3">
+        <CCard className="shadow-sm border-0">
             <CCardBody>
                 {/* Título */}
                 <div className="mb-3 ms-3 me-3">
