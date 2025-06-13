@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import useAdministradores from '../../hooks/useAdministradores'
+import useAdministrador from '../../hooks/useAdministrador'
 import { set } from '../../store'
 import {
     CContainer,
@@ -15,7 +15,7 @@ import { Info } from 'lucide-react';
 
 const TablaAdministradores = ({ filtroCedula }) => {
     const dispatch = useDispatch()
-    const { listarAdministradores } = useAdministradores()
+    const { listarAdministradores } = useAdministrador()
     const { administradores = [] } = useSelector((state) => state)
 
     const navigate = useNavigate()

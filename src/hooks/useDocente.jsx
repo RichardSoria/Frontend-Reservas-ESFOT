@@ -18,8 +18,11 @@ const useDocente = () => {
         try {
             const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/docente/docentes/${id}`, { withCredentials: true })
             dispatch(set({ userConsult: data }))
+            return data
         } catch (err) {
             console.error('Error al consultar docentes', err)
+            dispatch(set({ userConsult: null }))
+            return null
         }
     };
 

@@ -10,21 +10,21 @@ import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { set } from '../../store'
 import { limpiarSeleccionados } from '../../store'
-import { adminSchema } from '../../validations/adminSchema'
-import { CButton, CCard, CCardBody, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow } from '@coreui/react'
+import { aulaSchema } from '../../validations/aulaSchema'
+import { CButton, CCard, CCardBody, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow, CFormSelect } from '@coreui/react'
 import {
-    FileUser,
-    BookUser,
-    Mail,
-    Fingerprint,
-    Smartphone,
+    Presentation,
+    Barcode,
+    Ratio,
+    ChartNoAxesColumnIncreasing,
+    FileType,
     UserPlus,
     UserRoundPen,
     UserCheck,
     UserX,
     Eraser,
 } from 'lucide-react'
-import useAdministrador from '../../hooks/useAdministrador'
+import useAula from '../../hooks/useAula'
 import { ConfirmModal } from '../modals/ConfirmModal'
 import { LoadingModal } from '../modals/LoadingModal'
 
@@ -32,16 +32,16 @@ import { LoadingModal } from '../modals/LoadingModal'
 const ajv = new Ajv({ allErrors: true })
 addFormats(ajv)
 ajvErrors(ajv)
-const validate = ajv.compile(adminSchema)
+const validate = ajv.compile(aulaSchema)
 
 
-const FormularioAdministrador = () => {
+const FormularioAula = () => {
 
     // Hooks y estados
 
     const dispatch = useDispatch()
-    const { listarAdministradores } = useAdministrador()
-    const { administradorSeleccionado } = useSelector(state => state)
+    const { aulaSeleccionado } = useSelector(state => state)
+    const { listarAulas } = useAula()
     const [confirmVisible, setConfirmVisible] = React.useState(false)
     const [pendingAction, setPendingAction] = React.useState(null)
     const [operation, setOperation] = React.useState('')
@@ -52,19 +52,19 @@ const FormularioAdministrador = () => {
     // Configuración del formulario
 
     const {
-        register, handleSubmit, setError, reset, watch,
+        register, handleSubmit, setError, reset, setValue, watch,
         formState: { errors }
     } = useForm()
 
-    const fullNameForm = `${watch('name') || ''} ${watch('lastName') || ''}`.trim()
-    const fullNameAdmin = `${administradorSeleccionado?.name || ''} ${administradorSeleccionado?.lastName || ''}`.trim()
+    const fullNameForm = `${watch('name') || ''} ${watch('codigo') || ''}`.trim()
+    const fullNameAula = `${aulaSeleccionado?.name || ''} ${aulaSeleccionado?.codigo || ''}`.trim()
 
-    const defaultAdminValues = {
+    const defaultAulaValues = {
         name: '',
-        lastName: '',
-        email: '',
-        cedula: '',
-        phone: ''
+        codigo: '',
+        description: '',
+        capacity: '',
+        size: ''
     }
 
     // Validación de errores
@@ -80,7 +80,7 @@ const FormularioAdministrador = () => {
         }
         return true
     }
-    
+
     // Función para limpiar el formulario
 
     React.useEffect(() => {
@@ -90,13 +90,13 @@ const FormularioAdministrador = () => {
     // Cargar datos del administrador seleccionado al formulario
 
     React.useEffect(() => {
-        if (administradorSeleccionado) {
-            const { name, lastName, email, cedula, phone } = administradorSeleccionado
-            reset({ name, lastName, email, cedula, phone })
+        if (aulaSeleccionado) {
+            const { name, codigo, description, capacity, size } = aulaSeleccionado
+            reset({ name, codigo, description, capacity: capacity != null ? String(capacity) : '', size })
         } else {
-            reset(defaultAdminValues)
+            reset(defaultAulaValues)
         }
-    }, [administradorSeleccionado, reset])
+    }, [aulaSeleccionado, reset])
 
     // Mostrar errores de validación
 
@@ -133,22 +133,22 @@ const FormularioAdministrador = () => {
         }
 
         try {
-            setIsLoadingMessage('Creando administrador...')
+            setIsLoadingMessage('Creando aula...')
             setIsLoading(true)
-            await axios.post(`${import.meta.env.VITE_API_URL}/admin/register`, data, { withCredentials: true })
-            await listarAdministradores()
-            toast.success('¡Administrador registrado con éxito!')
+            await axios.post(`${import.meta.env.VITE_API_URL}/aula/create`, data, { withCredentials: true })
+            await listarAulas()
+            toast.success('Aula registrado con éxito!')
             resetForm()
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Error al registrar administrador', { autoClose: 5000 })
+            toast.error(err.response?.data?.message || 'Error al registrar aula', { autoClose: 5000 })
         } finally {
             setIsLoading(false)
         }
     }
 
     const onSubmitUpdate = async (data) => {
-        if (!administradorSeleccionado) {
-            toast.error('Debe seleccionar un administrador para actualizar', { autoClose: 4000 })
+        if (!aulaSeleccionado) {
+            toast.error('Debe seleccionar un aula para actualizar', { autoClose: 4000 })
             return
         }
         if (!validateForm(data)) {
@@ -156,68 +156,68 @@ const FormularioAdministrador = () => {
         }
 
         try {
-            setIsLoadingMessage('Actualizando administrador...')
+            setIsLoadingMessage('Actualizando aula...')
             setIsLoading(true)
-            await axios.put(`${import.meta.env.VITE_API_URL}/admin/update/${administradorSeleccionado._id}`, data, { withCredentials: true })
-            await listarAdministradores()
-            toast.success('¡Administrador actualizado con éxito!')
+            await axios.put(`${import.meta.env.VITE_API_URL}/aula/update/${aulaSeleccionado._id}`, data, { withCredentials: true })
+            await listarAulas()
+            toast.success('Aula actualizado con éxito!')
             resetForm()
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Error al actualizar administrador', { autoClose: 5000 })
+            toast.error(err.response?.data?.message || 'Error al actualizar Aula', { autoClose: 5000 })
         } finally {
             setIsLoading(false)
         }
     }
 
     const onSubmitEnable = async () => {
-        if (!administradorSeleccionado) {
-            toast.error('Debe seleccionar un administrador para habilitar', { autoClose: 4000 })
+        if (!aulaSeleccionado) {
+            toast.error('Debe seleccionar un aula para habilitar', { autoClose: 4000 })
             return
         }
-        if (administradorSeleccionado.status) {
-            toast.error('El administrador ya está habilitado', { autoClose: 4000 })
+        if (aulaSeleccionado.status) {
+            toast.error('El aula ya está habilitado', { autoClose: 4000 })
             return
         }
         try {
-            setIsLoadingMessage('Habilitando administrador...')
+            setIsLoadingMessage('Habilitando aula...')
             setIsLoading(true)
-            await axios.put(`${import.meta.env.VITE_API_URL}/admin/enable/${administradorSeleccionado._id}`, {}, { withCredentials: true })
-            await listarAdministradores()
-            toast.success('¡Administrador habilitado con éxito!')
+            await axios.put(`${import.meta.env.VITE_API_URL}/aula/enable/${aulaSeleccionado._id}`, {}, { withCredentials: true })
+            await listarAulas()
+            toast.success('Aula habilitado con éxito!')
             resetForm()
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Error al habilitar administrador', { autoClose: 5000 })
+            toast.error(err.response?.data?.message || 'Error al habilitar aula', { autoClose: 5000 })
         } finally {
             setIsLoading(false)
         }
     }
 
     const onSubmitDisable = async () => {
-        if (!administradorSeleccionado) {
-            toast.error('Debe seleccionar un administrador para deshabilitar', { autoClose: 4000 })
+        if (!aulaSeleccionado) {
+            toast.error('Debe seleccionar un aula para deshabilitar', { autoClose: 4000 })
             return
         }
-        if (!administradorSeleccionado.status) {
-            toast.error('El administrador ya está deshabilitado', { autoClose: 4000 })
+        if (!aulaSeleccionado.status) {
+            toast.error('El aula ya está deshabilitado', { autoClose: 4000 })
             return
         }
         try {
-            setIsLoadingMessage('Deshabilitando administrador...')
+            setIsLoadingMessage('Deshabilitando aula...')
             setIsLoading(true)
-            await axios.put(`${import.meta.env.VITE_API_URL}/admin/disable/${administradorSeleccionado._id}`, {}, { withCredentials: true })
-            await listarAdministradores()
-            toast.success('¡Administrador deshabilitado con éxito!')
+            await axios.put(`${import.meta.env.VITE_API_URL}/aula/disable/${aulaSeleccionado._id}`, {}, { withCredentials: true })
+            await listarAulas()
+            toast.success('Aula deshabilitado con éxito!')
             resetForm()
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Error al deshabilitar administrador', { autoClose: 5000 })
+            toast.error(err.response?.data?.message || 'Error al deshabilitar aula', { autoClose: 5000 })
         } finally {
             setIsLoading(false)
         }
     }
 
     const resetForm = () => {
-        reset(defaultAdminValues)
-        dispatch(set({ administradorSeleccionado: null }))
+        reset(defaultAulaValues)
+        dispatch(set({ aulaSeleccionado: null }))
     }
 
     // Texto del modal de confirmación
@@ -226,23 +226,23 @@ const FormularioAdministrador = () => {
         switch (operation) {
             case 'create':
                 return {
-                    title: 'Registrar Administrador',
-                    message: `¿Deseas registrar al nuevo administrador ${fullNameForm}?`
+                    title: 'Registrar Aula',
+                    message: `¿Deseas registrar al nuevo aula ${fullNameForm}?`
                 };
             case 'update':
                 return {
-                    title: 'Actualizar Administrador',
-                    message: `¿Deseas actualizar la información del administrador ${fullNameAdmin}?`
+                    title: 'Actualizar Aula',
+                    message: `¿Deseas actualizar la información del aula ${fullNameAula}?`
                 };
             case 'enable':
                 return {
-                    title: 'Habilitar Administrador',
-                    message: `¿Deseas habilitar al administrador ${fullNameAdmin}?`
+                    title: 'Habilitar Aula',
+                    message: `¿Deseas habilitar al aula ${fullNameAula}?`
                 };
             case 'disable':
                 return {
-                    title: 'Deshabilitar Administrador',
-                    message: `¿Deseas deshabilitar al administrador ${fullNameAdmin}?`
+                    title: 'Deshabilitar Aula',
+                    message: `¿Deseas deshabilitar al aula ${fullNameAula}?`
                 };
             default:
                 return {
@@ -264,8 +264,8 @@ const FormularioAdministrador = () => {
     }
 
     const confirmUpdate = (data) => {
-        if (!administradorSeleccionado) {
-            toast.error('Debe seleccionar un administrador para actualizar', { autoClose: 4000 })
+        if (!aulaSeleccionado) {
+            toast.error('Debe seleccionar un aula para actualizar', { autoClose: 4000 })
             return
         }
         if (!validateForm(data)) {
@@ -273,24 +273,25 @@ const FormularioAdministrador = () => {
         }
         showConfirm('update', () => onSubmitUpdate(data))
     }
+
     const confirmEnable = () => {
-        if (!administradorSeleccionado) {
-            toast.error('Debe seleccionar un administrador para habilitar', { autoClose: 4000 })
+        if (!aulaSeleccionado) {
+            toast.error('Debe seleccionar un aula para habilitar', { autoClose: 4000 })
             return
         }
-        if (administradorSeleccionado.status) {
-            toast.error('El administrador ya está habilitado', { autoClose: 4000 })
+        if (aulaSeleccionado.status) {
+            toast.error('El aula ya está habilitado', { autoClose: 4000 })
             return
         }
         showConfirm('enable', onSubmitEnable)
     }
     const confirmDisable = () => {
-        if (!administradorSeleccionado) {
-            toast.error('Debe seleccionar un administrador para deshabilitar', { autoClose: 4000 })
+        if (!aulaSeleccionado) {
+            toast.error('Debe seleccionar un aula para deshabilitar', { autoClose: 4000 })
             return
         }
-        if (!administradorSeleccionado.status) {
-            toast.error('El administrador ya está deshabilitado', { autoClose: 4000 })
+        if (!aulaSeleccionado.status) {
+            toast.error('El aula ya está deshabilitado', { autoClose: 4000 })
             return
         }
         showConfirm('disable', onSubmitDisable)
@@ -305,10 +306,10 @@ const FormularioAdministrador = () => {
                             <CCardBody>
                                 <CForm className="row g-3">
                                     {/* Nombre */}
-                                    <CCol md={6}>
+                                    <CCol md={3}>
                                         <CInputGroup className={`${errors.name ? 'is-invalid' : ''}`}>
                                             <CInputGroupText className={`${errors.name ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                                <FileUser className={`${errors.name ? 'text-white' : ''}`} />
+                                                <Presentation className={`${errors.name ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
                                                 placeholder={errors.name ? errors.name.message : "Nombre"}
@@ -319,63 +320,68 @@ const FormularioAdministrador = () => {
                                         </CInputGroup>
                                     </CCol>
 
-                                    {/* Apellido */}
-                                    <CCol md={6}>
-                                        <CInputGroup className={`${errors.lastName ? 'is-invalid' : ''}`}>
-                                            <CInputGroupText className={`${errors.lastName ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                                <BookUser className={`${errors.lastName ? 'text-white' : ''}`} />
+                                    {/* Código */}
+                                    <CCol md={3}>
+                                        <CInputGroup className={`${errors.codigo ? 'is-invalid' : ''}`}>
+                                            <CInputGroupText className={`${errors.codigo ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
+                                                <Barcode className={`${errors.codigo ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
-                                                placeholder={errors.lastName ? errors.lastName.message : "Apellido"}
-                                                className={`${errors.lastName ? 'border-danger text-danger' : ''}`}
-                                                invalid={!!errors.lastName}
-                                                {...register('lastName')}
+                                                placeholder={errors.codigo ? errors.codigo.message : "Código"}
+                                                className={`${errors.codigo ? 'border-danger text-danger' : ''}`}
+                                                invalid={!!errors.codigo}
+                                                {...register('codigo')}
                                             />
                                         </CInputGroup>
                                     </CCol>
 
-                                    {/* Correo */}
+
+                                    {/* Capacidad */}
+                                    <CCol md={3}>
+                                        <CInputGroup className={`${errors.capacity ? 'is-invalid' : ''}`}>
+                                            <CInputGroupText className={`${errors.capacity ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
+                                                <Ratio className={`${errors.capacity ? 'text-white' : ''}`} />
+                                            </CInputGroupText>
+                                            <CFormInput
+                                                type='text'
+                                                placeholder={errors.capacity ? errors.capacity.message : "Capacidad"}
+                                                className={`${errors.capacity ? 'border-danger text-danger' : ''}`}
+                                                invalid={!!errors.capacity}
+                                                {...register('capacity')}
+                                            />
+                                        </CInputGroup>
+                                    </CCol>
+
+                                    {/* Tamaño */}
+                                    <CCol md={3}>
+                                        <CInputGroup className={`${errors.size ? 'is-invalid' : ''}`}>
+                                            <CInputGroupText className={`${errors.size ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
+                                                <ChartNoAxesColumnIncreasing className={`${errors.size ? 'text-white' : ''}`} />
+                                            </CInputGroupText>
+                                            <CFormSelect
+                                                className={`${errors.size ? 'border-danger text-danger' : ''}`}
+                                                invalid={!!errors.size}
+                                                {...register('size')}
+                                            >
+                                                <option value="">{`${errors.size ? errors.size.message : 'Seleccione el tamaño'}`}</option>
+                                                <option value="Pequeño">Pequeño</option>
+                                                <option value="Mediano">Mediano</option>
+                                                <option value="Grande">Grande</option>
+                                            </CFormSelect>
+                                        </CInputGroup>
+                                    </CCol>
+
+                                    {/* Descripción */}
                                     <CCol md={12}>
-                                        <CInputGroup className={`${errors.email ? 'is-invalid' : ''}`}>
-                                            <CInputGroupText className={`${errors.email ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                                <Mail className={`${errors.email ? 'text-white' : ''}`} />
+                                        <CInputGroup className={`${errors.description ? 'is-invalid' : ''}`}>
+                                            <CInputGroupText className={`${errors.description ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
+                                                <FileType className={`${errors.description ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
-                                                type="email"
-                                                placeholder={errors.email ? errors.email.message : "Correo"}
-                                                className={`${errors.email ? 'border-danger text-danger' : ''}`}
-                                                invalid={!!errors.email}
-                                                {...register('email')}
-                                            />
-                                        </CInputGroup>
-                                    </CCol>
-
-                                    {/* Cédula */}
-                                    <CCol md={6}>
-                                        <CInputGroup className={`${errors.cedula ? 'is-invalid' : ''}`}>
-                                            <CInputGroupText className={`${errors.cedula ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                                <Fingerprint className={`${errors.cedula ? 'text-white' : ''}`} />
-                                            </CInputGroupText>
-                                            <CFormInput
-                                                placeholder={errors.cedula ? errors.cedula.message : "Cédula"}
-                                                className={`${errors.cedula ? 'border-danger text-danger' : ''}`}
-                                                invalid={!!errors.cedula}
-                                                {...register('cedula')}
-                                            />
-                                        </CInputGroup>
-                                    </CCol>
-
-                                    {/* Teléfono */}
-                                    <CCol md={6}>
-                                        <CInputGroup className={`${errors.phone ? 'is-invalid' : ''}`}>
-                                            <CInputGroupText className={`${errors.phone ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                                <Smartphone className={`${errors.phone ? 'text-white' : ''}`} />
-                                            </CInputGroupText>
-                                            <CFormInput
-                                                placeholder={errors.phone ? errors.phone.message : "Teléfono"}
-                                                className={`${errors.phone ? 'border-danger text-danger' : ''}`}
-                                                invalid={!!errors.phone}
-                                                {...register('phone')}
+                                                placeholder={errors.description ? errors.description.message : "Descripción"}
+                                                className={`${errors.description ? 'border-danger text-danger' : ''}`}
+                                                invalid={!!errors.description}
+                                                {...register('description')}
                                             />
                                         </CInputGroup>
                                     </CCol>
@@ -400,28 +406,28 @@ const FormularioAdministrador = () => {
                                         <div className="flex-fill text-center">
                                             <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={handleSubmit(confirmRegister)} >
                                                 <UserPlus className="me-2" />
-                                                Crear Administrador
+                                                Crear Aula
                                             </CButton>
                                         </div>
 
                                         <div className="flex-fill text-center">
                                             <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={handleSubmit(confirmUpdate)}>
                                                 <UserRoundPen className="me-2" />
-                                                Actualizar Administrador
+                                                Actualizar Aula
                                             </CButton>
                                         </div>
 
                                         <div className="flex-fill text-center">
                                             <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={confirmEnable} >
                                                 <UserCheck className="me-2" />
-                                                Habilitar Administrador
+                                                Habilitar Aula
                                             </CButton>
                                         </div>
 
                                         <div className="flex-fill text-center">
                                             <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={confirmDisable}>
                                                 <UserX className="me-2" />
-                                                Deshabilitar Administrador
+                                                Deshabilitar Aula
                                             </CButton>
                                         </div>
 
@@ -443,4 +449,4 @@ const FormularioAdministrador = () => {
     )
 }
 
-export default FormularioAdministrador
+export default FormularioAula

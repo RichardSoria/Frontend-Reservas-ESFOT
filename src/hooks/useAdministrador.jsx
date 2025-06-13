@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { set } from '../store'
 
-const useAdministradores = () => {
+const useAdministrador = () => {
     const dispatch = useDispatch()
 
     const listarAdministradores = async () => {
@@ -18,8 +18,11 @@ const useAdministradores = () => {
         try {
             const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/admin/admins/${id}`, { withCredentials: true })
             dispatch(set({ userConsult: data }))
+            return data
         } catch (err) {
             console.error('Error al consultar administrador', err)
+            dispatch(set({ userConsult: null }))
+            return null
         }
     };
 
@@ -29,4 +32,4 @@ const useAdministradores = () => {
     }
 }
 
-export default useAdministradores
+export default useAdministrador

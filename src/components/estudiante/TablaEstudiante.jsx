@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import useDocente from '../../hooks/useDocente'
+import useEstudiante from '../../hooks/useEstudiante'
 import { set } from '../../store'
 import {
     CContainer,
@@ -13,20 +13,20 @@ import {
 import { Info } from 'lucide-react';
 
 
-const TablaDocente = ({ filtroCedula }) => {
+const TablaEstudiante = ({ filtroCedula }) => {
     const dispatch = useDispatch()
-    const { listarDocentes } = useDocente()
-    const { docentes = [] } = useSelector((state) => state)
+    const { listarEstudiantes } = useEstudiante()
+    const { estudiantes = [] } = useSelector((state) => state)
 
     const navigate = useNavigate()
 
     useEffect(() => {
-        listarDocentes()
+        listarEstudiantes()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const docentesFiltrados = docentes.filter((docente) =>
-        docente.cedula?.toLowerCase().includes(filtroCedula.toLowerCase())
+    const estudiantesFiltrados = estudiantes.filter((estudiante) =>
+        estudiante.cedula?.toLowerCase().includes(filtroCedula.toLowerCase())
     )
 
     return (
@@ -51,36 +51,36 @@ const TablaDocente = ({ filtroCedula }) => {
                                             <th>Correo</th>
                                             <th>Cédula</th>
                                             <th>Teléfono</th>
-                                            <th>Facultad</th>
+                                            <th>Período Académico</th>
                                             <th>Último Acceso</th>
                                             <th>Estado</th>
                                             <th>Detalles</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {docentesFiltrados.length === 0 ? (
+                                        {estudiantesFiltrados.length === 0 ? (
                                             <tr>
                                                 <td className='text-center' colSpan="9">
                                                     No se encontraron coincidencias
                                                 </td>
                                             </tr>
                                         ) : (
-                                            docentesFiltrados.map((docente) => (
+                                            estudiantesFiltrados.map((estudiante) => (
                                                 <tr
-                                                    key={docente._id}
-                                                    onClick={() => dispatch(set({ docenteSeleccionado: { ...docente } }))}
+                                                    key={estudiante._id}
+                                                    onClick={() => dispatch(set({ estudianteSeleccionado: { ...estudiante } }))}
                                                     style={{ cursor: 'pointer' }}
                                                     className="text-center"
                                                 >
-                                                    <td>{docente.name}</td>
-                                                    <td>{docente.lastName}</td>
-                                                    <td>{docente.email}</td>
-                                                    <td>{docente.cedula}</td>
-                                                    <td>{docente.phone}</td>
-                                                    <td>{docente.otherFaculty}</td>
+                                                    <td>{estudiante.name}</td>
+                                                    <td>{estudiante.lastName}</td>
+                                                    <td>{estudiante.email}</td>
+                                                    <td>{estudiante.cedula}</td>
+                                                    <td>{estudiante.phone}</td>
+                                                    <td>{estudiante.lastPeriod}</td>
                                                     <td>
-                                                        {docente.lastLogin
-                                                            ? new Date(docente.lastLogin).toLocaleString('es-EC', {
+                                                        {estudiante.lastLogin
+                                                            ? new Date(estudiante.lastLogin).toLocaleString('es-EC', {
                                                                 day: '2-digit',
                                                                 month: '2-digit',
                                                                 year: 'numeric',
@@ -91,7 +91,7 @@ const TablaDocente = ({ filtroCedula }) => {
                                                             : 'Sin registro'}
                                                     </td>
                                                     <td>
-                                                        {docente.status ? (
+                                                        {estudiante.status ? (
                                                             <span className="badge bg-success">Habilitado</span>
                                                         ) : (
                                                             <span className="badge bg-danger">Deshabilitado</span>
@@ -102,8 +102,8 @@ const TablaDocente = ({ filtroCedula }) => {
                                                             className="iconos-esfot rounded-circle border-0 bg-transparent justify-content-center align-items-center"
                                                             title="Ver detalles"
                                                             onClick={(e) => { 
-                                                                navigate(`/admin/docentes/${docente._id}`); e.stopPropagation();
-                                                                dispatch(set({ docenteSeleccionado: null }));
+                                                                navigate(`/admin/estudiantes/${estudiante._id}`); e.stopPropagation();
+                                                                dispatch(set({ estudianteSeleccionado: null }));
                                                             }}
                                                         >
                                                         <Info/>
@@ -123,4 +123,4 @@ const TablaDocente = ({ filtroCedula }) => {
     )
 }
 
-export default TablaDocente
+export default TablaEstudiante

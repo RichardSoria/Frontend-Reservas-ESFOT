@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
-import useDocente from '../../../hooks/useDocente'
+import useAula from '../../../hooks/useAula'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -15,18 +15,18 @@ import clsx from 'clsx'
 import { set } from '../../../store'
 import { ArrowBigLeft } from 'lucide-react';
 
-const VisualizarDocente = () => {
+const VisualizarAula = () => {
     const dispatch = useDispatch()
-    const { consultDocente } = useDocente()
+    const { consultAula } = useAula()
     const { userConsult } = useSelector((state) => state)
     const { id } = useParams()
     const navigate = useNavigate()
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await consultDocente(id)
+            const result = await consultAula(id)
             if (!result) {
-                navigate('/admin/docentes')
+                navigate('/admin/aulas')
             }
         }
         fetchData()
@@ -47,30 +47,31 @@ const VisualizarDocente = () => {
             : 'Sin registro'
     }
 
+    console.log('userConsult', userConsult)
 
     return (
         <CCard className="shadow-sm border-0">
             <CCardBody>
                 {/* Título */}
                 <div className="mb-3 ms-3 me-3">
-                    <h1 className="text-4xl textos-esfot ">Visualizar Docente</h1>
+                    <h1 className="text-4xl textos-esfot ">Visualizar Aula</h1>
                     <hr />
                     <CRow className="align-items-center">
                         <CCol md={9} className="mt-2">
                             <p className="text-muted">
-                                Este módulo permite visualizar a detalle los datos del Docente seleccionado.
+                                Este módulo permite visualizar a detalle los datos del Aula seleccionado.
                             </p>
                         </CCol>
                         <CCol md={3} className={clsx('text-md-end', 'text-center')}>
                             <CButton
                                 className="btn-esfot-form "
                                 onClick={() => {
-                                    navigate('/admin/docentes');
+                                    navigate('/admin/aulas');
                                     dispatch(set({ userConsult: null }));
                                 }}
                             >
                                 <ArrowBigLeft className="me-2" />
-                                Volver a Docentes
+                                Volver a Aulas
                             </CButton>
                         </CCol>
                     </CRow>
@@ -79,29 +80,24 @@ const VisualizarDocente = () => {
                 <CRow className="ms-3 me-3">
                     {/* Datos personales */}
                     <CCol md={3}>
-                        <h5 className="subtitulos-esfot mb-3">Datos Personales</h5>
+                        <h5 className="subtitulos-esfot mb-3">Datos del Aula</h5>
                         <p><strong>Nombre:</strong> {userConsult.name}</p>
-                        <p><strong>Apellido:</strong> {userConsult.lastName}</p>
-                        <p><strong>Cédula:</strong> {userConsult.cedula}</p>
-                        <p><strong>Correo:</strong> {userConsult.email}</p>
-                        <p><strong>Teléfono:</strong> {userConsult.phone}</p>
-                        <p><strong>Carrera:</strong> {userConsult.career}</p>
-                        <p><strong>Facultad:</strong> {userConsult.otherFaculty}</p>
+                        <p><strong>Código:</strong> {userConsult.codigo}</p>
+                        <p><strong>Capacidad:</strong> {userConsult.capacity} estudiantes</p>
+                        <p><strong>Tamaño:</strong> {userConsult.size}</p>
                     </CCol>
 
                     {/* Cuenta */}
                     <CCol md={3}>
-                        <h5 className="subtitulos-esfot mb-3">Información de Cuenta</h5>
+                        <h5 className="subtitulos-esfot mb-3">Información del Aula</h5>
                         <p>
                             <strong>Estado:</strong>{' '}
                             <CBadge color={userConsult.status ? 'success' : 'danger'}>
                                 {userConsult.status ? 'Habilitado' : 'Deshabilitado'}
                             </CBadge>
                         </p>
-                        <p><strong>Rol:</strong> {userConsult.rol ? 'Docente' : ''}</p>
-                        <p><strong>Último Acceso:</strong> {formatFecha(userConsult.lastLogin)}</p>
-                        <p><strong>Intentos fallidos:</strong> {userConsult.loginAttempts ?? 0}</p>
-                        <p><strong>Fecha de bloqueo:</strong> {formatFecha(userConsult.blockedDate)}</p>
+                        <p><strong>Descripción:</strong> {userConsult.description}</p>
+                        <p><strong>Número de reservaciones:</strong> {userConsult.numberReservations}</p>
                     </CCol>
 
                     {/* Fechas */}
@@ -116,10 +112,10 @@ const VisualizarDocente = () => {
                     {/* Responsables */}
                     <CCol md={3}>
                         <h5 className="subtitulos-esfot mb-3">Responsables</h5>
-                        <p><strong>Creado por:</strong> {userConsult.createFor ? `${userConsult.createFor.name} ${userConsult.createFor.lastName}` : 'Sin registro'}</p>
-                        <p><strong>Actualizado por:</strong> {userConsult.updateFor ? `${userConsult.updateFor.name} ${userConsult.updateFor.lastName}` : 'Sin registro'}</p>
-                        <p><strong>Habilitado por:</strong> {userConsult.enableFor ? `${userConsult.enableFor.name} ${userConsult.enableFor.lastName}` : 'Sin registro'}</p>
-                        <p><strong>Deshabilitado por:</strong> {userConsult.disableFor ? `${userConsult.disableFor.name} ${userConsult.disableFor.lastName}` : 'Sin registro'}</p>
+                        <p><strong>Creado por:</strong> {userConsult.createBy ? `${userConsult.createBy.name} ${userConsult.createBy.lastName}` : 'Sin registro'}</p>
+                        <p><strong>Actualizado por:</strong> {userConsult.updateBy ? `${userConsult.updateBy.name} ${userConsult.updateBy.lastName}` : 'Sin registro'}</p>
+                        <p><strong>Habilitado por:</strong> {userConsult.enableBy ? `${userConsult.enableBy.name} ${userConsult.enableBy.lastName}` : 'Sin registro'}</p>
+                        <p><strong>Deshabilitado por:</strong> {userConsult.disableBy ? `${userConsult.disableBy.name} ${userConsult.disableBy.lastName}` : 'Sin registro'}</p>
                     </CCol>
                 </CRow>
             </CCardBody>
@@ -127,4 +123,4 @@ const VisualizarDocente = () => {
     )
 }
 
-export default VisualizarDocente
+export default VisualizarAula

@@ -45,10 +45,9 @@ const AppBreadcrumb = () => {
           matchedRoute.path.includes(':') &&
           isLast &&
           userConsult &&
-          userConsult.name &&
-          userConsult.lastName
+          userConsult.name
         ) {
-          name = `${userConsult.name} ${userConsult.lastName}`
+          name = `${userConsult.name} ${userConsult.lastName || userConsult.codigo || ''}`;
         }
         breadcrumbs.push({
           pathname: currentPathname,

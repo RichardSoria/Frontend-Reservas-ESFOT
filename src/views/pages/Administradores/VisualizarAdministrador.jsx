@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
-import useAdministradores from '../../../hooks/useAdministradores'
+import useAdministrador from '../../../hooks/useAdministrador'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -17,14 +17,20 @@ import { ArrowBigLeft } from 'lucide-react';
 
 const VisualizarAdministrador = () => {
     const dispatch = useDispatch()
-    const { consultAdministrador } = useAdministradores()
+    const { consultAdministrador } = useAdministrador()
     const { userConsult } = useSelector((state) => state)
     const { id } = useParams()
     const navigate = useNavigate()
 
     useEffect(() => {
-        consultAdministrador(id)
-    }, [])
+        const fetchData = async () => {
+            const result = await consultAdministrador(id)
+            if (!result) {
+                navigate('/admin/administradores')
+            }
+        }
+        fetchData()
+    }, [id])
 
     if (!userConsult) return null
 
