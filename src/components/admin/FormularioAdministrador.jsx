@@ -19,7 +19,7 @@ import {
     Fingerprint,
     Smartphone,
     UserPlus,
-    UserRoundPen,
+    UserPen,
     UserCheck,
     UserX,
     Eraser,
@@ -48,6 +48,18 @@ const FormularioAdministrador = () => {
     const [isLoading, setIsLoading] = React.useState(false);
     const [isLoadingMessage, setIsLoadingMessage] = React.useState('Cargando...')
 
+    // Manejo de eventos para campos numéricos
+    const handleNumericKeyDown = (e) => {
+        const invalidChars = ['e', 'E', '+', '-', '.'];
+        const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'Home', 'End', 'ArrowLeft', 'ArrowRight'];
+
+        if (allowedKeys.includes(e.key)) return;
+        if (e.ctrlKey && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return;
+
+        if (invalidChars.includes(e.key) || !/^[0-9]$/.test(e.key)) {
+            e.preventDefault();
+        }
+    };
 
     // Configuración del formulario
 
@@ -80,7 +92,7 @@ const FormularioAdministrador = () => {
         }
         return true
     }
-    
+
     // Función para limpiar el formulario
 
     React.useEffect(() => {
@@ -92,7 +104,7 @@ const FormularioAdministrador = () => {
     React.useEffect(() => {
         if (administradorSeleccionado) {
             const { name, lastName, email, cedula, phone } = administradorSeleccionado
-            reset({ name, lastName, email, cedula, phone })
+            reset({ name, lastName, email, cedula: cedula != null ? String(cedula) : '', phone: phone != null ? String(phone) : '' })
         } else {
             reset(defaultAdminValues)
         }
@@ -357,9 +369,11 @@ const FormularioAdministrador = () => {
                                                 <Fingerprint className={`${errors.cedula ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
+                                                type='number'
                                                 placeholder={errors.cedula ? errors.cedula.message : "Cédula"}
                                                 className={`${errors.cedula ? 'border-danger text-danger' : ''}`}
                                                 invalid={!!errors.cedula}
+                                                onKeyDown={handleNumericKeyDown}
                                                 {...register('cedula')}
                                             />
                                         </CInputGroup>
@@ -372,9 +386,11 @@ const FormularioAdministrador = () => {
                                                 <Smartphone className={`${errors.phone ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
+                                                type='number'
                                                 placeholder={errors.phone ? errors.phone.message : "Teléfono"}
                                                 className={`${errors.phone ? 'border-danger text-danger' : ''}`}
                                                 invalid={!!errors.phone}
+                                                onKeyDown={handleNumericKeyDown}
                                                 {...register('phone')}
                                             />
                                         </CInputGroup>
@@ -406,7 +422,7 @@ const FormularioAdministrador = () => {
 
                                         <div className="flex-fill text-center">
                                             <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={handleSubmit(confirmUpdate)}>
-                                                <UserRoundPen className="me-2" />
+                                                <UserPen className="me-2" />
                                                 Actualizar Administrador
                                             </CButton>
                                         </div>

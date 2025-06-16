@@ -185,6 +185,26 @@ body {
   border-top: 3px !important;
 }
 
+/* Estilos personalizados para toggle buttons */
+.custom-toggle {
+  background-color: #0e4c71;
+  color: white;
+  border:#0e4c71;
+}
+
+.btn-check:checked+.custom-toggle {
+  background-color: #f8ad25 !important;
+  color: #000;
+  border-color: #f8ad25;
+}
+
+.custom-toggle:hover {
+  background-color: #e72f2b !important;
+  color: white !important;
+  border-color: #e72f2b;
+}
+
+
 .custom-input::placeholder {
   color: #6c757d;
   opacity: 1;

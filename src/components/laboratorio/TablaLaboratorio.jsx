@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import useAula from '../../hooks/useAula'
+import useLaboratorio from '../../hooks/useLaboratorio'
 import { set } from '../../store'
 import {
     CContainer,
@@ -13,20 +13,20 @@ import {
 import { Info } from 'lucide-react';
 
 
-const TablaAula = ({ filtroName }) => {
+const TablaLaboratorio = ({ filtroCodigo }) => {
     const dispatch = useDispatch()
-    const { listarAulas } = useAula()
-    const { aulas = [] } = useSelector((state) => state)
+    const { listarLaboratorios } = useLaboratorio()
+    const { laboratorios = [] } = useSelector((state) => state)
 
     const navigate = useNavigate()
 
     useEffect(() => {
-        listarAulas()
+        listarLaboratorios()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const aulasFiltrados = aulas.filter((aula) =>
-        aula.name?.toLowerCase().includes(filtroName.toLowerCase())
+    const laboratoriosFiltrados = laboratorios.filter((laboratorio) =>
+        laboratorio.codigo?.toLowerCase().includes(filtroCodigo.toLowerCase())
     )
 
     return (
@@ -47,34 +47,40 @@ const TablaAula = ({ filtroName }) => {
                                     <thead className="bg-esfot table-dark text-center">
                                         <tr>
                                             <th>Nombre</th>
+                                            <th>Código</th>
                                             <th>Capacidad</th>
-                                            <th>Descripción</th>
+                                            <th>Equipos PC</th>
+                                            <th>Equipos Proyector</th>
+                                            <th>Pantallas Interactivas</th>
                                             <th>N° de Reservas</th>
                                             <th>Estado</th>
                                             <th>Detalles</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {aulasFiltrados.length === 0 ? (
+                                        {laboratoriosFiltrados.length === 0 ? (
                                             <tr>
                                                 <td className='text-center' colSpan="6">
                                                     No se encontraron coincidencias
                                                 </td>
                                             </tr>
                                         ) : (
-                                            aulasFiltrados.map((aula) => (
+                                            laboratoriosFiltrados.map((laboratorio) => (
                                                 <tr
-                                                    key={aula._id}
-                                                    onClick={() => dispatch(set({ aulaSeleccionado: { ...aula } }))}
+                                                    key={laboratorio._id}
+                                                    onClick={() => dispatch(set({ laboratorioSeleccionado: { ...laboratorio } }))}
                                                     style={{ cursor: 'pointer' }}
                                                     className="text-center"
                                                 >
-                                                    <td>{aula.name}</td>
-                                                    <td>{aula.capacity}</td>
-                                                    <td>{aula.description}</td>
-                                                    <td>{aula.numberReservations}</td>
+                                                    <td>{laboratorio.name}</td>
+                                                    <td>{laboratorio.codigo}</td>
+                                                    <td>{laboratorio.capacity}</td>
+                                                    <td>{laboratorio.equipmentPC ? 'Equipado' : 'No equipado'}</td>
+                                                    <td>{laboratorio.equipmentProyector ? 'Equipado' : 'No equipado'}</td>
+                                                    <td>{laboratorio.equipmentInteractiveScreen ? 'Equipado' : 'No equipado'}</td>
+                                                    <td>{laboratorio.numberReservations}</td>
                                                     <td>
-                                                        {aula.status ? (
+                                                        {laboratorio.status ? (
                                                             <span className="badge bg-success">Habilitado</span>
                                                         ) : (
                                                             <span className="badge bg-danger">Deshabilitado</span>
@@ -85,8 +91,8 @@ const TablaAula = ({ filtroName }) => {
                                                             className="iconos-esfot rounded-circle border-0 bg-transparent justify-content-center align-items-center"
                                                             title="Ver detalles"
                                                             onClick={(e) => {
-                                                                navigate(`/admin/aulas/${aula._id}`); e.stopPropagation();
-                                                                dispatch(set({ aulaSeleccionado: null }));
+                                                                navigate(`/admin/laboratorios/${laboratorio._id}`); e.stopPropagation();
+                                                                dispatch(set({ laboratorioSeleccionado: null }));
                                                             }}
                                                         >
                                                             <Info />
@@ -106,4 +112,4 @@ const TablaAula = ({ filtroName }) => {
     )
 }
 
-export default TablaAula
+export default TablaLaboratorio

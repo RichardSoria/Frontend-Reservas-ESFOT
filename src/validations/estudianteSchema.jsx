@@ -1,27 +1,23 @@
 export const estudianteSchema = {
     type: 'object',
-    required: ['cedula', 'name', 'lastName', 'email', 'phone', 'career', 'lastPeriod'],
+    required: ['cedula', 'name', 'lastName', 'email', 'phone', 'career'],
     properties: {
         name: {
             type: 'string',
             minLength: 1,
-            maxLength: 20,
-            pattern: '^[a-zA-Z]+$',
+            pattern: '^[\\p{L}]{1,20}$',
             errorMessage: {
-                pattern: 'El nombre solo puede contener letras',
-                minLength: 'El campo de nombre es obligatorio',
-                maxLength: 'El nombre no puede tener más de 20 caracteres'
+                pattern: 'El nombre solo puede contener letras y tener hasta 20 caracteres',
+                minLength: 'El campo de nombre es obligatorio'
             }
         },
         lastName: {
             type: 'string',
             minLength: 1,
-            maxLength: 20,
-            pattern: '^[a-zA-Z]+$',
+            pattern: '^[\\p{L}]{1,20}$',
             errorMessage: {
-                pattern: 'El apellido solo puede contener letras',
-                minLength: 'El campo de apellido es obligatorio',
-                maxLength: 'El apellido no puede tener más de 20 caracteres'
+                pattern: 'El apellido solo puede contener letras y tener hasta 20 caracteres',
+                minLength: 'El campo de apellido es obligatorio'
             }
         },
         cedula: {
@@ -68,17 +64,6 @@ export const estudianteSchema = {
             errorMessage: {
                 enum: 'La carrera debe ser una de las opciones disponibles'
             }
-        },
-        lastPeriod: {
-            type: 'string',
-            minLength: 6,
-            maxLength: 6,
-            pattern: '^\\d{4}-(A|B)$',
-            errorMessage: {
-                minLength: 'El periodo debe tener 6 caracteres',
-                maxLength: 'El periodo no puede tener más de 6 caracteres',
-                pattern: 'El periodo debe tener el formato YYYY-A o YYYY-B'
-            }
         }
     },
     additionalProperties: false,
@@ -90,7 +75,6 @@ export const estudianteSchema = {
             phone: 'El teléfono es obligatorio',
             email: 'El correo es obligatorio',
             career: 'La carrera es obligatoria',
-            lastPeriod: 'El período es obligatorio'
         }
     }
 };

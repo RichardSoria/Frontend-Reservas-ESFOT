@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
-import useAdministrador from '../../../hooks/useAdministrador'
+import useLaboratorio from '../../../hooks/useLaboratorio'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -15,18 +15,18 @@ import clsx from 'clsx'
 import { set } from '../../../store'
 import { ArrowBigLeft } from 'lucide-react';
 
-const VisualizarAdministrador = () => {
+const VisualizarLaboratorio = () => {
     const dispatch = useDispatch()
-    const { consultAdministrador } = useAdministrador()
+    const { consultLaboratorio } = useLaboratorio()
     const { elementConsult } = useSelector((state) => state)
     const { id } = useParams()
     const navigate = useNavigate()
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await consultAdministrador(id)
+            const result = await consultLaboratorio(id)
             if (!result) {
-                navigate('/admin/administradores')
+                navigate('/admin/laboratorios')
             }
         }
         fetchData()
@@ -47,30 +47,29 @@ const VisualizarAdministrador = () => {
             : 'Sin registro'
     }
 
-
     return (
         <CCard className="shadow-sm border-0">
             <CCardBody>
                 {/* Título */}
                 <div className="mb-3 ms-3 me-3">
-                    <h1 className="text-4xl textos-esfot ">Visualizar Administrador</h1>
+                    <h1 className="text-4xl textos-esfot ">Visualizar Laboratorio</h1>
                     <hr />
                     <CRow className="align-items-center">
                         <CCol md={9} className="mt-2">
                             <p className="text-muted">
-                                Este módulo permite visualizar a detalle los datos del Administrador seleccionado.
+                                Este módulo permite visualizar a detalle los datos del Laboratorio seleccionado.
                             </p>
                         </CCol>
                         <CCol md={3} className={clsx('text-md-end', 'text-center')}>
                             <CButton
                                 className="btn-esfot-form "
                                 onClick={() => {
-                                    navigate('/admin/administradores');
+                                    navigate('/admin/laboratorios');
                                     dispatch(set({ elementConsult: null }));
                                 }}
                             >
                                 <ArrowBigLeft className="me-2" />
-                                Volver a Administradores
+                                Volver a Laboratorios
                             </CButton>
                         </CCol>
                     </CRow>
@@ -79,27 +78,34 @@ const VisualizarAdministrador = () => {
                 <CRow className="ms-3 me-3">
                     {/* Datos personales */}
                     <CCol md={3}>
-                        <h5 className="subtitulos-esfot mb-3">Datos Personales</h5>
+                        <h5 className="subtitulos-esfot mb-3">Datos del Laboratorio</h5>
                         <p><strong>Nombre:</strong> {elementConsult.name}</p>
-                        <p><strong>Apellido:</strong> {elementConsult.lastName}</p>
-                        <p><strong>Cédula:</strong> {elementConsult.cedula}</p>
-                        <p><strong>Correo:</strong> {elementConsult.email}</p>
-                        <p><strong>Teléfono:</strong> {elementConsult.phone}</p>
+                        <p><strong>Código:</strong> {elementConsult.codigo}</p>
+                        <p><strong>Capacidad:</strong> {elementConsult.capacity} estudiantes</p>
+                        <p><strong>Descripción:</strong> {elementConsult.description}</p>
                     </CCol>
 
-                    {/* Cuenta */}
                     <CCol md={3}>
-                        <h5 className="subtitulos-esfot mb-3">Información de Cuenta</h5>
+                        <h5 className="subtitulos-esfot mb-3">Información del Laboratorio</h5>
                         <p>
                             <strong>Estado:</strong>{' '}
                             <CBadge color={elementConsult.status ? 'success' : 'danger'}>
                                 {elementConsult.status ? 'Habilitado' : 'Deshabilitado'}
                             </CBadge>
                         </p>
-                        <p><strong>Rol:</strong> {elementConsult.rol ? 'Administrador' : ''}</p>
-                        <p><strong>Último Acceso:</strong> {formatFecha(elementConsult.lastLogin)}</p>
-                        <p><strong>Intentos fallidos:</strong> {elementConsult.loginAttempts ?? 0}</p>
-                        <p><strong>Fecha de bloqueo:</strong> {formatFecha(elementConsult.blockedDate)}</p>
+                        <p>
+                            <strong>Equipo PC:</strong>{' '}
+                            {elementConsult.equipmentPC ? 'Equipado' : 'No equipado'}
+                        </p>
+                        <p>
+                            <strong>Proyector:</strong>{' '}
+                            {elementConsult.equipmentProyector ? 'Equipado' : 'No equipado'}
+                        </p>
+                        <p>
+                            <strong>Pantalla Interactiva:</strong>{' '}
+                            {elementConsult.equipmentInteractiveScreen ? 'Equipado' : 'No equipado'}
+                        </p>
+                        <p><strong>N° de reservaciones:</strong> {elementConsult.numberReservations}</p>
                     </CCol>
 
                     {/* Fechas */}
@@ -114,10 +120,10 @@ const VisualizarAdministrador = () => {
                     {/* Responsables */}
                     <CCol md={3}>
                         <h5 className="subtitulos-esfot mb-3">Responsables</h5>
-                        <p><strong>Creado por:</strong> {elementConsult.createFor ? `${elementConsult.createFor.name} ${elementConsult.createFor.lastName}` : 'Sin registro'}</p>
-                        <p><strong>Actualizado por:</strong> {elementConsult.updateFor ? `${elementConsult.updateFor.name} ${elementConsult.updateFor.lastName}` : 'Sin registro'}</p>
-                        <p><strong>Habilitado por:</strong> {elementConsult.enableFor ? `${elementConsult.enableFor.name} ${elementConsult.enableFor.lastName}` : 'Sin registro'}</p>
-                        <p><strong>Deshabilitado por:</strong> {elementConsult.disableFor ? `${elementConsult.disableFor.name} ${elementConsult.disableFor.lastName}` : 'Sin registro'}</p>
+                        <p><strong>Creado por:</strong> {elementConsult.createBy ? `${elementConsult.createBy.name} ${elementConsult.createBy.lastName}` : 'Sin registro'}</p>
+                        <p><strong>Actualizado por:</strong> {elementConsult.updateBy ? `${elementConsult.updateBy.name} ${elementConsult.updateBy.lastName}` : 'Sin registro'}</p>
+                        <p><strong>Habilitado por:</strong> {elementConsult.enableBy ? `${elementConsult.enableBy.name} ${elementConsult.enableBy.lastName}` : 'Sin registro'}</p>
+                        <p><strong>Deshabilitado por:</strong> {elementConsult.disableBy ? `${elementConsult.disableBy.name} ${elementConsult.disableBy.lastName}` : 'Sin registro'}</p>
                     </CCol>
                 </CRow>
             </CCardBody>
@@ -125,4 +131,4 @@ const VisualizarAdministrador = () => {
     )
 }
 
-export default VisualizarAdministrador
+export default VisualizarLaboratorio

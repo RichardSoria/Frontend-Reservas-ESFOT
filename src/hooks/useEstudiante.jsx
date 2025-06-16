@@ -17,11 +17,11 @@ const useEstudiante = () => {
     const consultEstudiante = async (id) => {
         try {
             const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/estudiante/estudiantes/${id}`, { withCredentials: true })
-            dispatch(set({ userConsult: data }))
+            dispatch(set({ elementConsult: data }))
             return data
         } catch (err) {
             console.error('Error al consultar estudiantes', err)
-            dispatch(set({ userConsult: null }))
+            dispatch(set({ elementConsult: null }))
             return null
         }
     };

@@ -51,7 +51,6 @@ const TablaEstudiante = ({ filtroCedula }) => {
                                             <th>Correo</th>
                                             <th>Cédula</th>
                                             <th>Teléfono</th>
-                                            <th>Período Académico</th>
                                             <th>Último Acceso</th>
                                             <th>Estado</th>
                                             <th>Detalles</th>
@@ -77,7 +76,6 @@ const TablaEstudiante = ({ filtroCedula }) => {
                                                     <td>{estudiante.email}</td>
                                                     <td>{estudiante.cedula}</td>
                                                     <td>{estudiante.phone}</td>
-                                                    <td>{estudiante.lastPeriod}</td>
                                                     <td>
                                                         {estudiante.lastLogin
                                                             ? new Date(estudiante.lastLogin).toLocaleString('es-EC', {

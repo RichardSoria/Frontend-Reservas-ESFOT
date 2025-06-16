@@ -18,7 +18,7 @@ import { ArrowBigLeft } from 'lucide-react';
 const VisualizarAula = () => {
     const dispatch = useDispatch()
     const { consultAula } = useAula()
-    const { userConsult } = useSelector((state) => state)
+    const { elementConsult } = useSelector((state) => state)
     const { id } = useParams()
     const navigate = useNavigate()
 
@@ -32,7 +32,7 @@ const VisualizarAula = () => {
         fetchData()
     }, [id])
 
-    if (!userConsult) return null
+    if (!elementConsult) return null
 
     const formatFecha = (fecha) => {
         return fecha
@@ -46,8 +46,6 @@ const VisualizarAula = () => {
             }).replace(',', '')
             : 'Sin registro'
     }
-
-    console.log('userConsult', userConsult)
 
     return (
         <CCard className="shadow-sm border-0">
@@ -67,7 +65,7 @@ const VisualizarAula = () => {
                                 className="btn-esfot-form "
                                 onClick={() => {
                                     navigate('/admin/aulas');
-                                    dispatch(set({ userConsult: null }));
+                                    dispatch(set({ elementConsult: null }));
                                 }}
                             >
                                 <ArrowBigLeft className="me-2" />
@@ -81,10 +79,9 @@ const VisualizarAula = () => {
                     {/* Datos personales */}
                     <CCol md={3}>
                         <h5 className="subtitulos-esfot mb-3">Datos del Aula</h5>
-                        <p><strong>Nombre:</strong> {userConsult.name}</p>
-                        <p><strong>Código:</strong> {userConsult.codigo}</p>
-                        <p><strong>Capacidad:</strong> {userConsult.capacity} estudiantes</p>
-                        <p><strong>Tamaño:</strong> {userConsult.size}</p>
+                        <p><strong>Nombre:</strong> {elementConsult.name}</p>
+                        <p><strong>Capacidad:</strong> {elementConsult.capacity} estudiantes</p>
+                        <p><strong>Descripción:</strong> {elementConsult.description}</p>
                     </CCol>
 
                     {/* Cuenta */}
@@ -92,30 +89,29 @@ const VisualizarAula = () => {
                         <h5 className="subtitulos-esfot mb-3">Información del Aula</h5>
                         <p>
                             <strong>Estado:</strong>{' '}
-                            <CBadge color={userConsult.status ? 'success' : 'danger'}>
-                                {userConsult.status ? 'Habilitado' : 'Deshabilitado'}
+                            <CBadge color={elementConsult.status ? 'success' : 'danger'}>
+                                {elementConsult.status ? 'Habilitado' : 'Deshabilitado'}
                             </CBadge>
                         </p>
-                        <p><strong>Descripción:</strong> {userConsult.description}</p>
-                        <p><strong>Número de reservaciones:</strong> {userConsult.numberReservations}</p>
+                        <p><strong>N° de reservaciones:</strong> {elementConsult.numberReservations}</p>
                     </CCol>
 
                     {/* Fechas */}
                     <CCol md={3}>
                         <h5 className="subtitulos-esfot mb-3">Fechas de Registro</h5>
-                        <p><strong>Creación:</strong> {formatFecha(userConsult.createdDate)}</p>
-                        <p><strong>Actualización:</strong> {formatFecha(userConsult.updatedDate)}</p>
-                        <p><strong>Habilitación:</strong> {formatFecha(userConsult.enableDate)}</p>
-                        <p><strong>Deshabilitación:</strong> {formatFecha(userConsult.disableDate)}</p>
+                        <p><strong>Creación:</strong> {formatFecha(elementConsult.createdDate)}</p>
+                        <p><strong>Actualización:</strong> {formatFecha(elementConsult.updatedDate)}</p>
+                        <p><strong>Habilitación:</strong> {formatFecha(elementConsult.enableDate)}</p>
+                        <p><strong>Deshabilitación:</strong> {formatFecha(elementConsult.disableDate)}</p>
                     </CCol>
 
                     {/* Responsables */}
                     <CCol md={3}>
                         <h5 className="subtitulos-esfot mb-3">Responsables</h5>
-                        <p><strong>Creado por:</strong> {userConsult.createBy ? `${userConsult.createBy.name} ${userConsult.createBy.lastName}` : 'Sin registro'}</p>
-                        <p><strong>Actualizado por:</strong> {userConsult.updateBy ? `${userConsult.updateBy.name} ${userConsult.updateBy.lastName}` : 'Sin registro'}</p>
-                        <p><strong>Habilitado por:</strong> {userConsult.enableBy ? `${userConsult.enableBy.name} ${userConsult.enableBy.lastName}` : 'Sin registro'}</p>
-                        <p><strong>Deshabilitado por:</strong> {userConsult.disableBy ? `${userConsult.disableBy.name} ${userConsult.disableBy.lastName}` : 'Sin registro'}</p>
+                        <p><strong>Creado por:</strong> {elementConsult.createBy ? `${elementConsult.createBy.name} ${elementConsult.createBy.lastName}` : 'Sin registro'}</p>
+                        <p><strong>Actualizado por:</strong> {elementConsult.updateBy ? `${elementConsult.updateBy.name} ${elementConsult.updateBy.lastName}` : 'Sin registro'}</p>
+                        <p><strong>Habilitado por:</strong> {elementConsult.enableBy ? `${elementConsult.enableBy.name} ${elementConsult.enableBy.lastName}` : 'Sin registro'}</p>
+                        <p><strong>Deshabilitado por:</strong> {elementConsult.disableBy ? `${elementConsult.disableBy.name} ${elementConsult.disableBy.lastName}` : 'Sin registro'}</p>
                     </CCol>
                 </CRow>
             </CCardBody>

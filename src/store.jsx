@@ -6,7 +6,9 @@ const initialState = {
   administradorSeleccionado: null,
   docenteSeleccionado: null,
   estudianteSeleccionado: null,
-  userConsult: null,
+  aulaSeleccionada: null,
+  laboratorioSeleccionado: null,
+  elementConsult: null,
 }
 
 const changeState = (state = initialState, { type, ...rest }) => {
@@ -19,7 +21,7 @@ const changeState = (state = initialState, { type, ...rest }) => {
         administradorSeleccionado: null,
         docenteSeleccionado: null,
         estudianteSeleccionado: null,
-        userConsult: null,
+        elementConsult: null,
       }
     default:
       return state

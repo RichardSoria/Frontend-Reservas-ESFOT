@@ -10,9 +10,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { set } from '../../store'
 import { limpiarSeleccionados } from '../../store'
-import { aulaSchema } from '../../validations/aulaSchema'
+import { laboratorioSchema } from '../../validations/laboratorioSchema'
 import { CButton, CCard, CCardBody, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow } from '@coreui/react'
 import {
+    ALargeSmall,
     Barcode,
     Ratio,
     FileType,
@@ -20,9 +21,9 @@ import {
     FilePen,
     FileCheck2,
     FileX2,
-    Eraser,
+    Eraser, Monitor, Video, Presentation
 } from 'lucide-react'
-import useAula from '../../hooks/useAula'
+import useLaboratorio from '../../hooks/useLaboratorio'
 import { ConfirmModal } from '../modals/ConfirmModal'
 import { LoadingModal } from '../modals/LoadingModal'
 
@@ -30,16 +31,16 @@ import { LoadingModal } from '../modals/LoadingModal'
 const ajv = new Ajv({ allErrors: true })
 addFormats(ajv)
 ajvErrors(ajv)
-const validate = ajv.compile(aulaSchema)
+const validate = ajv.compile(laboratorioSchema)
 
 
-const FormularioAula = () => {
+const FormularioLaboratorio = () => {
 
     // Hooks y estados
 
     const dispatch = useDispatch()
-    const { aulaSeleccionado } = useSelector(state => state)
-    const { listarAulas } = useAula()
+    const { laboratorioSeleccionado } = useSelector(state => state)
+    const { listarLaboratorios } = useLaboratorio()
     const [confirmVisible, setConfirmVisible] = React.useState(false)
     const [pendingAction, setPendingAction] = React.useState(null)
     const [operation, setOperation] = React.useState('')
@@ -66,28 +67,65 @@ const FormularioAula = () => {
         formState: { errors }
     } = useForm()
 
-    const fullNameForm = `${watch('name') || ''}`.trim()
-    const fullNameAula = `${aulaSeleccionado?.name || ''}`.trim()
+    const fullNameForm = `${watch('name') || ''} ${watch('codigo') || ''}`.trim()
+    const fullNameLaboratorio = `${laboratorioSeleccionado?.name || ''} ${laboratorioSeleccionado?.codigo || ''}`.trim()
 
-    const defaultAulaValues = {
+    const defaultLaboratorioValues = {
         name: '',
+        codigo: '',
         description: '',
         capacity: '',
+        equipmentPC: null,
+        equipmentProyector: null,
+        equipmentInteractiveScreen: null,
     }
+
+    const equipmentPC = watch('equipmentPC')
+    const equipmentProyector = watch('equipmentProyector')
+    const equipmentInteractiveScreen = watch('equipmentInteractiveScreen')
 
     // Validación de errores
 
     const validateForm = (data) => {
+        
+        let validacionExitosa = true
+
+        // Validación: al menos un equipo seleccionado
+        const algunoSeleccionado =
+            data.equipmentPC || data.equipmentProyector || data.equipmentInteractiveScreen
+
+        if (!algunoSeleccionado) {
+            setError('equipmentPC', {
+                type: 'manual',
+                message: 'Debe seleccionar al menos un equipo',
+            })
+            validacionExitosa = false
+        } else {
+            // Forzar los valores booleanos explícitos
+            data.equipmentPC = Boolean(data.equipmentPC)
+            data.equipmentProyector = Boolean(data.equipmentProyector)
+            data.equipmentInteractiveScreen = Boolean(data.equipmentInteractiveScreen)
+        }
+        
         const valid = validate(data)
         if (!valid) {
             validate.errors.forEach(err => {
                 const field = err.instancePath.replace('/', '')
-                setError(field, { type: 'manual', message: err.message })
+
+                // Evita duplicar el error de los checkboxes si ya lo manejamos arriba
+                if (
+                    !(field === 'equipmentPC' || field === 'equipmentProyector' || field === 'equipmentInteractiveScreen') ||
+                    algunoSeleccionado
+                ) {
+                    setError(field, { type: 'manual', message: err.message })
+                }
             })
-            return false
+            validacionExitosa = false
         }
-        return true
+
+        return validacionExitosa
     }
+
 
     // Función para limpiar el formulario
 
@@ -98,13 +136,13 @@ const FormularioAula = () => {
     // Cargar datos del administrador seleccionado al formulario
 
     React.useEffect(() => {
-        if (aulaSeleccionado) {
-            const { name, description, capacity } = aulaSeleccionado
-            reset({ name, description, capacity: capacity != null ? String(capacity) : '' })
+        if (laboratorioSeleccionado) {
+            const { name, codigo, description, capacity, equipmentPC, equipmentProyector, equipmentInteractiveScreen } = laboratorioSeleccionado
+            reset({ name, codigo, description, capacity: capacity != null ? String(capacity) : '', equipmentPC, equipmentProyector, equipmentInteractiveScreen })
         } else {
-            reset(defaultAulaValues)
+            reset(defaultLaboratorioValues)
         }
-    }, [aulaSeleccionado, reset])
+    }, [laboratorioSeleccionado, reset])
 
     // Mostrar errores de validación
 
@@ -141,22 +179,22 @@ const FormularioAula = () => {
         }
 
         try {
-            setIsLoadingMessage('Creando aula...')
+            setIsLoadingMessage('Creando laboratorio...')
             setIsLoading(true)
-            await axios.post(`${import.meta.env.VITE_API_URL}/aula/create`, data, { withCredentials: true })
-            await listarAulas()
-            toast.success('Aula registrado con éxito!')
+            await axios.post(`${import.meta.env.VITE_API_URL}/laboratorio/create`, data, { withCredentials: true })
+            await listarLaboratorios()
+            toast.success('Laboratorio registrado con éxito!')
             resetForm()
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Error al registrar aula', { autoClose: 5000 })
+            toast.error(err.response?.data?.message || 'Error al registrar laboratorio', { autoClose: 5000 })
         } finally {
             setIsLoading(false)
         }
     }
 
     const onSubmitUpdate = async (data) => {
-        if (!aulaSeleccionado) {
-            toast.error('Debe seleccionar un aula para actualizar', { autoClose: 4000 })
+        if (!laboratorioSeleccionado) {
+            toast.error('Debe seleccionar un laboratorio para actualizar', { autoClose: 4000 })
             return
         }
         if (!validateForm(data)) {
@@ -164,68 +202,68 @@ const FormularioAula = () => {
         }
 
         try {
-            setIsLoadingMessage('Actualizando aula...')
+            setIsLoadingMessage('Actualizando laboratorio...')
             setIsLoading(true)
-            await axios.put(`${import.meta.env.VITE_API_URL}/aula/update/${aulaSeleccionado._id}`, data, { withCredentials: true })
-            await listarAulas()
-            toast.success('Aula actualizado con éxito!')
+            await axios.put(`${import.meta.env.VITE_API_URL}/laboratorio/update/${laboratorioSeleccionado._id}`, data, { withCredentials: true })
+            await listarLaboratorios()
+            toast.success('Laboratorio actualizado con éxito!')
             resetForm()
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Error al actualizar Aula', { autoClose: 5000 })
+            toast.error(err.response?.data?.message || 'Error al actualizar Laboratorio', { autoClose: 5000 })
         } finally {
             setIsLoading(false)
         }
     }
 
     const onSubmitEnable = async () => {
-        if (!aulaSeleccionado) {
-            toast.error('Debe seleccionar un aula para habilitar', { autoClose: 4000 })
+        if (!laboratorioSeleccionado) {
+            toast.error('Debe seleccionar un laboratorio para habilitar', { autoClose: 4000 })
             return
         }
-        if (aulaSeleccionado.status) {
-            toast.error('El aula ya está habilitado', { autoClose: 4000 })
+        if (laboratorioSeleccionado.status) {
+            toast.error('El laboratorio ya está habilitado', { autoClose: 4000 })
             return
         }
         try {
-            setIsLoadingMessage('Habilitando aula...')
+            setIsLoadingMessage('Habilitando laboratorio...')
             setIsLoading(true)
-            await axios.put(`${import.meta.env.VITE_API_URL}/aula/enable/${aulaSeleccionado._id}`, {}, { withCredentials: true })
-            await listarAulas()
-            toast.success('Aula habilitado con éxito!')
+            await axios.put(`${import.meta.env.VITE_API_URL}/laboratorio/enable/${laboratorioSeleccionado._id}`, {}, { withCredentials: true })
+            await listarLaboratorios()
+            toast.success('Laboratorio habilitado con éxito!')
             resetForm()
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Error al habilitar aula', { autoClose: 5000 })
+            toast.error(err.response?.data?.message || 'Error al habilitar laboratorio', { autoClose: 5000 })
         } finally {
             setIsLoading(false)
         }
     }
 
     const onSubmitDisable = async () => {
-        if (!aulaSeleccionado) {
-            toast.error('Debe seleccionar un aula para deshabilitar', { autoClose: 4000 })
+        if (!laboratorioSeleccionado) {
+            toast.error('Debe seleccionar un laboratorio para deshabilitar', { autoClose: 4000 })
             return
         }
-        if (!aulaSeleccionado.status) {
-            toast.error('El aula ya está deshabilitado', { autoClose: 4000 })
+        if (!laboratorioSeleccionado.status) {
+            toast.error('El laboratorio ya está deshabilitado', { autoClose: 4000 })
             return
         }
         try {
-            setIsLoadingMessage('Deshabilitando aula...')
+            setIsLoadingMessage('Deshabilitando laboratorio...')
             setIsLoading(true)
-            await axios.put(`${import.meta.env.VITE_API_URL}/aula/disable/${aulaSeleccionado._id}`, {}, { withCredentials: true })
-            await listarAulas()
-            toast.success('Aula deshabilitado con éxito!')
+            await axios.put(`${import.meta.env.VITE_API_URL}/laboratorio/disable/${laboratorioSeleccionado._id}`, {}, { withCredentials: true })
+            await listarLaboratorios()
+            toast.success('Laboratorio deshabilitado con éxito!')
             resetForm()
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Error al deshabilitar aula', { autoClose: 5000 })
+            toast.error(err.response?.data?.message || 'Error al deshabilitar laboratorio', { autoClose: 5000 })
         } finally {
             setIsLoading(false)
         }
     }
 
     const resetForm = () => {
-        reset(defaultAulaValues)
-        dispatch(set({ aulaSeleccionado: null }))
+        reset(defaultLaboratorioValues)
+        dispatch(set({ laboratorioSeleccionado: null }))
     }
 
     // Texto del modal de confirmación
@@ -234,23 +272,23 @@ const FormularioAula = () => {
         switch (operation) {
             case 'create':
                 return {
-                    title: 'Registrar Aula',
-                    message: `¿Deseas registrar al nuevo aula ${fullNameForm}?`
+                    title: 'Registrar Laboratorio',
+                    message: `¿Deseas registrar al nuevo laboratorio ${fullNameForm}?`
                 };
             case 'update':
                 return {
-                    title: 'Actualizar Aula',
-                    message: `¿Deseas actualizar la información del aula ${fullNameAula}?`
+                    title: 'Actualizar Laboratorio',
+                    message: `¿Deseas actualizar la información del laboratorio ${fullNameLaboratorio}?`
                 };
             case 'enable':
                 return {
-                    title: 'Habilitar Aula',
-                    message: `¿Deseas habilitar al aula ${fullNameAula}?`
+                    title: 'Habilitar Laboratorio',
+                    message: `¿Deseas habilitar al laboratorio ${fullNameLaboratorio}?`
                 };
             case 'disable':
                 return {
-                    title: 'Deshabilitar Aula',
-                    message: `¿Deseas deshabilitar al aula ${fullNameAula}?`
+                    title: 'Deshabilitar Laboratorio',
+                    message: `¿Deseas deshabilitar al laboratorio ${fullNameLaboratorio}?`
                 };
             default:
                 return {
@@ -272,8 +310,8 @@ const FormularioAula = () => {
     }
 
     const confirmUpdate = (data) => {
-        if (!aulaSeleccionado) {
-            toast.error('Debe seleccionar un aula para actualizar', { autoClose: 4000 })
+        if (!laboratorioSeleccionado) {
+            toast.error('Debe seleccionar un laboratorio para actualizar', { autoClose: 4000 })
             return
         }
         if (!validateForm(data)) {
@@ -283,23 +321,23 @@ const FormularioAula = () => {
     }
 
     const confirmEnable = () => {
-        if (!aulaSeleccionado) {
-            toast.error('Debe seleccionar un aula para habilitar', { autoClose: 4000 })
+        if (!laboratorioSeleccionado) {
+            toast.error('Debe seleccionar un laboratorio para habilitar', { autoClose: 4000 })
             return
         }
-        if (aulaSeleccionado.status) {
-            toast.error('El aula ya está habilitado', { autoClose: 4000 })
+        if (laboratorioSeleccionado.status) {
+            toast.error('El laboratorio ya está habilitado', { autoClose: 4000 })
             return
         }
         showConfirm('enable', onSubmitEnable)
     }
     const confirmDisable = () => {
-        if (!aulaSeleccionado) {
-            toast.error('Debe seleccionar un aula para deshabilitar', { autoClose: 4000 })
+        if (!laboratorioSeleccionado) {
+            toast.error('Debe seleccionar un laboratorio para deshabilitar', { autoClose: 4000 })
             return
         }
-        if (!aulaSeleccionado.status) {
-            toast.error('El aula ya está deshabilitado', { autoClose: 4000 })
+        if (!laboratorioSeleccionado.status) {
+            toast.error('El laboratorio ya está deshabilitado', { autoClose: 4000 })
             return
         }
         showConfirm('disable', onSubmitDisable)
@@ -314,10 +352,10 @@ const FormularioAula = () => {
                             <CCardBody>
                                 <CForm className="row g-3">
                                     {/* Nombre */}
-                                    <CCol md={6}>
+                                    <CCol md={3}>
                                         <CInputGroup className={`${errors.name ? 'is-invalid' : ''}`}>
                                             <CInputGroupText className={`${errors.name ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                                <Barcode className={`${errors.name ? 'text-white' : ''}`} />
+                                                <ALargeSmall className={`${errors.name ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
                                                 placeholder={errors.name ? errors.name.message : "Nombre"}
@@ -328,8 +366,23 @@ const FormularioAula = () => {
                                         </CInputGroup>
                                     </CCol>
 
+                                    {/* Código */}
+                                    <CCol md={3}>
+                                        <CInputGroup className={`${errors.codigo ? 'is-invalid' : ''}`}>
+                                            <CInputGroupText className={`${errors.codigo ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
+                                                <Barcode className={`${errors.codigo ? 'text-white' : ''}`} />
+                                            </CInputGroupText>
+                                            <CFormInput
+                                                placeholder={errors.codigo ? errors.codigo.message : "Código"}
+                                                className={`${errors.codigo ? 'border-danger text-danger' : ''}`}
+                                                invalid={!!errors.codigo}
+                                                {...register('codigo')}
+                                            />
+                                        </CInputGroup>
+                                    </CCol>
+
                                     {/* Capacidad */}
-                                    <CCol md={6}>
+                                    <CCol md={2}>
                                         <CInputGroup className={`${errors.capacity ? 'is-invalid' : ''}`}>
                                             <CInputGroupText className={`${errors.capacity ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
                                                 <Ratio className={`${errors.capacity ? 'text-white' : ''}`} />
@@ -343,6 +396,62 @@ const FormularioAula = () => {
                                                 {...register('capacity')}
                                             />
                                         </CInputGroup>
+                                    </CCol>
+
+                                    {/* Equipos */}
+                                    <CCol md={4}>
+                                        <div className="btn-group w-100" role="group" aria-label="Equipos">
+                                            {/* PC */}
+                                            <input
+                                                type="checkbox"
+                                                className="btn-check"
+                                                id="equipmentPC"
+                                                autoComplete="off"
+                                                {...register('equipmentPC')}
+                                                defaultChecked={equipmentPC}
+                                            />
+                                            <label
+                                                className="btn custom-toggle"
+                                                htmlFor="equipmentPC"
+                                            >
+                                                <Monitor className={`${errors.equipmentPC ? 'text-white' : ''} me-1`} />
+                                                PC
+                                            </label>
+
+                                            {/* Proyector */}
+                                            <input
+                                                type="checkbox"
+                                                className="btn-check"
+                                                id="equipmentProyector"
+                                                autoComplete="off"
+                                                {...register('equipmentProyector')}
+                                                defaultChecked={equipmentProyector}
+                                            />
+                                            <label
+                                                className="btn custom-toggle"
+                                                htmlFor="equipmentProyector"
+                                            >
+                                                <Video className={`${errors.equipmentProyector ? 'text-white' : ''} me-1`} />
+                                                Proyector
+                                            </label>
+
+                                            {/* Pantalla Interactiva */}
+                                            <input
+                                                type="checkbox"
+                                                className="btn-check"
+                                                id="equipmentInteractiveScreen"
+                                                autoComplete="off"
+                                                {...register('equipmentInteractiveScreen')}
+                                                defaultChecked={equipmentInteractiveScreen}
+                                            />
+                                            <label
+                                                className="btn custom-toggle"
+                                                htmlFor="equipmentInteractiveScreen"
+                                            >
+                                                <Presentation className={`${errors.equipmentInteractiveScreen ? 'text-white' : ''} me-1`} />
+                                                Pantalla Interactiva
+                                            </label>
+                                        </div>
                                     </CCol>
 
                                     {/* Descripción */}
@@ -380,28 +489,28 @@ const FormularioAula = () => {
                                         <div className="flex-fill text-center">
                                             <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={handleSubmit(confirmRegister)} >
                                                 <FilePlus2 className="me-2" />
-                                                Crear Aula
+                                                Crear Laboratorio
                                             </CButton>
                                         </div>
 
                                         <div className="flex-fill text-center">
                                             <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={handleSubmit(confirmUpdate)}>
                                                 <FilePen className="me-2" />
-                                                Actualizar Aula
+                                                Actualizar Laboratorio
                                             </CButton>
                                         </div>
 
                                         <div className="flex-fill text-center">
                                             <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={confirmEnable} >
                                                 <FileCheck2 className="me-2" />
-                                                Habilitar Aula
+                                                Habilitar Laboratorio
                                             </CButton>
                                         </div>
 
                                         <div className="flex-fill text-center">
                                             <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={confirmDisable}>
                                                 <FileX2 className="me-2" />
-                                                Deshabilitar Aula
+                                                Deshabilitar Laboratorio
                                             </CButton>
                                         </div>
 
@@ -423,4 +532,4 @@ const FormularioAula = () => {
     )
 }
 
-export default FormularioAula
+export default FormularioLaboratorio

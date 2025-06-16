@@ -21,7 +21,7 @@ import {
     GraduationCap,
     CalendarClock,
     UserPlus,
-    UserRoundPen,
+    UserPen,
     UserCheck,
     UserX,
     Eraser,
@@ -50,11 +50,24 @@ const FormularioEstudiante = () => {
     const [isLoading, setIsLoading] = React.useState(false);
     const [isLoadingMessage, setIsLoadingMessage] = React.useState('Cargando...')
 
+    // Manejadores de eventos para evitar caracteres no numéricos en campos específicos
+    const handleNumericKeyDown = (e) => {
+        const invalidChars = ['e', 'E', '+', '-', '.'];
+        const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'Home', 'End', 'ArrowLeft', 'ArrowRight'];
+
+        if (allowedKeys.includes(e.key)) return;
+        if (e.ctrlKey && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return;
+
+        if (invalidChars.includes(e.key) || !/^[0-9]$/.test(e.key)) {
+            e.preventDefault();
+        }
+    };
+
 
     // Configuración del formulario
 
     const {
-        register, handleSubmit, setError, reset, setValue, watch,
+        register, handleSubmit, setError, reset, watch,
         formState: { errors }
     } = useForm()
 
@@ -67,8 +80,7 @@ const FormularioEstudiante = () => {
         email: '',
         cedula: '',
         phone: '',
-        career: '',
-        lastPeriod: ''
+        career: ''
     }
 
     // Validación de errores
@@ -95,8 +107,8 @@ const FormularioEstudiante = () => {
 
     React.useEffect(() => {
         if (estudianteSeleccionado) {
-            const { name, lastName, email, cedula, phone, career, lastPeriod } = estudianteSeleccionado
-            reset({ name, lastName, email, cedula, phone, career, lastPeriod })
+            const { name, lastName, email, cedula, phone, career } = estudianteSeleccionado
+            reset({ name, lastName, email, cedula, phone, career })
         } else {
             reset(defaultEstudianteValues)
         }
@@ -310,7 +322,7 @@ const FormularioEstudiante = () => {
                             <CCardBody>
                                 <CForm className="row g-3">
                                     {/* Nombre */}
-                                    <CCol md={3}>
+                                    <CCol md={4}>
                                         <CInputGroup className={`${errors.name ? 'is-invalid' : ''}`}>
                                             <CInputGroupText className={`${errors.name ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
                                                 <FileUser className={`${errors.name ? 'text-white' : ''}`} />
@@ -325,7 +337,7 @@ const FormularioEstudiante = () => {
                                     </CCol>
 
                                     {/* Apellido */}
-                                    <CCol md={3}>
+                                    <CCol md={4}>
                                         <CInputGroup className={`${errors.lastName ? 'is-invalid' : ''}`}>
                                             <CInputGroupText className={`${errors.lastName ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
                                                 <BookUser className={`${errors.lastName ? 'text-white' : ''}`} />
@@ -341,7 +353,7 @@ const FormularioEstudiante = () => {
 
 
                                     {/* Cédula */}
-                                    <CCol md={3}>
+                                    <CCol md={4}>
                                         <CInputGroup className={`${errors.cedula ? 'is-invalid' : ''}`}>
                                             <CInputGroupText className={`${errors.cedula ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
                                                 <Fingerprint className={`${errors.cedula ? 'text-white' : ''}`} />
@@ -349,6 +361,7 @@ const FormularioEstudiante = () => {
                                             <CFormInput
                                                 placeholder={errors.cedula ? errors.cedula.message : "Cédula"}
                                                 className={`${errors.cedula ? 'border-danger text-danger' : ''}`}
+                                                onKeyDown={handleNumericKeyDown}
                                                 invalid={!!errors.cedula}
                                                 {...register('cedula')}
                                             />
@@ -364,6 +377,7 @@ const FormularioEstudiante = () => {
                                             <CFormInput
                                                 placeholder={errors.phone ? errors.phone.message : "Teléfono"}
                                                 className={`${errors.phone ? 'border-danger text-danger' : ''}`}
+                                                onKeyDown={handleNumericKeyDown}
                                                 invalid={!!errors.phone}
                                                 {...register('phone')}
                                             />
@@ -404,23 +418,7 @@ const FormularioEstudiante = () => {
                                                 <option value="Tecnología Superior en Redes y Telecomunicaciones">Tecnología Superior en Redes y Telecomunicaciones</option>
                                                 <option value="Tecnología Superior en Procesamiento de Alimentos">Tecnología Superior en Procesamiento de Alimentos</option>
                                                 <option value="Tecnología Superior en Procesamiento Industrial de la Madera">Tecnología Superior en Procesamiento Industrial de la Madera</option>
-                                                <option value="No pertenece a ninguna carrera dentro de la facultad">No pertenece a ninguna carrera dentro de la facultad</option>
                                             </CFormSelect>
-                                        </CInputGroup>
-                                    </CCol>
-
-                                    {/* Facultad */}
-                                    <CCol md={3}>
-                                        <CInputGroup className={`${errors.lastPeriod ? 'is-invalid' : ''}`}>
-                                            <CInputGroupText className={`${errors.lastPeriod ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                                <CalendarClock className={`${errors.lastPeriod ? 'text-white' : ''}`} />
-                                            </CInputGroupText>
-                                            <CFormInput
-                                                placeholder={errors.lastPeriod ? errors.lastPeriod.message : "Período Académico"}
-                                                className={`${errors.lastPeriod ? 'border-danger text-danger' : ''}`}
-                                                invalid={!!errors.lastPeriod}
-                                                {...register('lastPeriod')}
-                                            />
                                         </CInputGroup>
                                     </CCol>
 
@@ -450,7 +448,7 @@ const FormularioEstudiante = () => {
 
                                         <div className="flex-fill text-center">
                                             <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={handleSubmit(confirmUpdate)}>
-                                                <UserRoundPen className="me-2" />
+                                                <UserPen className="me-2" />
                                                 Actualizar Estudiante
                                             </CButton>
                                         </div>

@@ -21,7 +21,7 @@ import {
     GraduationCap,
     School,
     UserPlus,
-    UserRoundPen,
+    UserPen,
     UserCheck,
     UserX,
     Eraser,
@@ -49,6 +49,19 @@ const FormularioDocente = () => {
     const [operation, setOperation] = React.useState('')
     const [isLoading, setIsLoading] = React.useState(false);
     const [isLoadingMessage, setIsLoadingMessage] = React.useState('Cargando...')
+
+    // Función para manejar el evento de teclado y permitir solo números
+    const handleNumericKeyDown = (e) => {
+        const invalidChars = ['e', 'E', '+', '-', '.'];
+        const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'Home', 'End', 'ArrowLeft', 'ArrowRight'];
+
+        if (allowedKeys.includes(e.key)) return;
+        if (e.ctrlKey && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return;
+
+        if (invalidChars.includes(e.key) || !/^[0-9]$/.test(e.key)) {
+            e.preventDefault();
+        }
+    };
 
 
     // Configuración del formulario
@@ -103,20 +116,6 @@ const FormularioDocente = () => {
     }, [docenteSeleccionado, reset])
 
     const careerValue = watch('career')
-    const otherFacultyValue = watch('otherFaculty')
-
-    React.useEffect(() => {
-        if (careerValue === 'No pertenece a ninguna carrera dentro de la facultad' && otherFacultyValue === '') {
-            setValue('otherFaculty', '')
-            errors.otherFaculty && delete errors.otherFaculty
-
-        } else if (careerValue && careerValue !== '') {
-            setValue('otherFaculty', 'ESFOT')
-            errors.otherFaculty && delete errors.otherFaculty
-        } else {
-            setValue('otherFaculty', '')
-        }
-    }, [careerValue, setValue])
 
     // Mostrar errores de validación
 
@@ -355,7 +354,6 @@ const FormularioDocente = () => {
                                         </CInputGroup>
                                     </CCol>
 
-
                                     {/* Cédula */}
                                     <CCol md={3}>
                                         <CInputGroup className={`${errors.cedula ? 'is-invalid' : ''}`}>
@@ -363,9 +361,11 @@ const FormularioDocente = () => {
                                                 <Fingerprint className={`${errors.cedula ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
+                                                type='number'
                                                 placeholder={errors.cedula ? errors.cedula.message : "Cédula"}
                                                 className={`${errors.cedula ? 'border-danger text-danger' : ''}`}
                                                 invalid={!!errors.cedula}
+                                                onKeyDown={handleNumericKeyDown}
                                                 {...register('cedula')}
                                             />
                                         </CInputGroup>
@@ -378,9 +378,11 @@ const FormularioDocente = () => {
                                                 <Smartphone className={`${errors.phone ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
+                                                type='number'
                                                 placeholder={errors.phone ? errors.phone.message : "Teléfono"}
                                                 className={`${errors.phone ? 'border-danger text-danger' : ''}`}
                                                 invalid={!!errors.phone}
+                                                onKeyDown={handleNumericKeyDown}
                                                 {...register('phone')}
                                             />
                                         </CInputGroup>
@@ -412,6 +414,16 @@ const FormularioDocente = () => {
                                                 className={`${errors.career ? 'border-danger text-danger' : ''}`}
                                                 invalid={!!errors.career}
                                                 {...register('career')}
+                                                onChange={(e) => {
+                                                    setValue('career', e.target.value)
+                                                    if (e.target.value === 'Otras facultades/Externos' || e.target.value === '') {
+                                                        setValue('otherFaculty', '')
+                                                        errors.otherFaculty && delete errors.otherFaculty
+                                                    } else {
+                                                        setValue('otherFaculty', 'ESFOT')
+                                                    }
+                                                }
+                                                }
                                             >
                                                 <option value="">{`${errors.career ? errors.career.message : 'Seleccione una carrera'}`}</option>
                                                 <option value="Tecnología Superior en Agua y Saneamiento Ambiental">Tecnología Superior en Agua y Saneamiento Ambiental</option>
@@ -420,7 +432,7 @@ const FormularioDocente = () => {
                                                 <option value="Tecnología Superior en Redes y Telecomunicaciones">Tecnología Superior en Redes y Telecomunicaciones</option>
                                                 <option value="Tecnología Superior en Procesamiento de Alimentos">Tecnología Superior en Procesamiento de Alimentos</option>
                                                 <option value="Tecnología Superior en Procesamiento Industrial de la Madera">Tecnología Superior en Procesamiento Industrial de la Madera</option>
-                                                <option value="No pertenece a ninguna carrera dentro de la facultad">No pertenece a ninguna carrera dentro de la facultad</option>
+                                                <option value="Otras facultades/Externos">Otras facultades/Externos</option>
                                             </CFormSelect>
                                         </CInputGroup>
                                     </CCol>
@@ -435,7 +447,7 @@ const FormularioDocente = () => {
                                                 placeholder={errors.otherFaculty ? errors.otherFaculty.message : "Facultad (opcional)"}
                                                 className={`${errors.otherFaculty ? 'border-danger text-danger' : ''}`}
                                                 invalid={!!errors.otherFaculty}
-                                                disabled={careerValue !== 'No pertenece a ninguna carrera dentro de la facultad'}
+                                                disabled={careerValue !== 'Otras facultades/Externos'}
                                                 {...register('otherFaculty')}
                                             />
                                         </CInputGroup>
@@ -467,7 +479,7 @@ const FormularioDocente = () => {
 
                                         <div className="flex-fill text-center">
                                             <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3" onClick={handleSubmit(confirmUpdate)}>
-                                                <UserRoundPen className="me-2" />
+                                                <UserPen className="me-2" />
                                                 Actualizar Docente
                                             </CButton>
                                         </div>

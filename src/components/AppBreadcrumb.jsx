@@ -25,7 +25,7 @@ const matchRoute = (pathname, routes) => {
 
 const AppBreadcrumb = () => {
   const currentLocation = useLocation().pathname
-  const { userConsult } = useSelector((state) => state)
+  const { elementConsult } = useSelector((state) => state)
   const routes = useRoutesByRole()
 
   const getBreadcrumbs = (location) => {
@@ -44,10 +44,10 @@ const AppBreadcrumb = () => {
         if (
           matchedRoute.path.includes(':') &&
           isLast &&
-          userConsult &&
-          userConsult.name
+          elementConsult &&
+          elementConsult.name
         ) {
-          name = `${userConsult.name} ${userConsult.lastName || userConsult.codigo || ''}`;
+          name = `${elementConsult.name} ${elementConsult.lastName || elementConsult.codigo || ''}`;
         }
         breadcrumbs.push({
           pathname: currentPathname,

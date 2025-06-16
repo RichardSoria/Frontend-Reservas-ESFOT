@@ -1,33 +1,27 @@
 export const aulaSchema = {
     type: 'object',
-    required: ['codigo', 'name', 'description', 'capacity', 'size'],
+    required: ['name', 'description', 'capacity'],
     properties: {
-        codigo: {
-            type: 'string',
-            minLength: 1,
-            pattern: '^E\\d{2}/PB\\d/E\\d{3}$',
-            errorMessage: {
-                pattern: 'El código debe seguir el formato E00/PB0/E000',
-                minLength: 'El campo de código es obligatorio',
-            },
-        },
         name: {
             type: 'string',
-            minLength: 1,
-            pattern: '^[a-zA-Z]{1,20}$',
+            minLength: 12,
+            maxLength: 12,
+            pattern: '^E\\d{2}/PB\\d{1}/E\\d{3}$',
             errorMessage: {
-                pattern: 'El nombre solo puede contener letras y tener hasta 20 caracteres',
-                minLength: 'El campo de nombre es obligatorio',
+                pattern: 'El nombre debe seguir exactamente el formato E00/PB0/E000',
+                minLength: 'El campo de nombre debe tener exactamente 12 caracteres',
+                maxLength: 'El campo de nombre debe tener exactamente 12 caracteres',
             },
         },
         description: {
             type: 'string',
             minLength: 1,
-            pattern: '^[a-zA-Z0-9\\s.,;:-]{1,100}$',
+            maxLength: 100,
+            pattern: '^[\\p{L}\\p{N}\\s.,;:()¿?¡!-]+$',
             errorMessage: {
-                pattern:
-                    'La descripción puede contener letras, números y algunos caracteres especiales (.,;:-) y tener hasta 100 caracteres',
+                pattern: 'La descripción puede contener letras, números, espacios y algunos caracteres especiales (.,;:()¿?¡!-)',
                 minLength: 'El campo de descripción es obligatorio',
+                maxLength: 'La descripción no puede exceder los 100 caracteres',
             },
         },
         capacity: {
@@ -39,22 +33,13 @@ export const aulaSchema = {
                 minLength: 'El campo de capacidad es obligatorio',
             },
         },
-        size: {
-            type: 'string',
-            enum: ['Pequeño', 'Mediano', 'Grande'],
-            errorMessage: {
-                enum: 'El tamaño debe ser pequeño, mediano o grande',
-            },
-        },
     },
     additionalProperties: false,
     errorMessage: {
         required: {
-            codigo: 'El código es obligatorio',
             name: 'El nombre es obligatorio',
             description: 'La descripción es obligatoria',
             capacity: 'La capacidad es obligatoria',
-            size: 'El tamaño es obligatorio',
         },
     },
 };

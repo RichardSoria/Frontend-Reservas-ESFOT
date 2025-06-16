@@ -1,32 +1,32 @@
-import FormularioAula from '../../../components/aula/FormularioAula'
-import TablaAula from '../../../components/aula/TablaAula'
+import FormularioLaboratorio from '../../../components/laboratorio/FormularioLaboratorio'
+import TablaLaboratorio from '../../../components/laboratorio/TablaLaboratorio'
 import { CCard, CCardBody, CRow, CCol, CFormInput, CInputGroup, CInputGroupText } from '@coreui/react'
 import { useState } from 'react'
 import { Search } from 'lucide-react'
 
-const Aulas = () => {
-    const [filtroName, setFiltroName] = useState('')
+const Laboratorios = () => {
+    const [filtroCodigo, setFiltroCodigo] = useState('')
     return (
         <CCard className="shadow-sm border-0">
             <CCardBody>
                 {/* Encabezado */}
                 <div className="ms-3 me-3">
-                    <h1 className="text-4xl textos-esfot">Gestionar Aulas</h1>
+                    <h1 className="text-4xl textos-esfot">Gestionar Laboratorios</h1>
                     <hr />
                     <CRow className="align-items-center">
                         <CCol md={9}>
                             <p className="text-muted mb-0">
-                                Este módulo permite la gestión de los usuarios aulas del sistema.
+                                Este módulo permite la gestión de los usuarios laboratorios del sistema.
                             </p>
                         </CCol>
                         <CCol md={3}>
                             <CInputGroup>
                                 <CFormInput
                                     type="text"
-                                    placeholder="Buscar por nombre"
-                                    aria-label="Buscar por nombre"
-                                    value={filtroName}
-                                    onChange={(e) => setFiltroName(e.target.value)}
+                                    placeholder="Buscar por código"
+                                    aria-label="Buscar por código"
+                                    value={filtroCodigo}
+                                    onChange={(e) => setFiltroCodigo(e.target.value)}
                                 />
                                 <CInputGroupText className='bg-esfot text-white'>
                                     <Search />
@@ -38,16 +38,16 @@ const Aulas = () => {
 
                 {/* Tabla */}
                 <div>
-                    <TablaAula filtroName={filtroName} />
+                    <TablaLaboratorio filtroCodigo={filtroCodigo} />
                 </div>
 
                 {/* Formulario */}
                 <div>
-                    <FormularioAula />
+                    <FormularioLaboratorio />
                 </div>
             </CCardBody>
         </CCard>
     )
 }
 
-export default Aulas
+export default Laboratorios

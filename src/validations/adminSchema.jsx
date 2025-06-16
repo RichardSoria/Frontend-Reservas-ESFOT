@@ -1,11 +1,11 @@
 export const adminSchema = {
     type: 'object',
-    required: ['name', 'lastName','cedula', 'email', 'phone'],
+    required: ['name', 'lastName', 'cedula', 'email', 'phone'],
     properties: {
         name: {
             type: 'string',
             minLength: 1,
-            pattern: '^[a-zA-Z]{1,20}$',
+            pattern: '^[\\p{L}]{1,20}$',
             errorMessage: {
                 pattern: 'El nombre solo puede contener letras y tener hasta 20 caracteres',
                 minLength: 'El campo de nombre es obligatorio'
@@ -14,7 +14,7 @@ export const adminSchema = {
         lastName: {
             type: 'string',
             minLength: 1,
-            pattern: '^[a-zA-Z]{1,20}$',
+            pattern: '^[\\p{L}]{1,20}$',
             errorMessage: {
                 pattern: 'El apellido solo puede contener letras y tener hasta 20 caracteres',
                 minLength: 'El campo de apellido es obligatorio'
