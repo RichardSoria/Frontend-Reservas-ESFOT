@@ -15,7 +15,7 @@ export const laboratorioSchema = {
         },
         codigo: {
             type: 'string',
-            minLength: 12,
+            minLength: 1,
             maxLength: 12,
             pattern: '^E\\d{2}/PB\\d{1}/E\\d{3}$',
             errorMessage: {
