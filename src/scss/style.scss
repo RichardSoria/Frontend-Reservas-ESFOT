@@ -189,7 +189,7 @@ body {
 .custom-toggle {
   background-color: #0e4c71;
   color: white;
-  border:#0e4c71;
+  border: #0e4c71;
 }
 
 .btn-check:checked+.custom-toggle {
@@ -233,6 +233,20 @@ body {
   /* color similar a table-dark */
   z-index: 10;
 }
+
+// Evita el cambio a morado o azul al hacer clic en un CDropdownItem
+.c-dropdown-item {
+  background-color: transparent !important;
+
+  &:hover,
+  &:focus,
+  &:active {
+    cursor: pointer;
+    background-color: #f3f4f7 !important;
+    color: #000 !important;
+  }
+}
+
 
 @include color-mode(dark) {
   body {

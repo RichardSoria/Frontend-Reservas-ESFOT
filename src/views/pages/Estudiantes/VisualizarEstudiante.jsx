@@ -86,7 +86,6 @@ const VisualizarEstudiante = () => {
                             <p><strong>Correo:</strong> {elementConsult.email}</p>
                             <p><strong>Teléfono:</strong> {elementConsult.phone}</p>
                             <p><strong>Carrera:</strong> {elementConsult.career}</p>
-                            <p><strong>Período Académico:</strong> {elementConsult.lastPeriod}</p>
                         </CCol>
 
                         {/* Cuenta */}

@@ -44,7 +44,7 @@ const TablaDocente = ({ filtroCedula }) => {
                                 className="table-container"
                             >
                                 <table className="table table-hover table-striped mb-0">
-                                    <thead className="bg-esfot table-dark text-center">
+                                    <thead className="bg-esfot table-dark text-center align-middle">
                                         <tr>
                                             <th>Nombre</th>
                                             <th>Apellido</th>
@@ -70,7 +70,7 @@ const TablaDocente = ({ filtroCedula }) => {
                                                     key={docente._id}
                                                     onClick={() => dispatch(set({ docenteSeleccionado: { ...docente } }))}
                                                     style={{ cursor: 'pointer' }}
-                                                    className="text-center"
+                                                    className="text-center align-middle"
                                                 >
                                                     <td>{docente.name}</td>
                                                     <td>{docente.lastName}</td>
@@ -101,24 +101,24 @@ const TablaDocente = ({ filtroCedula }) => {
                                                         <button
                                                             className="iconos-esfot rounded-circle border-0 bg-transparent justify-content-center align-items-center"
                                                             title="Ver detalles"
-                                                            onClick={(e) => { 
+                                                            onClick={(e) => {
                                                                 navigate(`/admin/docentes/${docente._id}`); e.stopPropagation();
                                                                 dispatch(set({ docenteSeleccionado: null }));
                                                             }}
                                                         >
-                                                        <Info/>
-                                                    </button>
-                                                </td>
+                                                            <Info />
+                                                        </button>
+                                                    </td>
                                                 </tr>
-                                    ))
+                                            ))
                                         )}
-                                </tbody>
-                            </table>
-                        </div>
-                    </CCardBody>
-                </CCard>
-            </CCol>
-        </CRow>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </CCardBody>
+                    </CCard>
+                </CCol>
+            </CRow>
         </CContainer >
     )
 }

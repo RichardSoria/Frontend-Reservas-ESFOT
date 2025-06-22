@@ -111,7 +111,7 @@ const RecoverPassword = () => {
                                             <CFormInput
                                                 placeholder="Correo Electrónico"
                                                 autoComplete="email"
-                                                className={`bg-light border-secondary text-secondary custom-input ${errors.email ? 'border-danger' : ''
+                                                className={`border-secondary text-secondary custom-input ${errors.email ? 'border-danger' : ''
                                                     }`}
                                                 invalid={!!errors.email}
                                                 {...register('email')}
@@ -126,7 +126,7 @@ const RecoverPassword = () => {
                                                 <User className={`${errors.role ? 'text-white' : ''}`}/>
                                             </CInputGroupText>
                                             <CFormSelect
-                                                className={`bg-light border-secondary text-secondary custom-input ${errors.role ? 'border-danger' : ''
+                                                className={`border-secondary text-secondary custom-input ${errors.role ? 'border-danger' : ''
                                                     }`}
                                                 invalid={!!errors.role}
                                                 {...register('role')}

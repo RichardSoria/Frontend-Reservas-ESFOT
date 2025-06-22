@@ -6,7 +6,7 @@ const DefaultLayout = () => {
       <AppSidebar />
       <div className="wrapper d-flex flex-column min-vh-100">
         <AppHeader />
-        <div className="d-flex flex-grow-1 justify-content-center align-items-center">
+        <div className="d-flex flex-grow-1 justify-content-center align-items-center mt-2 mb-2">
           <AppContent />
         </div>
         <AppFooter />

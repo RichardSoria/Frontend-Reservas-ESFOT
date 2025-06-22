@@ -44,7 +44,7 @@ const TablaAula = ({ filtroName }) => {
                                 className="table-container"
                             >
                                 <table className="table table-hover table-striped mb-0">
-                                    <thead className="bg-esfot table-dark text-center">
+                                    <thead className="bg-esfot table-dark text-center align-middle">
                                         <tr>
                                             <th>Nombre</th>
                                             <th>Capacidad</th>
@@ -67,7 +67,7 @@ const TablaAula = ({ filtroName }) => {
                                                     key={aula._id}
                                                     onClick={() => dispatch(set({ aulaSeleccionado: { ...aula } }))}
                                                     style={{ cursor: 'pointer' }}
-                                                    className="text-center"
+                                                    className="text-center align-middle"
                                                 >
                                                     <td>{aula.name}</td>
                                                     <td>{aula.capacity}</td>

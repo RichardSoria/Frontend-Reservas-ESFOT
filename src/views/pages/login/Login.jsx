@@ -140,7 +140,7 @@ const Login = () => {
                     <CFormInput
                       placeholder="Correo Electrónico"
                       autoComplete="email"
-                      className={`bg-light border-secondary text-secondary custom-input ${errors.email ? 'border-danger' : ''
+                      className={`border-secondary text-secondary custom-input ${errors.email ? 'border-danger' : ''
                         }`}
                       invalid={!!errors.email}
                       {...register('email')}
@@ -158,7 +158,7 @@ const Login = () => {
                       type={showPassword ? 'text' : 'password'}
                       placeholder="Contraseña"
                       autoComplete="current-password"
-                      className={`bg-light border-secondary text-secondary custom-input ${errors.password ? 'border-danger' : ''
+                      className={`border-secondary text-secondary custom-input ${errors.password ? 'border-danger' : ''
                         }`}
                       invalid={!!errors.password}
                       {...register('password')}
@@ -181,7 +181,7 @@ const Login = () => {
                       <User  className={`${errors.role}` ? 'text-white' : ''}/>
                     </CInputGroupText>
                     <CFormSelect
-                      className={`bg-light border-secondary text-secondary custom-input ${errors.role ? 'border-danger' : ''
+                      className={`border-secondary text-secondary custom-input ${errors.role ? 'border-danger' : ''
                         }`}
                       invalid={!!errors.role}
                       {...register('role')}

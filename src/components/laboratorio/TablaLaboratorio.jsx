@@ -44,7 +44,7 @@ const TablaLaboratorio = ({ filtroCodigo }) => {
                                 className="table-container"
                             >
                                 <table className="table table-hover table-striped mb-0">
-                                    <thead className="bg-esfot table-dark text-center">
+                                    <thead className="bg-esfot table-dark text-center align-middle">
                                         <tr>
                                             <th>Nombre</th>
                                             <th>Código</th>
@@ -70,7 +70,7 @@ const TablaLaboratorio = ({ filtroCodigo }) => {
                                                     key={laboratorio._id}
                                                     onClick={() => dispatch(set({ laboratorioSeleccionado: { ...laboratorio } }))}
                                                     style={{ cursor: 'pointer' }}
-                                                    className="text-center"
+                                                    className="text-center align-middle"
                                                 >
                                                     <td>{laboratorio.name}</td>
                                                     <td>{laboratorio.codigo}</td>

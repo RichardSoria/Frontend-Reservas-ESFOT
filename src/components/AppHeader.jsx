@@ -33,7 +33,7 @@ const AppHeader = () => {
 
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
-  const user = useSelector ((state) => state.user)
+  const perfil = useSelector((state) => state.perfil)
 
   useEffect(() => {
     document.addEventListener('scroll', () => {
@@ -54,26 +54,11 @@ const AppHeader = () => {
         <CHeaderNav className="d-none d-md-flex">
           <CNavItem>
             <CNavLink>
-              Bienvenido <span style={{ color: '#e72f2b', fontWeight:'bold'}}>{user.name} {user.lastName}</span> al Sistema de Reservas de Aulas y Laboratorios ESFOT
+              Bienvenido <span style={{ color: '#e72f2b', fontWeight: 'bold' }}>{perfil.name} {perfil.lastName}</span> al Sistema de Reservas de Aulas y Laboratorios ESFOT
             </CNavLink>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav className="ms-auto">
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilBell} size="lg" />
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilList} size="lg" />
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilEnvelopeOpen} size="lg" />
-            </CNavLink>
-          </CNavItem>
         </CHeaderNav>
         <CHeaderNav>
           <AppHeaderDropdown />

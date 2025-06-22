@@ -14,6 +14,11 @@ const VisualizarDocente = React.lazy(() => import('./views/pages/Docentes/Visual
 const Estudiantes = React.lazy(() => import('./views/pages/Estudiantes/Estudiante.jsx'))
 const VisualizarEstudiante = React.lazy(() => import('./views/pages/Estudiantes/VisualizarEstudiante.jsx'))
 
+// Perfiles
+const PerfilAdministrador = React.lazy(() => import('./views/pages/perfiles/PerfilAdministrador.jsx'))
+const PerfilDocente = React.lazy(() => import('./views/pages/perfiles/PerfilDocente.jsx'))
+const PerfilEstudiante = React.lazy(() => import('./views/pages/perfiles/PerfilEstudiante.jsx'))
+
 // Espacios Acádemicos
 const Aulas = React.lazy(() => import('./views/pages/Aulas/Aula.jsx'))
 const VisualizarAula = React.lazy(() => import('./views/pages/Aulas/VisualizarAula.jsx'))
@@ -33,6 +38,9 @@ const allRoutes = [
   { path: '/admin/aulas/:id', name: 'Visualizar Aula', element: VisualizarAula, roles: ['Admin'] },
   { path: '/admin/laboratorios', name: 'Laboratorios', element: Laboratorios, roles: ['Admin'] },
   { path: '/admin/laboratorios/:id', name: 'Visualizar Laboratorio', element: VisualizarLaboratorio, roles: ['Admin'] },
+  { path: '/admin/perfil', name: 'Perfil Administrador', element: PerfilAdministrador, roles: ['Admin'] },
+  { path: '/docente/perfil', name: 'Perfil Docente', element: PerfilDocente, roles: ['Docente'] },
+  { path: '/estudiante/perfil', name: 'Perfil Estudiante', element: PerfilEstudiante, roles: ['Estudiante'] },
 ]
 
 export function useRoutesByRole() {
