@@ -1,20 +1,6 @@
 export const createReservaSchema = {
     type: 'object',
     properties: {
-        userID: {
-            type: 'string',
-            pattern: '^[0-9a-fA-F]{24}$',
-            errorMessage: {
-                pattern: 'El userID debe ser un ID de objeto válido de MongoDB'
-            }
-        },
-        userRol: {
-            type: 'string',
-            enum: ['Estudiante', 'Docente', 'Admin'],
-            errorMessage: {
-                enum: 'El rol debe ser Estudiante, Docente o Admin'
-            }
-        },
         placeID: {
             type: 'string',
             pattern: '^[0-9a-fA-F]{24}$',
@@ -71,8 +57,6 @@ export const createReservaSchema = {
         }
     },
     required: [
-        'userID',
-        'userRol',
         'placeID',
         'placeType',
         'purpose',
