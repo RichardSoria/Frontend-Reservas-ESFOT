@@ -247,6 +247,139 @@ body {
   }
 }
 
+/* 1. Botones del toolbar */
+.rbc-toolbar button {
+  background-color: #0e4c71 !important;
+  color: white !important;
+  border: none !important;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.rbc-toolbar button:hover,
+.rbc-toolbar button:focus,
+.rbc-toolbar button:active {
+  background-color: #e72f2b !important;
+  outline: none;
+  box-shadow: none;
+}
+
+.rbc-toolbar button.active {
+  background-color: #e72f2b !important;
+}
+
+
+/* 2. Mayúsculas en encabezados */
+.rbc-toolbar-label,
+.rbc-agenda-header,
+.rbc-month-header,
+.rbc-time-header,
+.rbc-time-header-content .rbc-header {
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #e72f2b;
+  font-size: 1.5rem;
+}
+
+/* 3. Ocultar eventos de todo el día */
+.rbc-allday-cell,
+.rbc-allday-events {
+  display: none !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none;
+}
+
+/* 4. Encabezado azul con letras blancas (mes, semana y agenda) */
+.rbc-header,
+.rbc-time-header-content {
+  background-color: #0e4c71 !important;
+  color: white !important;
+  border: none !important;
+  font-weight: bold;
+}
+
+.rbc-header {
+  padding: 0.5rem 0.5rem !important;
+}
+
+.rbc-time-header-gutter,
+.rbc-time-gutter {
+  background-color: #0e4c71 !important;
+  color: white !important;
+  border: none !important;
+  font-weight: bold;
+  justify-content: center !important;
+}
+
+.rbc-time-header-cell button {
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+
+}
+
+.rbc-agenda-table th {
+  text-align: center !important;
+}
+
+
+/* 6. Agenda - bordes entre eventos */
+.rbc-agenda-date-cell,
+.rbc-agenda-time-cell,
+.rbc-agenda-event-cell {
+  border: 2px solid #fff;
+  padding: 5px;
+}
+
+/* 7. Quitar border de tablas y calendariois*/
+.rbc-month-view,
+.rbc-time-view,
+.rbc-agenda-view,
+.rbc-time-content {
+  border: none !important;
+  box-shadow: 0 .125rem .25rem rgba($black, .075);
+  scrollbar-width: none;
+}
+
+/* 8. Aumentar tamaño de letra de encabezados */
+.rbc-header,
+.rbc-agenda-header,
+.rbc-month-header,
+.rbc-time-header,
+.rbc-time-header-content .rbc-header,
+.rbc-agenda-table th {
+  font-size: 1rem !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+.rbc-agenda-table {
+  border: none !important;
+}
+
+
+/* Centrar texto vertical y horizontalmente */
+.rbc-agenda-empty {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 100%;
+  /* Ocupa todo el alto del contenedor padre */
+  width: 100%;
+  /* Ocupa todo el ancho del contenedor padre */
+  background-color: #f8f9fa;
+  color: #6c757d;
+  font-size: 1.25rem;
+  font-weight: 500;
+  border-radius: 8px;
+  margin: 0;
+  /* Elimina márgenes para que no reduzcan espacio */
+  min-height: 200px;
+  /* Opcional, para asegurar una altura mínima */
+}
+
 
 @include color-mode(dark) {
   body {

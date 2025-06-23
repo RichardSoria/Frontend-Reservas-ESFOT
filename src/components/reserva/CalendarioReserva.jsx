@@ -1,115 +1,127 @@
-import { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate } from "react-router-dom";
-import useLaboratorio from '../../hooks/useLaboratorio'
-import { set } from '../../store'
-import {
-    CContainer,
-    CRow,
-    CCol,
-    CCard,
-    CCardBody,
-} from '@coreui/react'
-import { Info } from 'lucide-react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from 'react'
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
+import format from 'date-fns/format'
+import parse from 'date-fns/parse'
+import startOfWeek from 'date-fns/startOfWeek'
+import getDay from 'date-fns/getDay'
+import { es } from 'date-fns/locale'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
+import { useSelector } from 'react-redux'
+import useReserva from '../../hooks/useReservas'
+import { CCard, CCardBody, CContainer, CRow, CCol } from '@coreui/react'
+import { toast } from 'react-toastify'
+import CustomToolbar from '../../components/reserva/CustomToolbar'  // <-- Importa aquí
 
+const locales = { es }
 
-const TablaLaboratorio = ({ filtroCodigo }) => {
-    const dispatch = useDispatch()
-    const { listarLaboratorios } = useLaboratorio()
-    const { laboratorios = [] } = useSelector((state) => state)
+const localizer = dateFnsLocalizer({
+    format,
+    parse,
+    startOfWeek,
+    getDay,
+    locales,
+})
 
-    const navigate = useNavigate()
+const CalendarioReservas = () => {
+    const { listarReservas } = useReserva()
+    const { reservas = [] } = useSelector((state) => state)
+    const [eventos, setEventos] = useState([])
+
+    const [vistaActual, setVistaActual] = useState('agenda')
+    const [fechaActual, setFechaActual] = useState(new Date())
 
     useEffect(() => {
-        listarLaboratorios()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        listarReservas()
     }, [])
 
-    const laboratoriosFiltrados = laboratorios.filter((laboratorio) =>
-        laboratorio.codigo?.toLowerCase().includes(filtroCodigo.toLowerCase())
-    )
+    useEffect(() => {
+        const eventosListos = reservas.map((e) => ({
+            id: e.id,
+            title: e.title,
+            start: new Date(e.start),
+            end: new Date(e.end),
+            allDay: false,
+            reserva: e,
+        }))
+        setEventos(eventosListos)
+    }, [reservas])
+
+    const eventStyleGetter = (event) => {
+        let backgroundColor = '#0d6efd'
+        let color = 'white'
+
+        switch (event.reserva.status) {
+            case 'Aprobada':
+                backgroundColor = '#198754' // Verde
+                break
+            case 'Pendiente':
+                backgroundColor = '#ffc008' // Amarillo
+                color = 'black'
+                break
+            case 'Rechazada':
+                backgroundColor = '#dc3545' // Rojo
+                break
+            case 'Cancelada':
+                backgroundColor = '#6c757d' // Gris
+                break
+        }
+
+        return {
+            style: {
+                backgroundColor,
+                color,
+                borderRadius: '6px',
+                padding: '4px',
+                border: 'none',
+            },
+        }
+    }
+
+    const handleSelectEvent = (event) => {
+        toast.info(
+            `Reserva: ${event.title}\nEstado: ${event.reserva?.status || 'Desconocido'}`,
+        )
+    }
 
     return (
-        <CContainer className='mt-3 mb-3' fluid>
+        <CContainer className="mt-4 mb-4" fluid>
             <CRow className="justify-content-center">
                 <CCol>
                     <CCard className="border-0 shadow-sm">
-                        <CCardBody className="p-0">
-                            <div
-                                style={{
-                                    maxHeight: '265px',
-                                    overflowY: 'auto',
-                                    scrollbarWidth: 'none',
+                        <CCardBody>
+                            <Calendar
+                                localizer={localizer}
+                                events={eventos}
+                                startAccessor="start"
+                                endAccessor="end"
+                                eventPropGetter={eventStyleGetter}
+                                style={{ height: '50vh' }}
+                                views={['month', 'week', 'day', 'agenda']}
+                                view={vistaActual}
+                                onView={setVistaActual}
+                                date={fechaActual}
+                                onNavigate={setFechaActual}
+                                popup
+                                culture="es"
+                                showAllDayEvents={false}
+                                min={new Date(1970, 1, 1, 7, 0)}
+                                max={new Date(1970, 1, 1, 21, 0)}
+                                onSelectEvent={handleSelectEvent}
+                                messages={{
+                                    date: 'Fecha',
+                                    time: 'Hora',
+                                    event: 'Reservas',
+                                    noEventsInRange: 'No hay reservas registradas.',
                                 }}
-                                className="table-container"
-                            >
-                                <table className="table table-hover table-striped mb-0">
-                                    <thead className="bg-esfot table-dark text-center">
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Código</th>
-                                            <th>Capacidad</th>
-                                            <th>Equipos PC</th>
-                                            <th>Equipos Proyector</th>
-                                            <th>Pantallas Interactivas</th>
-                                            <th>N° de Reservas</th>
-                                            <th>Estado</th>
-                                            <th>Detalles</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {laboratoriosFiltrados.length === 0 ? (
-                                            <tr>
-                                                <td className='text-center' colSpan="9">
-                                                    No se encontraron coincidencias
-                                                </td>
-                                            </tr>
-                                        ) : (
-                                            laboratoriosFiltrados.map((laboratorio) => (
-                                                <tr
-                                                    key={laboratorio._id}
-                                                    onClick={() => dispatch(set({ laboratorioSeleccionado: { ...laboratorio } }))}
-                                                    style={{ cursor: 'pointer' }}
-                                                    className="text-center"
-                                                >
-                                                    <td>{laboratorio.name}</td>
-                                                    <td>{laboratorio.codigo}</td>
-                                                    <td>{laboratorio.capacity}</td>
-                                                    <td>{laboratorio.equipmentPC ? 'Equipado' : 'No equipado'}</td>
-                                                    <td>{laboratorio.equipmentProyector ? 'Equipado' : 'No equipado'}</td>
-                                                    <td>{laboratorio.equipmentInteractiveScreen ? 'Equipado' : 'No equipado'}</td>
-                                                    <td>{laboratorio.numberReservations}</td>
-                                                    <td>
-                                                        {laboratorio.status ? (
-                                                            <span className="badge bg-success">Habilitado</span>
-                                                        ) : (
-                                                            <span className="badge bg-danger">Deshabilitado</span>
-                                                        )}
-                                                    </td>
-                                                    <td>
-                                                        <button
-                                                            className="iconos-esfot rounded-circle border-0 bg-transparent justify-content-center align-items-center"
-                                                            title="Ver detalles"
-                                                            onClick={(e) => {
-                                                                navigate(`/admin/laboratorios/${laboratorio._id}`); e.stopPropagation();
-                                                                dispatch(set({ laboratorioSeleccionado: null }));
-                                                            }}
-                                                        >
-                                                            <Info />
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
+                                components={{ toolbar: CustomToolbar }}
+                            />
                         </CCardBody>
                     </CCard>
                 </CCol>
             </CRow>
-        </CContainer >
+        </CContainer>
     )
 }
 
-export default TablaLaboratorio
+export default CalendarioReservas

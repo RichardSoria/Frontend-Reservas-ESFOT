@@ -76,7 +76,7 @@ const _nav = [
   },
   {
     component: CNavTitle,
-    name: 'Reservas Espacios Académicos',
+    name: 'Agendamientos',
   },
   {
     component: CNavItem,
