@@ -80,7 +80,7 @@ const RecoverPassword = () => {
         <div className="bg-esfot min-vh-100 d-flex flex-row align-items-center">
             <CContainer>
                 <CRow className="justify-content-center">
-                    <CCol md={5}>
+                    <CCol lg={5} md={9} >
                         <CCardGroup>
                             <CCard className="p-4 bg-white">
                                 <CCardBody>
@@ -123,7 +123,7 @@ const RecoverPassword = () => {
                                                 className={`bg-secondary border-secondary ${errors.role ? 'border-danger bg-danger' : 'text-white bg-esfot'
                                                     }`}
                                             >
-                                                <User className={`${errors.role ? 'text-white' : ''}`}/>
+                                                <User className={`${errors.role ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormSelect
                                                 className={`border-secondary text-secondary custom-input ${errors.role ? 'border-danger' : ''

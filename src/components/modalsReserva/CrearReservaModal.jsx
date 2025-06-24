@@ -2,8 +2,8 @@
 import React from 'react';
 import { ConfirmModal } from '../modals/ConfirmModal';
 import { LoadingModal } from '../modals/LoadingModal';
-import { CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CButton, CForm, CInputGroup, CInputGroupText, CFormSelect, CRow, CCol } from '@coreui/react'
-import { Mail, LockKeyhole, User, Eye, EyeOff } from 'lucide-react'
+import { CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CButton, CForm, CInputGroup, CInputGroupText, CFormSelect, CRow, CCol, CFormInput, CFormLabel } from '@coreui/react'
+import { University, HouseWifi, NotebookPen, CalendarDays, Clock3, Clock9, FileText } from 'lucide-react'
 import { createReservaSchema } from '../../validations/reservaSchema';
 import { useForm, Controller } from 'react-hook-form'
 import Ajv from 'ajv'
@@ -11,6 +11,7 @@ import addFormats from 'ajv-formats'
 import ajvErrors from 'ajv-errors'
 import useAula from '../../hooks/useAula';
 import useLaboratorio from '../../hooks/useLaboratorio';
+import useReserva from '../../hooks/useReserva';
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { toast } from 'react-toastify'
@@ -55,6 +56,7 @@ export const CrearReservaModal = ({ visible, onClose }) => {
     // Hooks para obtener datos de aulas y laboratorios
     const { listarAulas } = useAula()
     const { listarLaboratorios } = useLaboratorio()
+    const { listarReservas } = useReserva()
     const { aulas = [] } = useSelector((state) => state)
     const { laboratorios = [] } = useSelector((state) => state)
 
@@ -66,14 +68,15 @@ export const CrearReservaModal = ({ visible, onClose }) => {
         if (watchedFields) {
             setgeneralMessage('')
         }
-        console.log('watchedFields', watchedFields)
     }, [watchedFields])
 
     // Cargar aulas y laboratorios al abrir el modal
     React.useEffect(() => {
-        listarAulas()
-        listarLaboratorios()
-    }, [])
+        if (visible) {
+            listarAulas();
+            listarLaboratorios();
+        }
+    }, [visible]);
 
     // Mostrar errores con toast cuando cambian
     React.useEffect(() => {
@@ -125,15 +128,28 @@ export const CrearReservaModal = ({ visible, onClose }) => {
     const handleCancel = () => {
         setConfirmVisible(false)
         setPendingAction(null)
-        resetForm()
     }
 
     const onSubmitCreateReserva = async (data) => {
-        if (!validateForm(data)) {
-            return
+        if (!validateForm(data)) return;
+
+        try {
+            setIsLoadingMessage('Creando reserva...');
+            setIsLoading(true);
+
+            // Intenta crear la reserva
+            await axios.post(`${import.meta.env.VITE_API_URL}/reserva/create`, data, { withCredentials: true });
+            toast.success('Reserva creada exitosamente');
+            listarReservas();
+            resetForm();
+            onClose(); 
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Error al crear la reserva');
+
+        } finally {
+            setIsLoading(false);
         }
-        resetForm()
-    }
+    };
 
     // Función para confirmar la creación de la reserva
     const confirmCreateReserva = (data) => {
@@ -167,33 +183,32 @@ export const CrearReservaModal = ({ visible, onClose }) => {
                 <CModalBody>
                     <CForm>
                         { /* Tipo de Espacio Académico */}
-                        <CInputGroup className={`${errors.placeType ? 'is-invalid' : ''} mb-2`}>
+                        <CInputGroup className={`${errors.placeType ? 'is-invalid' : ''} mb-3`}>
                             <CInputGroupText
                                 className={`${errors.placeType ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                <User className={`${errors.placeType}` ? 'text-white' : ''} />
+                                <University className={`${errors.placeType}` ? 'text-white' : ''} />
                             </CInputGroupText>
                             <CFormSelect
                                 className={`${errors.placeType ? 'border-danger text-danger' : ''
                                     }`}
                                 invalid={!!errors.placeType}
                                 {...register('placeType')}>
-                                <option value="">{`${errors.placeType ? errors.placeType.message : 'Seleccione un espacio académico'}`}</option>
+                                <option value="">{`${errors.placeType ? errors.placeType.message : 'Seleccione el tipo de espacio académico'}`}</option>
                                 <option value="Aula">Aula</option>
                                 <option value="Laboratorio">Laboratorio</option>
                             </CFormSelect>
                         </CInputGroup>
                         { /* Espacio Académico */}
-                        <CInputGroup className={`${errors.placeID ? 'is-invalid' : ''} mb-2`}>
+                        <CInputGroup className={`${errors.placeID ? 'is-invalid' : ''} mb-3`}>
                             <CInputGroupText
                                 className={`${errors.placeID ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                <Mail className={`${errors.placeID ? 'text-white' : ''}`} />
+                                <HouseWifi className={`${errors.placeID ? 'text-white' : ''}`} />
                             </CInputGroupText>
 
                             <div className="flex-grow-1">
                                 <Controller
                                     name="placeID"
                                     control={control}
-                                    defaultValue=""
                                     render={({ field }) => {
                                         const selectedOptions =
                                             watchedFields.placeType === 'Aula'
@@ -221,7 +236,9 @@ export const CrearReservaModal = ({ visible, onClose }) => {
                                                 placeholder={
                                                     watchedFields.placeType === 'Aula'
                                                         ? 'Seleccione un aula'
-                                                        : 'Seleccione un laboratorio'
+                                                        : watchedFields.placeType === 'Laboratorio'
+                                                            ? 'Seleccione un laboratorio'
+                                                            : 'Seleccione un espacio académico'
                                                 }
                                             />
                                         );
@@ -230,10 +247,10 @@ export const CrearReservaModal = ({ visible, onClose }) => {
                             </div>
                         </CInputGroup>
                         { /* Propósito */}
-                        <CInputGroup className={`${errors.purpose ? 'is-invalid' : ''} mb-2`}>
+                        <CInputGroup className={`${errors.purpose ? 'is-invalid' : ''} mb-3`}>
                             <CInputGroupText
                                 className={`${errors.purpose ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                <LockKeyhole className={`${errors.purpose ? 'text-white' : ''}`} />
+                                <NotebookPen className={`${errors.purpose ? 'text-white' : ''}`} />
                             </CInputGroupText>
                             <CFormSelect
                                 className={`${errors.purpose ? 'border-danger text-danger' : ''}`}
@@ -248,99 +265,81 @@ export const CrearReservaModal = ({ visible, onClose }) => {
                             </CFormSelect>
                         </CInputGroup>
                         { /* Fecha de Reserva */}
-                        <CInputGroup className={`${errors.reservationDate ? 'is-invalid' : ''} mb-2`}>
-                            <CInputGroupText
-                                className={`${errors.reservationDate ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                <Eye className={`${errors.reservationDate ? 'text-white' : ''}`} />
-                            </CInputGroupText>
-                            <CFormSelect
-                                className={`${errors.reservationDate ? 'border-danger text-danger' : ''}`}
-                                invalid={!!errors.reservationDate}
-                                {...register('reservationDate')}>
-                                <option value="">{`${errors.reservationDate ? errors.reservationDate.message : 'Seleccione una fecha'}`}</option>
-                                {Array.from({ length: 30 }, (_, i) => {
-                                    const date = new Date();
-                                    date.setDate(date.getDate() + i);
-                                    const formattedDate = date.toISOString().split('T')[0];
-                                    return (
-                                        <option key={i} value={formattedDate}>
-                                            {date.toLocaleDateString('es-ES', {
-                                                weekday: 'long',
-                                                year: 'numeric',
-                                                month: 'long',
-                                                day: 'numeric'
-                                            })}
-                                        </option>
-                                    );
-                                })}
-                            </CFormSelect>
-                        </CInputGroup>
-                        <CRow>
-                            <CCol xs={6}>
-                                { /* Hora de Inicio */}
-                                <CInputGroup className={`${errors.startTime ? 'is-invalid' : ''} mb-2`}>
+                        <div className="mb-3">
+                            <CFormLabel htmlFor="reservationDate" className="fw-semibold">
+                                Fecha de reserva
+                            </CFormLabel>
+                            <CInputGroup className={`${errors.reservationDate ? 'is-invalid' : ''}`}>
+                                <CInputGroupText
+                                    className={`${errors.reservationDate ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
+                                    <CalendarDays className={`${errors.reservationDate ? 'text-white' : ''}`} />
+                                </CInputGroupText>
+                                <CFormInput
+                                    id="reservationDate"
+                                    type="date"
+                                    className={`${errors.reservationDate ? 'border-danger text-danger' : ''}`}
+                                    invalid={!!errors.reservationDate}
+                                    {...register('reservationDate')}
+                                />
+                            </CInputGroup>
+                        </div>
+                        <CRow className="g-2 mb-3">
+                            <CCol md={6}>
+                                <CFormLabel htmlFor="startTime" className="fw-semibold">
+                                    Hora de inicio
+                                </CFormLabel>
+                                <CInputGroup className={`${errors.startTime ? 'is-invalid' : ''}`}>
                                     <CInputGroupText
                                         className={`${errors.startTime ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                        <EyeOff className={`${errors.startTime ? 'text-white' : ''}`} />
+                                        <Clock3 className={`${errors.startTime ? 'text-white' : ''}`} />
                                     </CInputGroupText>
-                                    <CFormSelect
+                                    <CFormInput
+                                        id="startTime"
+                                        type="time"
                                         className={`${errors.startTime ? 'border-danger text-danger' : ''}`}
                                         invalid={!!errors.startTime}
-                                        {...register('startTime')}>
-                                        <option value="">{`${errors.startTime ? errors.startTime.message : 'Seleccione una hora de inicio'}`}</option>
-                                        {Array.from({ length: 13 }, (_, i) => {
-                                            const hour = (i + 7).toString().padStart(2, '0');
-                                            return (
-                                                <option key={i} value={`${hour}:00`}>
-                                                    {`${hour}:00`}
-                                                </option>
-                                            );
-                                        })}
-                                    </CFormSelect>
+                                        {...register('startTime')}
+                                    />
                                 </CInputGroup>
                             </CCol>
-                            <CCol xs={6}>
-                                { /* Hora de Fin */}
-                                <CInputGroup className={`${errors.endTime ? 'is-invalid' : ''} mb-2`}>
+
+                            <CCol md={6}>
+                                <CFormLabel htmlFor="endTime" className="fw-semibold subittulos-esfot">
+                                    Hora de finalización
+                                </CFormLabel>
+                                <CInputGroup className={`${errors.endTime ? 'is-invalid' : ''}`}>
                                     <CInputGroupText
                                         className={`${errors.endTime ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                        <EyeOff className={`${errors.endTime ? 'text-white' : ''}`} />
+                                        <Clock9 className={`${errors.endTime ? 'text-white' : ''}`} />
                                     </CInputGroupText>
-                                    <CFormSelect
+                                    <CFormInput
+                                        id="endTime"
+                                        type="time"
                                         className={`${errors.endTime ? 'border-danger text-danger' : ''}`}
                                         invalid={!!errors.endTime}
-                                        {...register('endTime')}>
-                                        <option value="">{`${errors.endTime ? errors.endTime.message : 'Seleccione una hora de fin'}`}</option>
-                                        {Array.from({ length: 13 }, (_, i) => {
-                                            const hour = (i + 8).toString().padStart(2, '0');
-                                            return (
-                                                <option key={i} value={`${hour}:00`}>
-                                                    {`${hour}:00`}
-                                                </option>
-                                            );
-                                        })}
-                                    </CFormSelect>
+                                        {...register('endTime')}
+                                    />
                                 </CInputGroup>
                             </CCol>
                         </CRow>
                         { /* Descripción */}
-                        <CInputGroup className={`${errors.description ? 'is-invalid' : ''} mb-2`}>
+                        <CInputGroup className={`${errors.description ? 'is-invalid' : ''} mb-3`}>
                             <CInputGroupText
                                 className={`${errors.description ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
-                                <Eye className={`${errors.description ? 'text-white' : ''}`} />
+                                <FileText className={`${errors.description ? 'text-white' : ''}`} />
                             </CInputGroupText>
                             <textarea
                                 className={`form-control ${errors.description ? 'is-invalid' : ''}`}
+                                placeholder={`${errors.description ? errors.description.message : 'Ingrese la descripción de la reserva'}`}
                                 rows="3"
                                 {...register('description')}
-                                placeholder={`${errors.description ? errors.description.message : 'Ingrese una descripción (opcional)'}`}
                             ></textarea>
                         </CInputGroup>
 
                     </CForm>
                 </CModalBody>
                 <CModalFooter>
-                    <CButton onClick={() => { onClose(); resetForm(); }}>Cancelar</CButton>
+                    <CButton onClick={() => { onClose(); resetForm(); toast.dismiss() }}>Cancelar</CButton>
                     <CButton className='btn-esfot' onClick={handleSubmit(confirmCreateReserva)}>Crear Reserva</CButton>
                 </CModalFooter>
             </CModal>

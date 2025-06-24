@@ -47,7 +47,7 @@ export const createReservaSchema = {
             type: 'string',
             minLength: 1,
             maxLength: 200,
-            pattern: '^[a-zA-Z0-9\\s.,;:-]{1,200}$',
+                pattern: "^[\\p{L}\\d\\s.,;:()\\-–—_¡!¿?\"'´`]+$",
             errorMessage: {
                 minLength: 'La descripción no puede estar vacía',
                 pattern: 'La descripción solo puede contener letras, números y (.,;:-)',

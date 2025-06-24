@@ -207,15 +207,24 @@ body {
 
 // CInputGroupText in focus
 .form-control:focus {
-  border-color: #0e4c71 !important;
+  border-color: #0e4c71;
   box-shadow: 0 0 0 0.25rem rgba(14, 76, 113, 0.25);
 }
 
 .form-select:focus {
-  border-color: #0e4c71 !important;
+  border-color: #0e4c71;
   box-shadow: 0 0 0 0.25rem rgba(14, 76, 113, 0.25);
 }
 
+// Form control is invalid
+.form-control.is-invalid {
+  color: #e55353 !important;
+}
+
+// Form control is invalid placeholder
+.form-control.is-invalid::placeholder {
+  color: #e55353 !important;
+}
 
 .bg-esfot {
   background-color: #0e4c71 !important;
@@ -413,6 +422,32 @@ body {
 .rbc-agenda-table {
   border: none !important;
 }
+
+.rbc-agenda-view .rbc-agenda-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.rbc-agenda-content {
+  overflow-y: auto;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE 10+ */
+}
+
+.rbc-agenda-content::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari y Opera */
+}
+
+.rbc-agenda-view .rbc-agenda-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
 
 
 /* Centrar texto vertical y horizontalmente */

@@ -8,7 +8,7 @@ import getDay from 'date-fns/getDay'
 import { es } from 'date-fns/locale'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { useSelector } from 'react-redux'
-import useReserva from '../../hooks/useReservas'
+import useReserva from '../../hooks/useReserva'
 import { CCard, CCardBody, CContainer, CRow, CCol } from '@coreui/react'
 import { toast } from 'react-toastify'
 import CustomToolbar from '../../components/reserva/CustomToolbar'  // <-- Importa aquí
@@ -96,7 +96,7 @@ const CalendarioReservas = () => {
                                 startAccessor="start"
                                 endAccessor="end"
                                 eventPropGetter={eventStyleGetter}
-                                style={{ height: '45vh' }}
+                                style={{ height: '46vh' }}
                                 views={['month', 'week', 'day', 'agenda']}
                                 view={vistaActual}
                                 onView={setVistaActual}

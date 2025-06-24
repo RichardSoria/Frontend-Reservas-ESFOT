@@ -110,7 +110,7 @@ const Login = () => {
     <div className="bg-esfot min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center ">
-          <CCol md={5}>
+          <CCol lg={5} md={9} >
             <CCardGroup>
               <CCardBody className="p-4 bg-white">
                 <CForm onSubmit={handleSubmit(onSubmit)}>
@@ -132,7 +132,7 @@ const Login = () => {
 
                   <CInputGroup className={`mb-3 ${errors.email ? 'is-invalid' : ''}`}>
                     <CInputGroupText
-                      className={`bg-secondary border-secondary ${errors.email ? 'border-danger bg-danger' : 'text-white bg-esfot'
+                      className={`${errors.email ? 'border-danger bg-danger' : 'text-white bg-esfot'
                         }`}
                     >
                       <Mail className={`${errors.email}` ? 'text-white' : ''}/>
@@ -140,7 +140,7 @@ const Login = () => {
                     <CFormInput
                       placeholder="Correo Electrónico"
                       autoComplete="email"
-                      className={`border-secondary text-secondary custom-input ${errors.email ? 'border-danger' : ''
+                      className={`custom-input ${errors.email ? 'border-danger' : ''
                         }`}
                       invalid={!!errors.email}
                       {...register('email')}
@@ -149,7 +149,7 @@ const Login = () => {
 
                   <CInputGroup className={`mb-3 ${errors.password ? 'is-invalid' : ''}`}>
                     <CInputGroupText
-                      className={`bg-secondary border-secondary ${errors.password ? 'border-danger bg-danger' : 'text-white bg-esfot'
+                      className={`${errors.password ? 'border-danger bg-danger' : 'text-white bg-esfot'
                         }`}
                     >
                       <LockKeyhole  className={`${errors.password}` ? 'text-white' : ''}/>
@@ -158,13 +158,13 @@ const Login = () => {
                       type={showPassword ? 'text' : 'password'}
                       placeholder="Contraseña"
                       autoComplete="current-password"
-                      className={`border-secondary text-secondary custom-input ${errors.password ? 'border-danger' : ''
+                      className={`custom-input ${errors.password ? 'border-danger' : ''
                         }`}
                       invalid={!!errors.password}
                       {...register('password')}
                     />
                     <CInputGroupText
-                      className={`bg-secondary border-secondary ${errors.password ? 'border-danger bg-danger' : 'text-white bg-esfot'
+                      className={` ${errors.password ? 'border-danger bg-danger' : 'text-white bg-esfot'
                         }`}
                       style={{ cursor: 'pointer' }}
                       onClick={() => setShowPassword((prev) => !prev)}
@@ -175,13 +175,13 @@ const Login = () => {
 
                   <CInputGroup className={`mb-4 ${errors.role ? 'is-invalid' : ''}`}>
                     <CInputGroupText
-                      className={`bg-secondary border-secondary ${errors.role ? 'border-danger bg-danger' : 'text-white bg-esfot'
+                      className={`${errors.role ? 'border-danger bg-danger' : 'text-white bg-esfot'
                         }`}
                     >
                       <User  className={`${errors.role}` ? 'text-white' : ''}/>
                     </CInputGroupText>
                     <CFormSelect
-                      className={`border-secondary text-secondary custom-input ${errors.role ? 'border-danger' : ''
+                      className={`text-secondary custom-input ${errors.role ? 'border-danger' : ''
                         }`}
                       invalid={!!errors.role}
                       {...register('role')}
