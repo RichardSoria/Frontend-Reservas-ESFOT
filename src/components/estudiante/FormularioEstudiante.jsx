@@ -65,15 +65,6 @@ const FormularioEstudiante = () => {
 
 
     // Configuración del formulario
-
-    const {
-        register, handleSubmit, setError, reset, watch,
-        formState: { errors }
-    } = useForm()
-
-    const fullNameForm = `${watch('name') || ''} ${watch('lastName') || ''}`.trim()
-    const fullNameEstudiante = `${estudianteSeleccionado?.name || ''} ${estudianteSeleccionado?.lastName || ''}`.trim()
-
     const defaultEstudianteValues = {
         name: '',
         lastName: '',
@@ -82,6 +73,17 @@ const FormularioEstudiante = () => {
         phone: '',
         career: ''
     }
+
+    const {
+        register, handleSubmit, setError, reset, watch,
+        formState: { errors }
+    } = useForm({
+        defaultValues: defaultEstudianteValues,
+    })
+
+    const fullNameForm = `${watch('name') || ''} ${watch('lastName') || ''}`.trim()
+    const fullNameEstudiante = `${estudianteSeleccionado?.name || ''} ${estudianteSeleccionado?.lastName || ''}`.trim()
+
 
     // Validación de errores
 

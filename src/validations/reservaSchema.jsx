@@ -1,13 +1,6 @@
 export const createReservaSchema = {
     type: 'object',
     properties: {
-        placeID: {
-            type: 'string',
-            pattern: '^[0-9a-fA-F]{24}$',
-            errorMessage: {
-                pattern: 'El placeID debe ser un ID válido de MongoDB'
-            }
-        },
         placeType: {
             type: 'string',
             enum: ['Aula', 'Laboratorio'],
@@ -15,30 +8,25 @@ export const createReservaSchema = {
                 enum: 'El tipo de lugar debe ser Aula o Laboratorio'
             }
         },
+        placeID: {
+            type: 'string',
+            pattern: '^[0-9a-fA-F]{24}$',
+            errorMessage: {
+                pattern: 'El espacio académico es obligatorio'
+            }
+        },
         purpose: {
             type: 'string',
             enum: ['Clase', 'Prueba/Examen', 'Proyecto', 'Evento/Capacitación', 'Otro'],
             errorMessage: {
-                enum: 'El propósito debe ser válido'
+                enum: 'Seleccione una de las opciones disponibles'
             }
         },
-        description: {
+        reservationDate: {
             type: 'string',
-            minLength: 1,
-            maxLength: 200,
-            pattern: '^[a-zA-Z0-9\\s.,;:-]{1,200}$',
+            format: 'date',
             errorMessage: {
-                minLength: 'La descripción no puede estar vacía',
-                pattern: 'La descripción solo puede contener letras, números y (.,;:-)',
-                maxLength: 'Máximo 200 caracteres'
-            }
-        },
-        status: {
-            type: 'string',
-            enum: ['Pendiente', 'Aprobada', 'Rechazada', 'Cancelada'],
-            default: 'Pendiente',
-            errorMessage: {
-                enum: 'El estado debe ser Pendiente, Aprobada, Rechazada o Cancelada'
+                format: 'La fecha de reserva es obligatoria'
             }
         },
         startTime: {
@@ -54,15 +42,27 @@ export const createReservaSchema = {
             errorMessage: {
                 pattern: 'La hora de fin debe estar en formato HH:mm'
             }
-        }
+        },
+        description: {
+            type: 'string',
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9\\s.,;:-]{1,200}$',
+            errorMessage: {
+                minLength: 'La descripción no puede estar vacía',
+                pattern: 'La descripción solo puede contener letras, números y (.,;:-)',
+                maxLength: 'Máximo 200 caracteres'
+            }
+        },
     },
     required: [
-        'placeID',
         'placeType',
+        'placeID',
         'purpose',
-        'description',
+        'reservationDate',
         'startTime',
-        'endTime'
+        'endTime',
+        'description',
     ],
     additionalProperties: false
 };

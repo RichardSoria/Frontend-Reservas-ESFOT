@@ -61,15 +61,6 @@ const FormularioLaboratorio = () => {
     };
 
     // Configuración del formulario
-
-    const {
-        register, handleSubmit, setError, reset, watch,
-        formState: { errors }
-    } = useForm()
-
-    const fullNameForm = `${watch('name') || ''} ${watch('codigo') || ''}`.trim()
-    const fullNameLaboratorio = `${laboratorioSeleccionado?.name || ''} ${laboratorioSeleccionado?.codigo || ''}`.trim()
-
     const defaultLaboratorioValues = {
         name: '',
         codigo: '',
@@ -79,6 +70,17 @@ const FormularioLaboratorio = () => {
         equipmentProyector: null,
         equipmentInteractiveScreen: null,
     }
+
+    const {
+        register, handleSubmit, setError, reset, watch,
+        formState: { errors }
+    } = useForm({
+        defaultValues: defaultLaboratorioValues
+    })
+
+    const fullNameForm = `${watch('name') || ''} ${watch('codigo') || ''}`.trim()
+    const fullNameLaboratorio = `${laboratorioSeleccionado?.name || ''} ${laboratorioSeleccionado?.codigo || ''}`.trim()
+
 
     const equipmentPC = watch('equipmentPC')
     const equipmentProyector = watch('equipmentProyector')

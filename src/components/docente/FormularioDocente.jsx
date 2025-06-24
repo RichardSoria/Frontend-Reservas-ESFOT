@@ -65,15 +65,6 @@ const FormularioDocente = () => {
 
 
     // Configuración del formulario
-
-    const {
-        register, handleSubmit, setError, reset, setValue, watch,
-        formState: { errors }
-    } = useForm()
-
-    const fullNameForm = `${watch('name') || ''} ${watch('lastName') || ''}`.trim()
-    const fullNameDocente = `${docenteSeleccionado?.name || ''} ${docenteSeleccionado?.lastName || ''}`.trim()
-
     const defaultDocenteValues = {
         name: '',
         lastName: '',
@@ -83,6 +74,17 @@ const FormularioDocente = () => {
         career: '',
         otherFaculty: ''
     }
+
+    const {
+        register, handleSubmit, setError, reset, setValue, watch,
+        formState: { errors }
+    } = useForm({
+        defaultValues: defaultDocenteValues
+    })
+
+    const fullNameForm = `${watch('name') || ''} ${watch('lastName') || ''}`.trim()
+    const fullNameDocente = `${docenteSeleccionado?.name || ''} ${docenteSeleccionado?.lastName || ''}`.trim()
+
 
     // Validación de errores
 

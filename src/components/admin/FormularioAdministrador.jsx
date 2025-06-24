@@ -62,15 +62,6 @@ const FormularioAdministrador = () => {
     };
 
     // Configuración del formulario
-
-    const {
-        register, handleSubmit, setError, reset, watch,
-        formState: { errors }
-    } = useForm()
-
-    const fullNameForm = `${watch('name') || ''} ${watch('lastName') || ''}`.trim()
-    const fullNameAdmin = `${administradorSeleccionado?.name || ''} ${administradorSeleccionado?.lastName || ''}`.trim()
-
     const defaultAdminValues = {
         name: '',
         lastName: '',
@@ -78,6 +69,17 @@ const FormularioAdministrador = () => {
         cedula: '',
         phone: ''
     }
+    
+    const {
+        register, handleSubmit, setError, reset, watch,
+        formState: { errors }
+    } = useForm({
+        defaultValues: defaultAdminValues
+    })
+
+    const fullNameForm = `${watch('name') || ''} ${watch('lastName') || ''}`.trim()
+    const fullNameAdmin = `${administradorSeleccionado?.name || ''} ${administradorSeleccionado?.lastName || ''}`.trim()
+
 
     // Validación de errores
 

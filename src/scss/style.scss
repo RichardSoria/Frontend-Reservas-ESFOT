@@ -194,6 +194,11 @@ body {
   box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
 }
 
+.react-select-container.is-invalid-select .react-select__placeholder {
+  color: #e55353 !important;
+  /* rojo error */
+}
+
 /* Focus normal sin error */
 .react-select-container .react-select__control--is-focused {
   border: 1px solid #0e4c71 !important;
@@ -269,6 +274,19 @@ body {
   background-color: #0e4c71;
   /* color similar a table-dark */
   z-index: 10;
+}
+
+/* Oculta scrollbar en webkit (Chrome, Edge, Safari) */
+.react-select__menu-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Oculta scrollbar en Firefox */
+.react-select__menu-list {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE y Edge */
 }
 
 // Evita el cambio a morado o azul al hacer clic en un CDropdownItem

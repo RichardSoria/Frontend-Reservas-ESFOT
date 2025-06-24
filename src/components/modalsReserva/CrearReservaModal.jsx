@@ -23,6 +23,16 @@ const validate = ajv.compile(createReservaSchema)
 
 export const CrearReservaModal = ({ visible, onClose }) => {
 
+    const reservaDefaultValues = {
+        placeType: '',
+        placeID: '',
+        purpose: '',
+        reservationDate: '',
+        startTime: '',
+        endTime: '',
+        description: '',
+    }
+
     const {
         register,
         control,
@@ -31,7 +41,9 @@ export const CrearReservaModal = ({ visible, onClose }) => {
         reset,
         watch,
         formState: { errors },
-    } = useForm()
+    } = useForm({
+        defaultValues: reservaDefaultValues
+    })
 
     // Estado para el modal de confirmación
     const [confirmVisible, setConfirmVisible] = React.useState(false);
@@ -48,21 +60,13 @@ export const CrearReservaModal = ({ visible, onClose }) => {
 
     const watchedFields = watch()
 
-    const reservaDefaultValues = {
-        placeType: '',
-        placeID: '',
-        reservationDate: '',
-        startTime: '',
-        endTime: '',
-        purpose: '',
-        description: '',
-    }
 
     // Limpia el mensaje general cuando cambian inputs
     React.useEffect(() => {
         if (watchedFields) {
             setgeneralMessage('')
         }
+        console.log('watchedFields', watchedFields)
     }, [watchedFields])
 
     // Cargar aulas y laboratorios al abrir el modal
@@ -128,6 +132,7 @@ export const CrearReservaModal = ({ visible, onClose }) => {
         if (!validateForm(data)) {
             return
         }
+        resetForm()
     }
 
     // Función para confirmar la creación de la reserva
@@ -161,6 +166,7 @@ export const CrearReservaModal = ({ visible, onClose }) => {
                 </CModalHeader>
                 <CModalBody>
                     <CForm>
+                        { /* Tipo de Espacio Académico */}
                         <CInputGroup className={`${errors.placeType ? 'is-invalid' : ''} mb-2`}>
                             <CInputGroupText
                                 className={`${errors.placeType ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
@@ -171,12 +177,12 @@ export const CrearReservaModal = ({ visible, onClose }) => {
                                     }`}
                                 invalid={!!errors.placeType}
                                 {...register('placeType')}>
-                                <option value="">{`${errors.placeType ? errors.placeType.message : 'Selecciona un espacio académico'}`}</option>
-                                <option value="aula">Aula</option>
-                                <option value="laboratorio">Laboratorio</option>
+                                <option value="">{`${errors.placeType ? errors.placeType.message : 'Seleccione un espacio académico'}`}</option>
+                                <option value="Aula">Aula</option>
+                                <option value="Laboratorio">Laboratorio</option>
                             </CFormSelect>
                         </CInputGroup>
-
+                        { /* Espacio Académico */}
                         <CInputGroup className={`${errors.placeID ? 'is-invalid' : ''} mb-2`}>
                             <CInputGroupText
                                 className={`${errors.placeID ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
@@ -187,30 +193,148 @@ export const CrearReservaModal = ({ visible, onClose }) => {
                                 <Controller
                                     name="placeID"
                                     control={control}
-                                    render={({ field }) => (
-                                        <Select
-                                            {...field}
-                                            classNamePrefix="react-select"
-                                            className={`react-select-container ${errors.placeID ? 'is-invalid-select' : ''}`}
-                                            placeholder={
-                                                watchedFields.placeType
-                                                    ? watchedFields.placeType === 'aula'
-                                                        ? 'Selecciona un aula'
-                                                        : 'Selecciona un laboratorio'
-                                                    : 'Selecciona el tipo de espacio'
-                                            }
-                                            isClearable
-                                            options={
-                                                watchedFields.placeType === 'aula'
-                                                    ? aulas.map(a => ({ value: a._id, label: a.name }))
-                                                    : watchedFields.placeType === 'laboratorio'
-                                                        ? laboratorios.map(l => ({ value: l._id, label: l.name }))
-                                                        : []
-                                            }
-                                        />
-                                    )}
+                                    defaultValue=""
+                                    render={({ field }) => {
+                                        const selectedOptions =
+                                            watchedFields.placeType === 'Aula'
+                                                ? aulas.map(a => ({ value: a._id, label: a.name }))
+                                                : watchedFields.placeType === 'Laboratorio'
+                                                    ? laboratorios.map(l => ({ value: l._id, label: l.name }))
+                                                    : [];
+
+                                        const selectedValue = selectedOptions.find(option => option.value === field.value) || null;
+
+                                        return (
+                                            <Select
+                                                value={selectedValue}
+                                                onChange={(option) => field.onChange(option?.value || '')}
+                                                options={selectedOptions}
+                                                isClearable
+                                                classNamePrefix="react-select"
+                                                menuPosition="fixed"
+                                                menuPortalTarget={document.body}
+                                                styles={{
+                                                    menuPortal: base => ({ ...base, zIndex: 9999 }),
+                                                }}
+                                                noOptionsMessage={() => 'No se han encontrado coincidencias'}
+                                                className={`react-select-container ${errors.placeID ? 'is-invalid-select' : ''}`}
+                                                placeholder={
+                                                    watchedFields.placeType === 'Aula'
+                                                        ? 'Seleccione un aula'
+                                                        : 'Seleccione un laboratorio'
+                                                }
+                                            />
+                                        );
+                                    }}
                                 />
                             </div>
+                        </CInputGroup>
+                        { /* Propósito */}
+                        <CInputGroup className={`${errors.purpose ? 'is-invalid' : ''} mb-2`}>
+                            <CInputGroupText
+                                className={`${errors.purpose ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
+                                <LockKeyhole className={`${errors.purpose ? 'text-white' : ''}`} />
+                            </CInputGroupText>
+                            <CFormSelect
+                                className={`${errors.purpose ? 'border-danger text-danger' : ''}`}
+                                invalid={!!errors.purpose}
+                                {...register('purpose')}>
+                                <option value="">{`${errors.purpose ? errors.purpose.message : 'Seleccione un propósito'}`}</option>
+                                <option value="Clase">Clase</option>
+                                <option value="Prueba/Examen">Prueba/Examen</option>
+                                <option value="Proyecto">Proyecto</option>
+                                <option value="Evento/Capacitación">Evento/Capacitación</option>
+                                <option value="Otro">Otro</option>
+                            </CFormSelect>
+                        </CInputGroup>
+                        { /* Fecha de Reserva */}
+                        <CInputGroup className={`${errors.reservationDate ? 'is-invalid' : ''} mb-2`}>
+                            <CInputGroupText
+                                className={`${errors.reservationDate ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
+                                <Eye className={`${errors.reservationDate ? 'text-white' : ''}`} />
+                            </CInputGroupText>
+                            <CFormSelect
+                                className={`${errors.reservationDate ? 'border-danger text-danger' : ''}`}
+                                invalid={!!errors.reservationDate}
+                                {...register('reservationDate')}>
+                                <option value="">{`${errors.reservationDate ? errors.reservationDate.message : 'Seleccione una fecha'}`}</option>
+                                {Array.from({ length: 30 }, (_, i) => {
+                                    const date = new Date();
+                                    date.setDate(date.getDate() + i);
+                                    const formattedDate = date.toISOString().split('T')[0];
+                                    return (
+                                        <option key={i} value={formattedDate}>
+                                            {date.toLocaleDateString('es-ES', {
+                                                weekday: 'long',
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric'
+                                            })}
+                                        </option>
+                                    );
+                                })}
+                            </CFormSelect>
+                        </CInputGroup>
+                        <CRow>
+                            <CCol xs={6}>
+                                { /* Hora de Inicio */}
+                                <CInputGroup className={`${errors.startTime ? 'is-invalid' : ''} mb-2`}>
+                                    <CInputGroupText
+                                        className={`${errors.startTime ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
+                                        <EyeOff className={`${errors.startTime ? 'text-white' : ''}`} />
+                                    </CInputGroupText>
+                                    <CFormSelect
+                                        className={`${errors.startTime ? 'border-danger text-danger' : ''}`}
+                                        invalid={!!errors.startTime}
+                                        {...register('startTime')}>
+                                        <option value="">{`${errors.startTime ? errors.startTime.message : 'Seleccione una hora de inicio'}`}</option>
+                                        {Array.from({ length: 13 }, (_, i) => {
+                                            const hour = (i + 7).toString().padStart(2, '0');
+                                            return (
+                                                <option key={i} value={`${hour}:00`}>
+                                                    {`${hour}:00`}
+                                                </option>
+                                            );
+                                        })}
+                                    </CFormSelect>
+                                </CInputGroup>
+                            </CCol>
+                            <CCol xs={6}>
+                                { /* Hora de Fin */}
+                                <CInputGroup className={`${errors.endTime ? 'is-invalid' : ''} mb-2`}>
+                                    <CInputGroupText
+                                        className={`${errors.endTime ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
+                                        <EyeOff className={`${errors.endTime ? 'text-white' : ''}`} />
+                                    </CInputGroupText>
+                                    <CFormSelect
+                                        className={`${errors.endTime ? 'border-danger text-danger' : ''}`}
+                                        invalid={!!errors.endTime}
+                                        {...register('endTime')}>
+                                        <option value="">{`${errors.endTime ? errors.endTime.message : 'Seleccione una hora de fin'}`}</option>
+                                        {Array.from({ length: 13 }, (_, i) => {
+                                            const hour = (i + 8).toString().padStart(2, '0');
+                                            return (
+                                                <option key={i} value={`${hour}:00`}>
+                                                    {`${hour}:00`}
+                                                </option>
+                                            );
+                                        })}
+                                    </CFormSelect>
+                                </CInputGroup>
+                            </CCol>
+                        </CRow>
+                        { /* Descripción */}
+                        <CInputGroup className={`${errors.description ? 'is-invalid' : ''} mb-2`}>
+                            <CInputGroupText
+                                className={`${errors.description ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
+                                <Eye className={`${errors.description ? 'text-white' : ''}`} />
+                            </CInputGroupText>
+                            <textarea
+                                className={`form-control ${errors.description ? 'is-invalid' : ''}`}
+                                rows="3"
+                                {...register('description')}
+                                placeholder={`${errors.description ? errors.description.message : 'Ingrese una descripción (opcional)'}`}
+                            ></textarea>
                         </CInputGroup>
 
                     </CForm>

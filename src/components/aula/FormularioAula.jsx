@@ -60,20 +60,22 @@ const FormularioAula = () => {
     };
 
     // Configuración del formulario
-
-    const {
-        register, handleSubmit, setError, reset, watch,
-        formState: { errors }
-    } = useForm()
-
-    const fullNameForm = `${watch('name') || ''}`.trim()
-    const fullNameAula = `${aulaSeleccionado?.name || ''}`.trim()
-
     const defaultAulaValues = {
         name: '',
         description: '',
         capacity: '',
     }
+
+    const {
+        register, handleSubmit, setError, reset, watch,
+        formState: { errors }
+    } = useForm({
+        defaultValues: defaultAulaValues
+    })
+
+    const fullNameForm = `${watch('name') || ''}`.trim()
+    const fullNameAula = `${aulaSeleccionado?.name || ''}`.trim()
+
 
     // Validación de errores
 
