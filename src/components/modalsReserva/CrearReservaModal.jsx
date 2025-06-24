@@ -1,15 +1,20 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import { ConfirmModal } from '../modals/ConfirmModal';
 import { LoadingModal } from '../modals/LoadingModal';
 import { CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CButton, CForm, CInputGroup, CInputGroupText, CFormSelect, CRow, CCol } from '@coreui/react'
 import { Mail, LockKeyhole, User, Eye, EyeOff } from 'lucide-react'
 import { createReservaSchema } from '../../validations/reservaSchema';
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import Ajv from 'ajv'
 import addFormats from 'ajv-formats'
 import ajvErrors from 'ajv-errors'
+import useAula from '../../hooks/useAula';
+import useLaboratorio from '../../hooks/useLaboratorio';
+import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import Select from 'react-select'
 
 const ajv = new Ajv({ allErrors: true })
 addFormats(ajv)
@@ -20,6 +25,7 @@ export const CrearReservaModal = ({ visible, onClose }) => {
 
     const {
         register,
+        control,
         handleSubmit,
         setError,
         reset,
@@ -33,6 +39,12 @@ export const CrearReservaModal = ({ visible, onClose }) => {
     const [isLoading, setIsLoading] = React.useState(false);
     const [isLoadingMessage, setIsLoadingMessage] = React.useState('');
     const [generalMessage, setgeneralMessage] = React.useState('')
+
+    // Hooks para obtener datos de aulas y laboratorios
+    const { listarAulas } = useAula()
+    const { listarLaboratorios } = useLaboratorio()
+    const { aulas = [] } = useSelector((state) => state)
+    const { laboratorios = [] } = useSelector((state) => state)
 
     const watchedFields = watch()
 
@@ -48,10 +60,16 @@ export const CrearReservaModal = ({ visible, onClose }) => {
 
     // Limpia el mensaje general cuando cambian inputs
     React.useEffect(() => {
-        if (watchedFields.placeType) {
+        if (watchedFields) {
             setgeneralMessage('')
         }
-    }, [watchedFields.placeType])
+    }, [watchedFields])
+
+    // Cargar aulas y laboratorios al abrir el modal
+    React.useEffect(() => {
+        listarAulas()
+        listarLaboratorios()
+    }, [])
 
     // Mostrar errores con toast cuando cambian
     React.useEffect(() => {
@@ -86,7 +104,7 @@ export const CrearReservaModal = ({ visible, onClose }) => {
     const resetForm = () => {
         reset(reservaDefaultValues)
     }
-        
+
 
     const showConfirm = (action) => {
         if (pendingAction) pendingAction()
@@ -143,27 +161,62 @@ export const CrearReservaModal = ({ visible, onClose }) => {
                 </CModalHeader>
                 <CModalBody>
                     <CForm>
-                        <CInputGroup className={`mb-4 ${errors.placeType ? 'is-invalid' : ''}`}>
+                        <CInputGroup className={`${errors.placeType ? 'is-invalid' : ''} mb-2`}>
                             <CInputGroupText
-                                className={`bg-secondary border-secondary ${errors.placeType ? 'border-danger bg-danger' : 'text-white bg-esfot'
-                                    }`}
-                            >
+                                className={`${errors.placeType ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
                                 <User className={`${errors.placeType}` ? 'text-white' : ''} />
                             </CInputGroupText>
                             <CFormSelect
-                                className={`border-secondary text-secondary custom-input ${errors.placeType ? 'border-danger' : ''
+                                className={`${errors.placeType ? 'border-danger text-danger' : ''
                                     }`}
                                 invalid={!!errors.placeType}
                                 {...register('placeType')}>
-                                <option value="">Selecciona un espacio académico</option>
+                                <option value="">{`${errors.placeType ? errors.placeType.message : 'Selecciona un espacio académico'}`}</option>
                                 <option value="aula">Aula</option>
                                 <option value="laboratorio">Laboratorio</option>
                             </CFormSelect>
                         </CInputGroup>
+
+                        <CInputGroup className={`${errors.placeID ? 'is-invalid' : ''} mb-2`}>
+                            <CInputGroupText
+                                className={`${errors.placeID ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
+                                <Mail className={`${errors.placeID ? 'text-white' : ''}`} />
+                            </CInputGroupText>
+
+                            <div className="flex-grow-1">
+                                <Controller
+                                    name="placeID"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Select
+                                            {...field}
+                                            classNamePrefix="react-select"
+                                            className={`react-select-container ${errors.placeID ? 'is-invalid-select' : ''}`}
+                                            placeholder={
+                                                watchedFields.placeType
+                                                    ? watchedFields.placeType === 'aula'
+                                                        ? 'Selecciona un aula'
+                                                        : 'Selecciona un laboratorio'
+                                                    : 'Selecciona el tipo de espacio'
+                                            }
+                                            isClearable
+                                            options={
+                                                watchedFields.placeType === 'aula'
+                                                    ? aulas.map(a => ({ value: a._id, label: a.name }))
+                                                    : watchedFields.placeType === 'laboratorio'
+                                                        ? laboratorios.map(l => ({ value: l._id, label: l.name }))
+                                                        : []
+                                            }
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </CInputGroup>
+
                     </CForm>
                 </CModalBody>
                 <CModalFooter>
-                    <CButton onClick={onClose}>Cancelar</CButton>
+                    <CButton onClick={() => { onClose(); resetForm(); }}>Cancelar</CButton>
                     <CButton className='btn-esfot' onClick={handleSubmit(confirmCreateReserva)}>Crear Reserva</CButton>
                 </CModalFooter>
             </CModal>

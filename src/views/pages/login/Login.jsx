@@ -45,10 +45,10 @@ const Login = () => {
 
   // Limpia el mensaje general cuando cambian inputs
   React.useEffect(() => {
-    if (watchedFields.email || watchedFields.password || watchedFields.role) {
+    if (watchedFields) {
       setgeneralMessage('')
     }
-  }, [watchedFields.email, watchedFields.password, watchedFields.role])
+  }, [watchedFields])
 
   // Mostrar errores con toast cuando cambian
   React.useEffect(() => {

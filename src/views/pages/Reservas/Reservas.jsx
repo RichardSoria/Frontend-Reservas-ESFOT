@@ -13,8 +13,6 @@ const Reservas = () => {
 
     // Función para manejar la cancelación
     const handleCancel = () => {
-        // Aquí puedes agregar la lógica que se ejecutará al cancelar
-        console.log('Acción cancelada');
         setConfirmVisible(false);
     };
 
@@ -58,7 +56,7 @@ const Reservas = () => {
                         </CCol>
 
                         <CCol md={3} className="text-center">
-                            <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3">
+                            <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3 mb-2">
                                 <CalendarCog className="me-2" />
                                 Asignar Reserva
                             </CButton>

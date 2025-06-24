@@ -96,7 +96,7 @@ const CalendarioReservas = () => {
                                 startAccessor="start"
                                 endAccessor="end"
                                 eventPropGetter={eventStyleGetter}
-                                style={{ height: '50vh' }}
+                                style={{ height: '45vh' }}
                                 views={['month', 'week', 'day', 'agenda']}
                                 view={vistaActual}
                                 onView={setVistaActual}
