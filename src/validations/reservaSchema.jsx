@@ -1,3 +1,5 @@
+import { maxTime, minTime } from "date-fns/constants";
+
 export const createReservaSchema = {
     type: 'object',
     properties: {
@@ -33,14 +35,14 @@ export const createReservaSchema = {
             type: 'string',
             pattern: '^([01]?[0-9]|2[0-3]):[0-5][0-9]$',
             errorMessage: {
-                pattern: 'La hora de inicio debe estar en formato HH:mm'
+                pattern: 'La hora de inicio es obligatoria'
             }
         },
         endTime: {
             type: 'string',
             pattern: '^([01]?[0-9]|2[0-3]):[0-5][0-9]$',
             errorMessage: {
-                pattern: 'La hora de fin debe estar en formato HH:mm'
+                pattern: 'La hora de fin es obligatoria'
             }
         },
         description: {
@@ -64,5 +66,14 @@ export const createReservaSchema = {
         'endTime',
         'description',
     ],
+    errorMessage: {
+        required: {
+            placeType: 'El tipo de lugar es obligatorio',
+            placeID: 'El espacio académico es obligatorio',
+            purpose: 'El propósito es obligatorio',
+            reservationDate: 'La fecha de reserva es obligatoria',
+            description: 'La descripción es obligatoria'
+        }
+    },
     additionalProperties: false
 };

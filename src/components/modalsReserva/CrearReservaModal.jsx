@@ -142,7 +142,7 @@ export const CrearReservaModal = ({ visible, onClose }) => {
             toast.success('Reserva creada exitosamente');
             listarReservas();
             resetForm();
-            onClose(); 
+            onClose();
         } catch (error) {
             toast.error(error.response?.data?.message || 'Error al crear la reserva');
 
@@ -158,6 +158,8 @@ export const CrearReservaModal = ({ visible, onClose }) => {
         }
         showConfirm(() => onSubmitCreateReserva(data))
     }
+
+    const today = new Date().toISOString().split('T')[0];
 
     return (
         <>
@@ -277,6 +279,7 @@ export const CrearReservaModal = ({ visible, onClose }) => {
                                 <CFormInput
                                     id="reservationDate"
                                     type="date"
+                                    min={today}
                                     className={`${errors.reservationDate ? 'border-danger text-danger' : ''}`}
                                     invalid={!!errors.reservationDate}
                                     {...register('reservationDate')}
