@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
+import React, { use } from 'react';
 import { ConfirmModal } from '../modals/ConfirmModal';
 import { LoadingModal } from '../modals/LoadingModal';
 import { CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CButton, CForm, CInputGroup, CInputGroupText, CFormSelect, CRow, CCol, CFormInput, CFormLabel } from '@coreui/react'
@@ -12,6 +12,9 @@ import ajvErrors from 'ajv-errors'
 import useAula from '../../hooks/useAula';
 import useLaboratorio from '../../hooks/useLaboratorio';
 import useReserva from '../../hooks/useReserva';
+import useAdministrador from '../../hooks/useAdministrador';
+import useDocente from '../../hooks/useDocente';
+import useEstudiante from '../../hooks/useEstudiante';
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { toast } from 'react-toastify'
@@ -23,11 +26,13 @@ addFormats(ajv)
 ajvErrors(ajv)
 const validate = ajv.compile(createReservaSchema)
 
-export const CrearReservaModal = ({ visible, onClose }) => {
+export const AsignarReservaModal = ({ visible, onClose }) => {
 
     const reservaDefaultValues = {
         placeType: '',
         placeID: '',
+        userRol: '',
+        userID: '',
         purpose: '',
         reservationDate: '',
         startTime: '',
@@ -60,9 +65,14 @@ export const CrearReservaModal = ({ visible, onClose }) => {
     const { listarReservas } = useReserva()
     const { aulas = [] } = useSelector((state) => state)
     const { laboratorios = [] } = useSelector((state) => state)
+    const { listarAdministradores } = useAdministrador()
+    const { listarDocentes } = useDocente()
+    const { listarEstudiantes } = useEstudiante()
+    const { administradores = [] } = useSelector((state) => state)
+    const { docentes = [] } = useSelector((state) => state)
+    const { estudiantes = [] } = useSelector((state) => state)
 
     const watchedFields = watch()
-
 
     // Limpia el mensaje general cuando cambian inputs
     React.useEffect(() => {
@@ -70,6 +80,7 @@ export const CrearReservaModal = ({ visible, onClose }) => {
             setgeneralMessage('')
         }
     }, [watchedFields])
+
 
     // Cargar aulas y laboratorios al abrir el modal
     React.useEffect(() => {
@@ -80,6 +91,20 @@ export const CrearReservaModal = ({ visible, onClose }) => {
             listarLaboratorios();
         }
     }, [visible, watchedFields.placeType]);
+
+    // Cargar administradores, docentes y estudiantes al abrir el modal
+    React.useEffect(() => {
+        if (visible && watchedFields.userRol === 'Administrador') {
+            listarAdministradores();
+        }
+        if (visible && watchedFields.userRol === 'Docente') {
+            listarDocentes();
+        }
+        if (visible && watchedFields.userRol === 'Estudiante') {
+            listarEstudiantes();
+        }
+    }, [visible, watchedFields.userRol]);
+
 
     // Mostrar errores con toast cuando cambian
     React.useEffect(() => {
@@ -203,14 +228,14 @@ export const CrearReservaModal = ({ visible, onClose }) => {
             setIsLoadingMessage('Creando reserva...');
             setIsLoading(true);
 
-            // Intenta crear la reserva
+            // Intenta asignar la reserva
             await axios.post(`${import.meta.env.VITE_API_URL}/reserva/create`, data, { withCredentials: true });
             toast.success('Reserva creada exitosamente');
             listarReservas();
             resetForm();
             onClose();
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Error al crear la reserva');
+            toast.error(error.response?.data?.message || 'Error al asignar la reserva');
 
         } finally {
             setIsLoading(false);
@@ -235,7 +260,7 @@ export const CrearReservaModal = ({ visible, onClose }) => {
                 onClose={handleCancel}
                 onConfirm={handleConfirm}
                 title={'Confirmar creación de reserva'}
-                message={'¿Estás seguro de que deseas crear esta reserva? Esta acción no se puede deshacer.'}
+                message={'¿Estás seguro de que deseas asignar esta reserva? Esta acción no se puede deshacer.'}
             />
 
             {/* Modal de carga */}
@@ -246,7 +271,7 @@ export const CrearReservaModal = ({ visible, onClose }) => {
 
             <CModal backdrop="static" visible={visible} onClose={onClose} alignment='center'>
                 <CModalHeader>
-                    <CModalTitle className='textos-esfot'> Crear Reserva </CModalTitle>
+                    <CModalTitle className='textos-esfot'> Asignar Reserva </CModalTitle>
                 </CModalHeader>
                 <CModalBody>
                     <CForm>
@@ -314,6 +339,76 @@ export const CrearReservaModal = ({ visible, onClose }) => {
                                 />
                             </div>
                         </CInputGroup>
+
+                        { /* Rol del Usuario */}
+                        <CInputGroup className={`${errors.userRol ? 'is-invalid' : ''} mb-3`}>
+                            <CInputGroupText
+                                className={`${errors.userRol ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
+                                <University className={`${errors.userRol ? 'text-white' : ''}`} />
+                            </CInputGroupText>
+                            <CFormSelect
+                                className={`${errors.userRol ? 'border-danger text-danger' : ''}`}
+                                invalid={!!errors.userRol}
+                                {...register('userRol')}>
+                                <option value="">{`${errors.userRol ? errors.userRol.message : 'Seleccione el rol del usuario'}`}</option>
+                                <option value="Administrador">Administrador</option>
+                                <option value="Docente">Docente</option>
+                                <option value="Estudiante">Estudiante</option>
+                            </CFormSelect>
+                        </CInputGroup>
+
+                        { /* Usuario */}
+                        <CInputGroup className={`${errors.userID ? 'is-invalid' : ''} mb-3`}>
+                            <CInputGroupText
+                                className={`${errors.userID ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
+                                <University className={`${errors.userID ? 'text-white' : ''}`} />
+                            </CInputGroupText>
+                            <div className="flex-grow-1">
+                                <Controller
+                                    name="userID"
+                                    control={control}
+                                    render={({ field }) => {
+                                        const selectedOptions =
+                                            watchedFields.userRol === 'Administrador'
+                                                ? administradores.map(a => ({ value: a._id, label: `${a.name} ${a.lastName}` }))
+                                                : watchedFields.userRol === 'Docente'
+                                                    ? docentes.map(d => ({ value: d._id, label: `${d.name} ${d.lastName}` }))
+                                                    : watchedFields.userRol === 'Estudiante'
+                                                        ? estudiantes.map(e => ({ value: e._id, label: `${e.name} ${e.lastName}` }))
+                                                        : [];
+
+                                        const selectedValue = selectedOptions.find(option => option.value === field.value) || null;
+
+                                        return (
+                                            <Select
+                                                value={selectedValue}
+                                                onChange={(option) => field.onChange(option?.value || '')}
+                                                options={selectedOptions}
+                                                isClearable
+                                                classNamePrefix="react-select"
+                                                menuPosition="fixed"
+                                                menuPortalTarget={document.body}
+                                                styles={{
+                                                    menuPortal: base => ({ ...base, zIndex: 9999 }),
+                                                }}
+                                                noOptionsMessage={() => 'No se han encontrado coincidencias'}
+                                                className={`react-select-container ${errors.userID ? 'is-invalid-select' : ''}`}
+                                                placeholder={
+                                                    watchedFields.userRol === 'Administrador'
+                                                        ? 'Seleccione un administrador'
+                                                        : watchedFields.userRol === 'Docente'
+                                                            ? 'Seleccione un docente'
+                                                            : watchedFields.userRol === 'Estudiante'
+                                                                ? 'Seleccione un estudiante'
+                                                                : 'Seleccione un usuario'
+                                                }
+                                            />
+                                        );
+                                    }}
+                                />
+                            </div>
+                        </CInputGroup>
+
                         { /* Propósito */}
                         <CInputGroup className={`${errors.purpose ? 'is-invalid' : ''} mb-3`}>
                             <CInputGroupText
@@ -409,7 +504,7 @@ export const CrearReservaModal = ({ visible, onClose }) => {
                 </CModalBody>
                 <CModalFooter>
                     <CButton onClick={() => { onClose(); resetForm(); toast.dismiss() }}>Cancelar</CButton>
-                    <CButton className='btn-esfot' onClick={handleSubmit(confirmCreateReserva)}>Crear Reserva</CButton>
+                    <CButton className='btn-esfot' onClick={handleSubmit(confirmCreateReserva)}>Asignar Reserva</CButton>
                 </CModalFooter>
             </CModal>
         </>

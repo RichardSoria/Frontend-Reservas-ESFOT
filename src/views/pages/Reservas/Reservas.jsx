@@ -3,17 +3,30 @@ import CalendarioReservas from '../../../components/reserva/CalendarioReserva'
 import { CCard, CCardBody, CRow, CCol, CButton } from '@coreui/react'
 import { CalendarPlus, CalendarCog } from 'lucide-react';
 import { CrearReservaModal } from '../../../components/modalsReserva/CrearReservaModal';
+import { AsignarReservaModal } from '../../../components/modalsReserva/AsignarReservaModal';
 
 
 const Reservas = () => {
 
     // Estado para el modal de confirmación
-    const [confirmVisible, setConfirmVisible] = React.useState(false);
+    const [confirmVisibleCreateModal, setConfirmVisibleCreateModal] = React.useState(false);
+    const [confirmVisibleAssignModal, setConfirmVisibleAssignModal] = React.useState(false);
 
 
     // Función para manejar la cancelación
     const handleCancel = () => {
-        setConfirmVisible(false);
+        setConfirmVisibleCreateModal(false);
+        setConfirmVisibleAssignModal(false);
+    };
+
+    // Función para abrir el modal de creación de reserva
+    const handleCreateReserva = () => {
+        setConfirmVisibleCreateModal(true);
+    };
+
+    // Función para abrir el modal de asignación de reserva
+    const handleAsignarReserva = () => {
+        setConfirmVisibleAssignModal(true);
     };
 
     return (
@@ -39,7 +52,13 @@ const Reservas = () => {
 
                 {/* Modal de confirmación */}
                 <CrearReservaModal
-                    visible={confirmVisible}
+                    visible={confirmVisibleCreateModal}
+                    onClose={handleCancel}
+                />
+
+                { /* Modal de asignación de reserva */}
+                <AsignarReservaModal
+                    visible={confirmVisibleAssignModal}
                     onClose={handleCancel}
                 />
 
@@ -47,16 +66,14 @@ const Reservas = () => {
                     {/* Botones de acción */}
                     <CRow className="ms-2 me-2 justify-content-center">
                         <CCol md={3} className="text-center">
-                            <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3 mb-2" onClick={() => {
-                                setConfirmVisible(true);
-                            }}>
+                            <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3 mb-2" onClick={handleCreateReserva}>
                                 <CalendarPlus className="me-2" />
                                 Crear Reserva
                             </CButton>
                         </CCol>
 
                         <CCol md={3} className="text-center">
-                            <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3 mb-2">
+                            <CButton type="button" className="btn-esfot-form w-100 fs-6 py-3 mb-2" onClick={handleAsignarReserva}>
                                 <CalendarCog className="me-2" />
                                 Asignar Reserva
                             </CButton>
