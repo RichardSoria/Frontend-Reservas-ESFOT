@@ -4,7 +4,7 @@ import { ConfirmModal } from '../modals/ConfirmModal';
 import { LoadingModal } from '../modals/LoadingModal';
 import { CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CButton, CForm, CInputGroup, CInputGroupText, CFormSelect, CRow, CCol, CFormInput, CFormLabel } from '@coreui/react'
 import { University, HouseWifi, NotebookPen, CalendarDays, Clock3, Clock9, FileText } from 'lucide-react'
-import { createReservaSchema } from '../../validations/reservaSchema';
+import { assignReservaSchema } from '../../validations/reservaSchema';
 import { useForm, Controller } from 'react-hook-form'
 import Ajv from 'ajv'
 import addFormats from 'ajv-formats'
@@ -24,7 +24,7 @@ import moment from 'moment-timezone';
 const ajv = new Ajv({ allErrors: true })
 addFormats(ajv)
 ajvErrors(ajv)
-const validate = ajv.compile(createReservaSchema)
+const validate = ajv.compile(assignReservaSchema)
 
 export const AsignarReservaModal = ({ visible, onClose }) => {
 
