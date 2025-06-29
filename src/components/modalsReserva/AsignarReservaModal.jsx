@@ -229,7 +229,7 @@ export const AsignarReservaModal = ({ visible, onClose }) => {
             setIsLoading(true);
 
             // Intenta asignar la reserva
-            await axios.post(`${import.meta.env.VITE_API_URL}/reserva/create`, data, { withCredentials: true });
+            await axios.post(`${import.meta.env.VITE_API_URL}/reserva/assign`, data, { withCredentials: true });
             toast.success('Reserva creada exitosamente');
             listarReservas();
             resetForm();

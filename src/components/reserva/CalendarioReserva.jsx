@@ -60,7 +60,7 @@ const CalendarioReservas = () => {
                 color = 'black'
                 break
             case 'Rechazada':
-                backgroundColor = '#dc3545' // Rojo
+                backgroundColor = '#7b2626' // Rojo
                 break
             case 'Cancelada':
                 backgroundColor = '#6c757d' // Gris
@@ -72,8 +72,7 @@ const CalendarioReservas = () => {
                 backgroundColor,
                 color,
                 borderRadius: '6px',
-                padding: '4px',
-                border: 'none',
+                margin: '2px',
             },
         }
     }
