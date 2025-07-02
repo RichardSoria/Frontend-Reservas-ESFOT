@@ -4,8 +4,6 @@ import { CCard, CCardBody, CRow, CCol, CButton } from '@coreui/react'
 import { CalendarPlus, CalendarCog } from 'lucide-react';
 import { CrearReservaModal } from '../../../components/modalsReserva/CrearReservaModal';
 import { AsignarReservaModal } from '../../../components/modalsReserva/AsignarReservaModal';
-
-
 const Reservas = () => {
 
     // Estado para el modal de confirmación

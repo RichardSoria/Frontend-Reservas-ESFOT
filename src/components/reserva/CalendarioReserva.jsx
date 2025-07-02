@@ -12,6 +12,7 @@ import useReserva from '../../hooks/useReserva'
 import { CCard, CCardBody, CContainer, CRow, CCol } from '@coreui/react'
 import { toast } from 'react-toastify'
 import CustomToolbar from '../../components/reserva/CustomToolbar'  // <-- Importa aquí
+import { VerReservaModal } from '../modalsReserva/VerReservaModal'
 
 const locales = { es }
 
@@ -27,6 +28,8 @@ const CalendarioReservas = () => {
     const { listarReservas } = useReserva()
     const { reservas = [] } = useSelector((state) => state)
     const [eventos, setEventos] = useState([])
+    const [confirmVisibleWatchModal, setConfirmVisibleWatchModal] = useState(false)
+    const [id, setId] = useState(null) // Estado para el ID de
 
     const [vistaActual, setVistaActual] = useState('agenda')
     const [fechaActual, setFechaActual] = useState(new Date())
@@ -77,49 +80,64 @@ const CalendarioReservas = () => {
         }
     }
 
+    // Función para manejar la cancelación
+    const handleCancel = () => {
+        setConfirmVisibleWatchModal(false);
+        setId(null);
+    };
+
+    // Mostrar modal con detalles de la reserva al seleccionar un evento
     const handleSelectEvent = (event) => {
-        toast.info(
-            `Reserva: ${event.title}\nEstado: ${event.reserva?.status || 'Desconocido'}`,
-        )
+        const id = event.id
+        setId(id)
     }
 
     return (
-        <CContainer className="mt-4 mb-4" fluid>
-            <CRow className="justify-content-center">
-                <CCol>
-                    <CCard className="border-0 shadow-sm">
-                        <CCardBody>
-                            <Calendar
-                                localizer={localizer}
-                                events={eventos}
-                                startAccessor="start"
-                                endAccessor="end"
-                                eventPropGetter={eventStyleGetter}
-                                style={{ height: '46vh' }}
-                                views={['month', 'week', 'day', 'agenda']}
-                                view={vistaActual}
-                                onView={setVistaActual}
-                                date={fechaActual}
-                                onNavigate={setFechaActual}
-                                popup
-                                culture="es"
-                                showAllDayEvents={false}
-                                min={new Date(1970, 1, 1, 7, 0)}
-                                max={new Date(1970, 1, 1, 21, 0)}
-                                onSelectEvent={handleSelectEvent}
-                                messages={{
-                                    date: 'Fecha',
-                                    time: 'Hora',
-                                    event: 'Reservas',
-                                    noEventsInRange: 'No hay reservas registradas.',
-                                }}
-                                components={{ toolbar: CustomToolbar }}
-                            />
-                        </CCardBody>
-                    </CCard>
-                </CCol>
-            </CRow>
-        </CContainer>
+        <>
+            {/*Visualizar modal de reserva*/}
+            <VerReservaModal
+                id={id}
+                visible={!!id}
+                onClose={handleCancel}
+            />
+
+            <CContainer className="mt-4 mb-4" fluid>
+                <CRow className="justify-content-center">
+                    <CCol>
+                        <CCard className="border-0 shadow-sm">
+                            <CCardBody>
+                                <Calendar
+                                    localizer={localizer}
+                                    events={eventos}
+                                    startAccessor="start"
+                                    endAccessor="end"
+                                    eventPropGetter={eventStyleGetter}
+                                    style={{ blockSize: '46vh' }}
+                                    views={['month', 'week', 'day', 'agenda']}
+                                    view={vistaActual}
+                                    onView={setVistaActual}
+                                    date={fechaActual}
+                                    onNavigate={setFechaActual}
+                                    popup
+                                    culture="es"
+                                    showAllDayEvents={false}
+                                    min={new Date(1970, 1, 1, 7, 0)}
+                                    max={new Date(1970, 1, 1, 21, 0)}
+                                    onSelectEvent={handleSelectEvent}
+                                    messages={{
+                                        date: 'Fecha',
+                                        time: 'Hora',
+                                        event: 'Reservas',
+                                        noEventsInRange: 'No hay reservas registradas.',
+                                    }}
+                                    components={{ toolbar: CustomToolbar }}
+                                />
+                            </CCardBody>
+                        </CCard>
+                    </CCol>
+                </CRow>
+            </CContainer>
+        </>
     )
 }
 
