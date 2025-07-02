@@ -12,6 +12,8 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
     const { elementConsult } = useSelector((state) => state)
     const { consultReserva } = useReserva();
     const [reason, setRazon] = useState('');
+    const perfil = useSelector((state) => state.perfil)
+
 
     useEffect(() => {
         if (!visible || !id) return;
@@ -98,8 +100,15 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
                     </CCol>
                 </CRow>
             </CModalBody>
-            <CModalFooter>
-                <CButton onClick={() => { onClose(); toast.dismiss() }}>Cancelar</CButton>
+            <CModalFooter className="d-flex justify-content-center flex-nowrap">
+                {[
+                    <CButton type="button" className="btn-esfot-form w-100 mb-2">Aprobar Reserva</CButton>,
+                    <CButton type="button" className="btn-esfot-form w-100 mb-2">Rechazar Reserva</CButton>,
+                    elementConsult?.solicitante === `${perfil.name} ${perfil.lastName}` &&
+                    elementConsult?.status === "Pendiente" && (
+                        <CButton type="button" className="btn-esfot-form w-100 mb-2">Cancelar Reserva</CButton>
+                    )
+                ].filter(Boolean)}
             </CModalFooter>
         </CModal>
     );
