@@ -21,6 +21,8 @@ import React from 'react'
 import axios from 'axios'
 import { LockKeyhole, Eye, EyeOff, ShieldCheck } from 'lucide-react'
 import { LoadingModal } from '../../../components/modals/LoadingModal'
+import { ConfirmModal } from '../../../components/modals/ConfirmModal';
+
 import { toast } from 'react-toastify'
 
 const ajv = new Ajv({ allErrors: true })
@@ -32,10 +34,17 @@ const PerfilAdministrador = () => {
 
     const { perfil } = useSelector(state => state)
 
-    const { register, handleSubmit, setError, watch, formState: { errors } } = useForm();
+    const defaultValues = {
+        password: '',
+        confirmPassword: ''
+    }
+
+    const { register, handleSubmit, setError, watch, reset, formState: { errors } } = useForm({ defaultValues });
 
     const [generalMessage, setgeneralMessage] = React.useState('')
+    const [pendingAction, setPendingAction] = React.useState(null)
     const [showPassword, setShowPassword] = React.useState(false)
+    const [confirmVisible, setConfirmVisible] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false)
     const [isLoadingMessage, setIsLoadingMessage] = React.useState('Cargando...')
 
@@ -62,30 +71,48 @@ const PerfilAdministrador = () => {
         }
     }, [generalMessage])
 
-    const onPasswordSubmit = async (data) => {
-        const valid = validate(data)
+    const resetForm = () => {
+        reset(defaultValues)
+    }
+
+
+    const onPasswordSubmit = (data) => {
+        const valid = validate(data);
         if (!valid) {
             validate.errors.forEach((err) => {
-                const field = err.instancePath.replace('/', '')
-                setError(field, { type: 'manual', message: err.message })
-            })
-            return
+                const field = err.instancePath.replace('/', '');
+                setError(field, { type: 'manual', message: err.message });
+            });
+            return;
         }
+        setPendingAction(() => () => updatePassword(data));
+        setConfirmVisible(true);
+    };
+
+    const updatePassword = async (data) => {
         try {
-            setIsLoading(true)
-            setIsLoadingMessage('Actualizando contraseña...')
-            await axios.put(`${import.meta.env.VITE_API_URL}/admin/update-password`, data, { withCredentials: true })
-            setgeneralMessage('')
-            toast.success('Contraseña actualizada correctamente')
+            setIsLoading(true);
+            setIsLoadingMessage('Actualizando contraseña...');
+            await axios.put(`${import.meta.env.VITE_API_URL}/admin/update-password`, data, { withCredentials: true });
+            toast.success('Contraseña actualizada correctamente');
+            resetForm();
         } catch (error) {
-            if (error.response && error.response.data) {
-                setgeneralMessage(error.response.data.message || 'Error al actualizar la contraseña')
-            } else {
-                setgeneralMessage('Error de conexión al servidor')
-            }
+            const msg = error.response?.data?.message || 'Error al actualizar la contraseña';
+            setgeneralMessage(msg);
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
+    };
+
+    const handleConfirm = () => {
+        if (pendingAction) pendingAction()
+        setConfirmVisible(false)
+        setPendingAction(null)
+    };
+
+    const handleCancel = () => {
+        setConfirmVisible(false)
+        setPendingAction(null)
     }
 
     if (!perfil) return <Navigate to="/modulos" replace />
@@ -132,6 +159,15 @@ const PerfilAdministrador = () => {
                         </p>
                         <p><strong>Rol:</strong> {perfil.rol ? 'Administrador' : ''}</p>
                     </CCol>
+
+                    {/* Modal de confirmación */}
+                    <ConfirmModal
+                        visible={confirmVisible}
+                        onClose={handleCancel}
+                        onConfirm={handleConfirm}
+                        title={'Cambiar Contraseña'}
+                        message={'¿Estás seguro de que deseas cambiar tu contraseña?'}
+                    />
 
                     {/* Modal de carga */}
                     <LoadingModal

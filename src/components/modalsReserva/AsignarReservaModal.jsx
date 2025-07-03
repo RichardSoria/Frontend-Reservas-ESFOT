@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { use } from 'react';
+import React from 'react';
 import { ConfirmModal } from '../modals/ConfirmModal';
 import { LoadingModal } from '../modals/LoadingModal';
 import { CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CButton, CForm, CInputGroup, CInputGroupText, CFormSelect, CRow, CCol, CFormInput, CFormLabel } from '@coreui/react'
@@ -227,8 +227,6 @@ export const AsignarReservaModal = ({ visible, onClose }) => {
         try {
             setIsLoadingMessage('Creando reserva...');
             setIsLoading(true);
-
-            // Intenta asignar la reserva
             await axios.post(`${import.meta.env.VITE_API_URL}/reserva/assign`, data, { withCredentials: true });
             toast.success('Reserva creada exitosamente');
             listarReservas();

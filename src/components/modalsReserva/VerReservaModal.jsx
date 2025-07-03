@@ -196,55 +196,57 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
                         <p><strong>Fecha:</strong> {new Date(elementConsult?.reservationDate).toLocaleDateString('es-EC')}</p>
                         <p><strong>Horario:</strong> {elementConsult?.startTime} - {elementConsult?.endTime}</p>
                         <p>
-                            <strong>Estado:</strong>{' '}
-                            <span
-                                style={{
-                                    backgroundColor:
-                                        elementConsult?.status === 'Aprobada' ? '#198754' :
-                                            elementConsult?.status === 'Pendiente' ? '#ffc008' :
-                                                elementConsult?.status === 'Rechazada' ? '#7b2626' :
-                                                    elementConsult?.status === 'Cancelada' ? '#6c757d' : '#adb5bd',
-                                    color:
-                                        elementConsult?.status === 'Pendiente' ? 'black' : 'white',
-                                    padding: '3px 12px',
-                                    borderRadius: '12px',
-                                    fontWeight: '500',
-                                    fontSize: '0.9rem',
-                                    display: 'inline-block',
-                                    textAlign: 'center',
-                                }}
-                            >
-                                {elementConsult?.status}
-                            </span>
                         </p>
-                        {elementConsult?.rejectReason && (
-                            <p><strong>Motivo de rechazo:</strong> {elementConsult?.rejectReason}</p>
-                        )}
+                        <strong>Estado:</strong>{' '}
+                        <span
+                            style={{
+                                backgroundColor:
+                                    elementConsult?.status === 'Aprobada' ? '#198754' :
+                                        elementConsult?.status === 'Pendiente' ? '#ffc008' :
+                                            elementConsult?.status === 'Rechazada' ? '#7b2626' :
+                                                elementConsult?.status === 'Cancelada' ? '#6c757d' : '#adb5bd',
+                                color:
+                                    elementConsult?.status === 'Pendiente' ? 'black' : 'white',
+                                padding: '3px 12px',
+                                borderRadius: '12px',
+                                fontWeight: '500',
+                                fontSize: '0.9rem',
+                                display: 'inline-block',
+                                textAlign: 'center',
+                            }}
+                        >
+                            {elementConsult?.status}
+                        </span>
+                    </CCol>
+
+                    <CCol md={6}>
+                        <h5 className="subtitulos-esfot mb-3">Detalles Temporales de la Reserva</h5>
                         <p>
-                            <strong>Fecha de registro:</strong> {new Date(elementConsult?.createdDate).toLocaleString('es-EC')}
+                            <strong>Fecha de registro:</strong><br />{new Date(elementConsult?.createdDate).toLocaleString('es-EC')}
                         </p>
                         <p>
-                            <strong>Fecha de cancelación:</strong>{' '}
+                            <strong>Fecha de cancelación:<br /></strong>{' '}
                             {elementConsult?.cancellationDate
                                 ? new Date(elementConsult.cancellationDate).toLocaleString('es-EC')
                                 : 'Sin registro'}
                         </p>
-                    </CCol>
 
-                    {/* Información del responsable */}
-                    <CCol md={6}>
+                        {/* Información del responsable */}
+
                         <h5 className="subtitulos-esfot mb-3">Información de Autorización</h5>
-                        <p><strong>Autorizado por:</strong> {elementConsult?.autorizadoPor ?? 'Sin registro'}</p>
-                        <p><strong>Fecha de autorización:</strong> {elementConsult?.authorizationDate
+                        <p><strong>Autorizado por:<br /></strong> {elementConsult?.autorizadoPor ?? 'Sin registro'}</p>
+                        <p><strong>Fecha de autorización:<br /></strong> {elementConsult?.authorizationDate
                             ? new Date(elementConsult?.authorizationDate).toLocaleString('es-EC')
                             : 'Sin registro'}
                         </p>
                         <p>
                             <strong>Motivo:</strong> {elementConsult?.reason ?? 'Sin motivo registrado'}
                         </p>
-                        <hr />
-                        {/* Motivo de aprobación o rechazo */}
-                        <CInputGroup className={`${errors.reason ? 'is-invalid' : ''} mb-3`}>
+                    </CCol>
+
+                    {/* Motivo de aprobación o rechazo */}
+                    {elementConsult?.status === "Pendiente" && (
+                        <CInputGroup className={`${errors.reason ? 'is-invalid' : ''} mt-3`}>
                             <CInputGroupText className={`${errors.reason ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
                                 <FileText className={`${errors.reason ? 'text-white' : ''}`} />
                             </CInputGroupText>
@@ -257,7 +259,7 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
                                 {...register('reason')}
                             />
                         </CInputGroup>
-                    </CCol>
+                    )}
                 </CRow>
             </CModalBody>
 
@@ -276,16 +278,33 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
                 message={isLoadingMessage}
             />
 
-            <CModalFooter className="d-flex justify-content-center flex-nowrap">
-                {[
-                    <CButton type="button" className="btn-esfot-form w-100 mb-2" onClick={handleSubmit(confirmAprove)}>Aprobar Reserva</CButton>,
-                    <CButton type="button" className="btn-esfot-form w-100 mb-2">Rechazar Reserva</CButton>,
-                    elementConsult?.solicitante === `${perfil.name} ${perfil.lastName}` &&
-                    elementConsult?.status === "Pendiente" && (
-                        <CButton type="button" className="btn-esfot-form w-100 mb-2">Cancelar Reserva</CButton>
-                    )
-                ].filter(Boolean)}
-            </CModalFooter>
+            {elementConsult?.status === "Pendiente" && (
+                <CModalFooter className="d-flex justify-content-center flex-nowrap">
+                    <CButton
+                        type="button"
+                        className="btn-esfot-form w-100 mb-2"
+                        onClick={handleSubmit(confirmAprove)}
+                    >
+                        Aprobar Reserva
+                    </CButton>
+
+                    <CButton
+                        type="button"
+                        className="btn-esfot-form w-100 mb-2"
+                    >
+                        Rechazar Reserva
+                    </CButton>
+
+                    {elementConsult?.solicitante === `${perfil.name} ${perfil.lastName}` && (
+                        <CButton
+                            type="button"
+                            className="btn-esfot-form w-100 mb-2"
+                        >
+                            Cancelar Reserva
+                        </CButton>
+                    )}
+                </CModalFooter>
+            )}
         </CModal>
     );
 }
