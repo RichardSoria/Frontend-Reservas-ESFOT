@@ -272,7 +272,7 @@ export const AsignarReservaModal = ({ visible, onClose }) => {
                 message={isLoadingMessage}
             />
 
-            <CModal backdrop="static" visible={visible} onClose={handleManualClose} alignment='center'>
+            <CModal backdrop="static" visible={visible} onClose={handleManualClose} alignment='center' style={{ display: confirmVisible ? 'none' : 'block' }}>
                 <CModalHeader>
                     <CModalTitle className='textos-esfot'> Asignar Reserva </CModalTitle>
                 </CModalHeader>
