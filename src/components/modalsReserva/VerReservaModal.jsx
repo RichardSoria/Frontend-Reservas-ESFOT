@@ -3,18 +3,113 @@ import { useEffect, useState } from 'react'
 import useReserva from '../../hooks/useReserva';
 import { useSelector } from 'react-redux';
 import { CModal } from '@coreui/react';
-import { CModalHeader, CModalTitle, CModalBody, CRow, CCol, CButton, CModalFooter, CFormTextarea } from '@coreui/react';
+import { CModalHeader, CModalTitle, CModalBody, CRow, CCol, CInputGroup, CInputGroupText, CFormTextarea, CButton, CModalFooter } from '@coreui/react';
 import { toast } from 'react-toastify';
+import { FileText } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { reasonReservaSchema } from '../../validations/reservaSchema';
+import addFormats from 'ajv-formats';
+import ajvErrors from 'ajv-errors';
+import Ajv from 'ajv';
+import { ConfirmModal } from '../modals/ConfirmModal'
+import { LoadingModal } from '../modals/LoadingModal'
+import axios from 'axios';
 
+
+const ajv = new Ajv({ allErrors: true })
+addFormats(ajv)
+ajvErrors(ajv)
+const validate = ajv.compile(reasonReservaSchema)
 
 
 export const VerReservaModal = ({ id, visible, onClose }) => {
+
+    const reasonValueDefault = '';
+
+    const {
+        register,
+        handleSubmit,
+        setError,
+        reset,
+        watch,
+        formState: { errors },
+    } = useForm({
+        defaultValues: { reason: reasonValueDefault }
+    });
+
+
+    // Estado para el modal de confirmación
+    const [confirmVisible, setConfirmVisible] = useState(false);
+    const [pendingAction, setPendingAction] = useState(null)
+    const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingMessage, setIsLoadingMessage] = useState('');
+    const [operation, setOperation] = useState('')
+    const [generalMessage, setgeneralMessage] = useState('')
+
     const { elementConsult } = useSelector((state) => state)
-    const { consultReserva } = useReserva();
-    const [reason, setRazon] = useState('');
     const perfil = useSelector((state) => state.perfil)
+    const { consultReserva } = useReserva();
+    const { listarReservas } = useReserva();
+    const watchedFields = watch();
 
 
+    useEffect(() => {
+        if (watchedFields) {
+            setgeneralMessage('')
+        }
+    }, [watchedFields]);
+
+    useEffect(() => {
+        Object.values(errors).forEach((error) => {
+            toast.error(error.message, { autoClose: 4000 });
+        });
+    }, [errors]);
+
+    useEffect(() => {
+        if (generalMessage) {
+            toast.error(generalMessage, {
+                autoClose: 5000,
+                onClose: () => setgeneralMessage(''),
+            })
+        }
+    }, [generalMessage])
+
+
+    const validateForm = (data) => {
+        const valid = validate(data)
+        if (!valid) {
+            validate.errors.forEach(err => {
+                const field = err.instancePath.replace('/', '')
+                setError(field, { type: 'manual', message: err.message })
+            })
+            return false
+        }
+        return true
+    }
+
+    const resetForm = () => {
+        reset({ reason: reasonValueDefault });
+    };
+
+
+    // Funciones de confirmación
+
+    const showConfirm = (operation, action) => {
+        setOperation(operation)
+        setPendingAction(() => action)
+        setConfirmVisible(true)
+    }
+
+    const handleConfirm = () => {
+        if (pendingAction) pendingAction()
+        setConfirmVisible(false)
+        setPendingAction(null)
+    }
+
+    const handleCancel = () => {
+        setConfirmVisible(false)
+        setPendingAction(null)
+    }
     useEffect(() => {
         if (!visible || !id) return;
 
@@ -29,9 +124,61 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
 
     if (!elementConsult) return null;
 
+    // Funciones de envío
+    const onSubmitApprove = async (data) => {
+        if (!validateForm(data)) return;
+
+        try {
+            setIsLoadingMessage('Aprobando reserva...');
+            setIsLoading(true);
+            await axios.post(`${import.meta.env.VITE_API_URL}/reserva/approve/${elementConsult._id}`, data, { withCredentials: true })
+            toast.success('Reserva aprobada con éxito')
+            listarReservas()
+            resetForm();
+            onClose();
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Error al aprobar la reserva', { autoClose: 5000 })
+        } finally {
+            setIsLoading(false);
+        }
+    }
+    const getModalText = () => {
+        switch (operation) {
+            case 'approve':
+                return {
+                    title: 'Aprobar Reserva',
+                    message: '¿Está seguro de que desea aprobar esta reserva?'
+                }
+            case 'reject':
+                return {
+                    title: 'Rechazar Reserva',
+                    message: '¿Está seguro de que desea rechazar esta reserva?'
+                }
+            case 'cancel':
+                return {
+                    title: 'Cancelar Reserva',
+                    message: '¿Está seguro de que desea cancelar esta reserva?'
+                }
+            default:
+                return { title: '', message: '' }
+        }
+    }
+
+    const { title, message } = getModalText();
+
+    const confirmAprove = (data) => {
+        if (!validateForm(data)) return;
+
+        showConfirm('approve', () => onSubmitApprove(data));
+    }
+
+    const handleManualClose = () => {
+        reset({ reason: '' });
+        onClose();
+    };
 
     return (
-        <CModal backdrop="static" visible={visible} onClose={onClose} alignment='center'>
+        <CModal backdrop="static" visible={visible} onClose={handleManualClose} alignment='center'>
             <CModalHeader>
                 <CModalTitle className='textos-esfot'> Ver Reserva </CModalTitle>
             </CModalHeader>
@@ -73,6 +220,15 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
                         {elementConsult?.rejectReason && (
                             <p><strong>Motivo de rechazo:</strong> {elementConsult?.rejectReason}</p>
                         )}
+                        <p>
+                            <strong>Fecha de registro:</strong> {new Date(elementConsult?.createdDate).toLocaleString('es-EC')}
+                        </p>
+                        <p>
+                            <strong>Fecha de cancelación:</strong>{' '}
+                            {elementConsult?.cancellationDate
+                                ? new Date(elementConsult.cancellationDate).toLocaleString('es-EC')
+                                : 'Sin registro'}
+                        </p>
                     </CCol>
 
                     {/* Información del responsable */}
@@ -83,26 +239,46 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
                             ? new Date(elementConsult?.authorizationDate).toLocaleString('es-EC')
                             : 'Sin registro'}
                         </p>
-
                         <p>
-                            <strong>Registrada el:</strong> {new Date(elementConsult?.createdDate).toLocaleString('es-EC')}
+                            <strong>Motivo:</strong> {elementConsult?.reason ?? 'Sin motivo registrado'}
                         </p>
                         <hr />
-
-                        <CFormTextarea
-                            id="razonRechazo"
-                            placeholder="Ingrese el motivo de aprobación o rechazo de la reserva"
-                            rows={6}
-                            value={reason}
-                            onChange={(e) => setRazon(e.target.value)}
-                            className="mb-3"
-                        />
+                        {/* Motivo de aprobación o rechazo */}
+                        <CInputGroup className={`${errors.reason ? 'is-invalid' : ''} mb-3`}>
+                            <CInputGroupText className={`${errors.reason ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
+                                <FileText className={`${errors.reason ? 'text-white' : ''}`} />
+                            </CInputGroupText>
+                            <textarea
+                                id="reason"
+                                className={`form-control ${errors.reason ? 'is-invalid' : ''}`}
+                                placeholder={errors.reason ? errors.reason.message : 'Ingrese el motivo de aprobación o rechazo de la reserva'}
+                                rows={6}
+                                style={{ resize: 'none' }}
+                                {...register('reason')}
+                            />
+                        </CInputGroup>
                     </CCol>
                 </CRow>
             </CModalBody>
+
+            {/* Modal de confirmación */}
+            <ConfirmModal
+                visible={confirmVisible}
+                onClose={handleCancel}
+                onConfirm={handleConfirm}
+                title={title}
+                message={message}
+            />
+
+            {/* Modal de carga */}
+            <LoadingModal
+                visible={isLoading}
+                message={isLoadingMessage}
+            />
+
             <CModalFooter className="d-flex justify-content-center flex-nowrap">
                 {[
-                    <CButton type="button" className="btn-esfot-form w-100 mb-2">Aprobar Reserva</CButton>,
+                    <CButton type="button" className="btn-esfot-form w-100 mb-2" onClick={handleSubmit(confirmAprove)}>Aprobar Reserva</CButton>,
                     <CButton type="button" className="btn-esfot-form w-100 mb-2">Rechazar Reserva</CButton>,
                     elementConsult?.solicitante === `${perfil.name} ${perfil.lastName}` &&
                     elementConsult?.status === "Pendiente" && (

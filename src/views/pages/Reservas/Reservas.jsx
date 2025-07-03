@@ -4,6 +4,7 @@ import { CCard, CCardBody, CRow, CCol, CButton } from '@coreui/react'
 import { CalendarPlus, CalendarCog } from 'lucide-react';
 import { CrearReservaModal } from '../../../components/modalsReserva/CrearReservaModal';
 import { AsignarReservaModal } from '../../../components/modalsReserva/AsignarReservaModal';
+import { toast } from 'react-toastify';
 const Reservas = () => {
 
     // Estado para el modal de confirmación
@@ -15,6 +16,7 @@ const Reservas = () => {
     const handleCancel = () => {
         setConfirmVisibleCreateModal(false);
         setConfirmVisibleAssignModal(false);
+        toast.dismiss();
     };
 
     // Función para abrir el modal de creación de reserva

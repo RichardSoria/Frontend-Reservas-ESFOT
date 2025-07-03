@@ -158,7 +158,7 @@ const FormularioDocente = () => {
             setIsLoading(true)
             await axios.post(`${import.meta.env.VITE_API_URL}/docente/register`, data, { withCredentials: true })
             await listarDocentes()
-            toast.success('Docente registrado con éxito!')
+            toast.success('Docente registrado con éxito')
             resetForm()
         } catch (err) {
             toast.error(err.response?.data?.message || 'Error al registrar docente', { autoClose: 5000 })
@@ -181,7 +181,7 @@ const FormularioDocente = () => {
             setIsLoading(true)
             await axios.put(`${import.meta.env.VITE_API_URL}/docente/update/${docenteSeleccionado._id}`, data, { withCredentials: true })
             await listarDocentes()
-            toast.success('Docente actualizado con éxito!')
+            toast.success('Docente actualizado con éxito')
             resetForm()
         } catch (err) {
             toast.error(err.response?.data?.message || 'Error al actualizar Docente', { autoClose: 5000 })
@@ -204,7 +204,7 @@ const FormularioDocente = () => {
             setIsLoading(true)
             await axios.put(`${import.meta.env.VITE_API_URL}/docente/enable/${docenteSeleccionado._id}`, {}, { withCredentials: true })
             await listarDocentes()
-            toast.success('Docente habilitado con éxito!')
+            toast.success('Docente habilitado con éxito')
             resetForm()
         } catch (err) {
             toast.error(err.response?.data?.message || 'Error al habilitar docente', { autoClose: 5000 })
@@ -227,7 +227,7 @@ const FormularioDocente = () => {
             setIsLoading(true)
             await axios.put(`${import.meta.env.VITE_API_URL}/docente/disable/${docenteSeleccionado._id}`, {}, { withCredentials: true })
             await listarDocentes()
-            toast.success('Docente deshabilitado con éxito!')
+            toast.success('Docente deshabilitado con éxito')
             resetForm()
         } catch (err) {
             toast.error(err.response?.data?.message || 'Error al deshabilitar docente', { autoClose: 5000 })

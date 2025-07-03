@@ -174,3 +174,26 @@ export const assignReservaSchema = {
     additionalProperties: false
 };
 
+export const reasonReservaSchema = {
+    type: 'object',
+    properties: {
+        reason: {
+            type: 'string',
+            minLength: 1,
+            maxLength: 200,
+            pattern: "^[\\p{L}\\d\\s.,;:()\\-–—_¡!¿?\"'´`]+$",
+            errorMessage: {
+                minLength: 'El motivo no puede estar vacío',
+                pattern: 'El motivo solo puede contener letras, números y (.,;:-)',
+                maxLength: 'Máximo 200 caracteres'
+            }
+        }
+    },
+    required: ['reason'],
+    errorMessage: {
+        required: {
+            reason: 'El motivo es obligatorio'
+        }
+    },
+    additionalProperties: false
+};

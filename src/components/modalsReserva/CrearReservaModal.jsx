@@ -227,6 +227,11 @@ export const CrearReservaModal = ({ visible, onClose }) => {
 
     const today = new Date().toISOString().split('T')[0];
 
+    const handleManualClose = () => {
+        resetForm(reservaDefaultValues);
+        onClose();
+    }
+
     return (
         <>
             {/* Modal de confirmación */}
@@ -244,7 +249,7 @@ export const CrearReservaModal = ({ visible, onClose }) => {
                 message={isLoadingMessage}
             />
 
-            <CModal backdrop="static" visible={visible} onClose={onClose} alignment='center'>
+            <CModal backdrop="static" visible={visible} onClose={handleManualClose} alignment='center'>
                 <CModalHeader>
                     <CModalTitle className='textos-esfot'> Crear Reserva </CModalTitle>
                 </CModalHeader>
