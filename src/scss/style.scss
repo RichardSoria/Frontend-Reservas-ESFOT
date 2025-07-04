@@ -365,18 +365,23 @@ body {
   font-weight: bold;
 }
 
-.rbc-event:focus, 
-.rbc-event.rbc-selected {
+.rbc-event:focus {
   outline: none !important;
-  border: 2px solid #0e4c71 !important;
+  border: 1px solid #0e4c71 !important;
   border-color: #0e4c71;
   box-shadow: 0 0 0 0.25rem rgba(14, 76, 113, 0.25);
   cursor: pointer;
 }
+
 .rbc-event:hover {
-  border-color: #0e4c71;
+  border-color: #0e4c71 !important;
   box-shadow: 0 0 0 0.25rem rgba(14, 76, 113, 0.25);
   cursor: pointer;
+}
+
+.rbc-event,
+.rbc-day-slot .rbc-background-event {
+  border: 1px solid #0e4c71 !important;
 }
 
 
@@ -410,6 +415,10 @@ body {
 .rbc-agenda-event-cell {
   border: 2px solid #fff;
   padding: 5px;
+}
+
+.rbc-agenda-event-cell {
+  cursor: pointer;
 }
 
 /* 7. Quitar border de tablas y calendariois*/
