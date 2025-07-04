@@ -178,7 +178,7 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
     };
 
     return (
-        <CModal backdrop="static" visible={visible} onClose={handleManualClose} alignment='center'>
+        <CModal backdrop="static" visible={visible} onClose={handleManualClose} alignment='center' style={{display: confirmVisible ? 'none' : 'block'}}>
             <CModalHeader>
                 <CModalTitle className='textos-esfot'> Ver Reserva </CModalTitle>
             </CModalHeader>
@@ -221,7 +221,7 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
 
                     <CCol md={6}>
                         <h5 className="subtitulos-esfot mb-3">Detalles Temporales de la Reserva</h5>
-                        <p>
+                        <p>|
                             <strong>Fecha de registro:</strong><br />{new Date(elementConsult?.createdDate).toLocaleString('es-EC')}
                         </p>
                         <p>

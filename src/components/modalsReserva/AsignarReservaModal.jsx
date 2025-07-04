@@ -221,14 +221,14 @@ export const AsignarReservaModal = ({ visible, onClose }) => {
         setPendingAction(null)
     }
 
-    const onSubmitCreateReserva = async (data) => {
+    const onSubmitAssingReserva = async (data) => {
         if (!validateForm(data)) return;
 
         try {
-            setIsLoadingMessage('Creando reserva...');
+            setIsLoadingMessage('Asignando reserva...');
             setIsLoading(true);
             await axios.post(`${import.meta.env.VITE_API_URL}/reserva/assign`, data, { withCredentials: true });
-            toast.success('Reserva creada exitosamente');
+            toast.success('Reserva asignada exitosamente');
             listarReservas();
             resetForm();
             onClose();
@@ -241,11 +241,11 @@ export const AsignarReservaModal = ({ visible, onClose }) => {
     };
 
     // Función para confirmar la creación de la reserva
-    const confirmCreateReserva = (data) => {
+    const confrimAssignReserva = (data) => {
         if (!validateForm(data)) {
             return
         }
-        showConfirm(() => onSubmitCreateReserva(data))
+        showConfirm(() => onSubmitAssingReserva(data))
     }
 
     const today = new Date().toISOString().split('T')[0];
@@ -507,7 +507,7 @@ export const AsignarReservaModal = ({ visible, onClose }) => {
                 </CModalBody>
                 <CModalFooter>
                     <CButton onClick={() => { onClose(); resetForm(); toast.dismiss() }}>Cancelar</CButton>
-                    <CButton className='btn-esfot' onClick={handleSubmit(confirmCreateReserva)}>Asignar Reserva</CButton>
+                    <CButton className='btn-esfot' onClick={handleSubmit(confrimAssignReserva)}>Asignar Reserva</CButton>
                 </CModalFooter>
             </CModal>
         </>

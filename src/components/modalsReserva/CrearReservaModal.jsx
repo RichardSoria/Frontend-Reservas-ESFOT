@@ -202,8 +202,6 @@ export const CrearReservaModal = ({ visible, onClose }) => {
         try {
             setIsLoadingMessage('Creando reserva...');
             setIsLoading(true);
-
-            // Intenta crear la reserva
             await axios.post(`${import.meta.env.VITE_API_URL}/reserva/create`, data, { withCredentials: true });
             toast.success('Reserva creada exitosamente');
             listarReservas();
@@ -249,7 +247,7 @@ export const CrearReservaModal = ({ visible, onClose }) => {
                 message={isLoadingMessage}
             />
 
-            <CModal backdrop="static" visible={visible} onClose={handleManualClose} alignment='center'>
+            <CModal backdrop="static" visible={visible} onClose={handleManualClose} alignment='center' style={{ display: confirmVisible ? 'none' : 'block' }}>
                 <CModalHeader>
                     <CModalTitle className='textos-esfot'> Crear Reserva </CModalTitle>
                 </CModalHeader>

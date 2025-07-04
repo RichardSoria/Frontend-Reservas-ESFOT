@@ -16,7 +16,6 @@ const Reservas = () => {
     const handleCancel = () => {
         setConfirmVisibleCreateModal(false);
         setConfirmVisibleAssignModal(false);
-        toast.dismiss();
     };
 
     // Función para abrir el modal de creación de reserva
