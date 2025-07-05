@@ -101,7 +101,7 @@ const CalendarioReservas = () => {
                 onClose={handleCancel}
             />
 
-            <CContainer className='mt4 mb-4' fluid>
+            <CContainer fluid>
                 <CRow className="justify-content-center">
                     <CCol>
                         <CCard className="border-0 shadow-sm">
@@ -112,7 +112,7 @@ const CalendarioReservas = () => {
                                     startAccessor="start"
                                     endAccessor="end"
                                     eventPropGetter={eventStyleGetter}
-                                    style={{ blockSize: '60vh' }}
+                                    style={{ blockSize: '65vh' }}
                                     views={['month', 'week', 'day', 'agenda']}
                                     view={vistaActual}
                                     onView={setVistaActual}

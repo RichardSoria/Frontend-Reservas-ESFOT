@@ -131,7 +131,7 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
         try {
             setIsLoadingMessage('Aprobando reserva...');
             setIsLoading(true);
-            await axios.post(`${import.meta.env.VITE_API_URL}/reserva/approve/${elementConsult._id}`, data, { withCredentials: true })
+            await axios.patch(`${import.meta.env.VITE_API_URL}/reserva/approve/${elementConsult._id}`, data, { withCredentials: true })
             toast.success('Reserva aprobada con éxito')
             listarReservas()
             resetForm();
@@ -142,6 +142,41 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
             setIsLoading(false);
         }
     }
+
+    const onSubmitReject = async (data) => {
+        if (!validateForm(data)) return;
+        try {
+            setIsLoadingMessage('Rechazando reserva...');
+            setIsLoading(true);
+            await axios.patch(`${import.meta.env.VITE_API_URL}/reserva/reject/${elementConsult._id}`, data, { withCredentials: true })
+            toast.success('Reserva rechazada con éxito')
+            listarReservas()
+            resetForm();
+            onClose();
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Error al rechazar la reserva', { autoClose: 5000 })
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    const onSubmitCancel = async (data) => {
+        if (!validateForm(data)) return;
+        try {
+            setIsLoadingMessage('Cancelando reserva...');
+            setIsLoading(true);
+            await axios.patch(`${import.meta.env.VITE_API_URL}/reserva/cancel/${elementConsult._id}`, data, { withCredentials: true })
+            toast.success('Reserva cancelada con éxito')
+            listarReservas()
+            resetForm();
+            onClose();
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Error al cancelar la reserva', { autoClose: 5000 })
+        } finally {
+            setIsLoading(false);
+        }
+    }
+    
     const getModalText = () => {
         switch (operation) {
             case 'approve':
@@ -170,6 +205,16 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
         if (!validateForm(data)) return;
 
         showConfirm('approve', () => onSubmitApprove(data));
+    }
+
+    const confirmReject = (data) => {
+        if (!validateForm(data)) return;
+        showConfirm('reject', () => onSubmitReject(data));
+    }
+
+    const confirmCancel = (data) => {
+        if (!validateForm(data)) return;
+        showConfirm('cancel', () => onSubmitCancel(data));
     }
 
     const handleManualClose = () => {
@@ -291,6 +336,7 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
                     <CButton
                         type="button"
                         className="btn-esfot-form w-100 mb-2"
+                        onClick={handleSubmit(confirmReject)}
                     >
                         Rechazar Reserva
                     </CButton>
@@ -299,6 +345,7 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
                         <CButton
                             type="button"
                             className="btn-esfot-form w-100 mb-2"
+                            onClick={handleSubmit(confirmCancel)}
                         >
                             Cancelar Reserva
                         </CButton>

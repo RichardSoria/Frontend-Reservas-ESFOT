@@ -341,10 +341,12 @@ body {
 .rbc-time-header,
 .rbc-time-header-content .rbc-header {
   text-transform: uppercase;
-  font-weight: bold;
+  font-weight: normal !important;
   color: #e72f2b;
   font-size: 1.5rem;
 }
+
+
 
 /* 3. Ocultar eventos de todo el día */
 .rbc-allday-cell,
@@ -502,5 +504,17 @@ body {
 
   .footer {
     --cui-footer-bg: var(--cui-body-bg);
+  }
+}
+
+@media (max-width: 1259px) {
+  .rbc-toolbar {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 856px) {
+  .rbc-toolbar {
+    flex-direction: column;
   }
 }

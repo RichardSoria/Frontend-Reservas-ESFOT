@@ -49,7 +49,7 @@ export const createReservaSchema = {
             type: 'string',
             minLength: 1,
             maxLength: 200,
-                pattern: "^[\\p{L}\\d\\s.,;:()\\-–—_¡!¿?\"'´`]+$",
+            pattern: "^[\\p{L}\\d\\s.,;:()\\-–—_¡!¿?\"'´`]+$",
             errorMessage: {
                 minLength: 'La descripción no puede estar vacía',
                 pattern: 'La descripción solo puede contener letras, números y (.,;:-)',
@@ -141,7 +141,7 @@ export const assignReservaSchema = {
             type: 'string',
             minLength: 1,
             maxLength: 200,
-                pattern: "^[\\p{L}\\d\\s.,;:()\\-–—_¡!¿?\"'´`]+$",
+            pattern: "^[\\p{L}\\d\\s.,;:()\\-–—_¡!¿?\"'´`]+$",
             errorMessage: {
                 minLength: 'La descripción no puede estar vacía',
                 pattern: 'La descripción solo puede contener letras, números y (.,;:-)',
@@ -181,10 +181,10 @@ export const reasonReservaSchema = {
             type: 'string',
             minLength: 1,
             maxLength: 200,
-            pattern: "^[\\p{L}\\d\\s.,;:()\\-–—_¡!¿?\"'´`]+$",
+            pattern: "^(?=.*[\\p{L}\\d])[\\p{L}\\d\\s.,;:()\\-–—_¡!¿?\"'´`]+$",
             errorMessage: {
                 minLength: 'El motivo no puede estar vacío',
-                pattern: 'El motivo solo puede contener letras, números y (.,;:-)',
+                pattern: 'El motivo solo puede contener letras, números y (.,;:-), y no puede ser solo espacios',
                 maxLength: 'Máximo 200 caracteres'
             }
         }

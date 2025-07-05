@@ -29,7 +29,7 @@ const Reservas = () => {
     };
 
     return (
-        <CCard className="shadow-sm border-0">
+        <CCard>
             <CCardBody>
 
                 {/* Calendario */}

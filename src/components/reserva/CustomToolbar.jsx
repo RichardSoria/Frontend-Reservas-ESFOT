@@ -27,7 +27,7 @@ const CustomToolbar = (toolbar) => {
     }, [])
 
     return (
-        <div className="rbc-toolbar d-flex justify-content-between align-items-center mb-2">
+        <div className="mt-3 mb-3 rbc-toolbar d-flex justify-content-between align-items-center">
             <div className="rbc-btn-group">
                 <button
                     type="button"
@@ -52,8 +52,8 @@ const CustomToolbar = (toolbar) => {
                 </button>
             </div>
 
-            <div className="rbc-toolbar-label text-center flex-grow-1">
-                <p>{toolbar.label}</p>
+            <div className="rbc-toolbar-label mt-2 mb-2 text-center">
+                <strong>{toolbar.label}</strong>
             </div>
 
             <div className="rbc-btn-group">
