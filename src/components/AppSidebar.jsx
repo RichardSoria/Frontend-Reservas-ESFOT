@@ -13,7 +13,8 @@ import CIcon from '@coreui/icons-react'
 
 import AppSidebarNavFiltered from './AppSidebarNavFiltered'
 
-import { logo } from 'src/assets/brand/logo'
+import logo from 'src/assets/images/logo_esfot_buho.png';
+import logo_buho from 'src/assets/images/logo_buho.png';
 
 
 const AppSidebar = () => {
@@ -33,8 +34,15 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarHeader className="border-bottom">
+
         <CSidebarBrand to="/">
-          <CIcon customClassName="sidebar-brand-full" icon={logo} height={32} />
+          <CSidebarBrand to="/">
+            {unfoldable ? (
+              <img src={logo_buho} alt="Logo ESFOT" width={40} className="sidebar-brand-narrow bg-white rounded p-2" />
+            ) : (
+              <img src={logo} alt="Logo ESFOT" width={218} className="sidebar-brand-full bg-white rounded p-2" />
+            )}
+          </CSidebarBrand>
         </CSidebarBrand>
         <CCloseButton
           className="d-lg-none"
