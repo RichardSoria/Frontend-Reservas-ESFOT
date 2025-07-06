@@ -58,6 +58,7 @@ export const CrearReservaModal = ({ visible, onClose }) => {
     const { listarAulas } = useAula()
     const { listarLaboratorios } = useLaboratorio()
     const { listarReservas } = useReserva()
+    const { listarReservasGeneral } = useReserva()
     const { aulas = [] } = useSelector((state) => state)
     const { laboratorios = [] } = useSelector((state) => state)
 
@@ -205,6 +206,7 @@ export const CrearReservaModal = ({ visible, onClose }) => {
             await axios.post(`${import.meta.env.VITE_API_URL}/reserva/create`, data, { withCredentials: true });
             toast.success('Reserva creada exitosamente');
             listarReservas();
+            listarReservasGeneral();
             resetForm();
             onClose();
         } catch (error) {
@@ -247,7 +249,7 @@ export const CrearReservaModal = ({ visible, onClose }) => {
                 message={isLoadingMessage}
             />
 
-            <CModal backdrop="static" visible={visible} onClose={handleManualClose} alignment='center' style={{ display: confirmVisible ? 'none' : 'block' }}>
+            <CModal backdrop="static" visible={visible} onClose={handleManualClose} alignment='center' style={{ display: (confirmVisible || isLoading) ? 'none' : 'block' }}>
                 <CModalHeader>
                     <CModalTitle className='textos-esfot'> Crear Reserva </CModalTitle>
                 </CModalHeader>
@@ -283,9 +285,13 @@ export const CrearReservaModal = ({ visible, onClose }) => {
                                     render={({ field }) => {
                                         const selectedOptions =
                                             watchedFields.placeType === 'Aula'
-                                                ? aulas.map(a => ({ value: a._id, label: a.name }))
+                                                ? aulas
+                                                    .filter(a => a.status === true)
+                                                    .map(a => ({ value: a._id, label: a.name }))
                                                 : watchedFields.placeType === 'Laboratorio'
-                                                    ? laboratorios.map(l => ({ value: l._id, label: l.name }))
+                                                    ? laboratorios
+                                                        .filter(l => l.status === true)
+                                                        .map(l => ({ value: l._id, label: l.name }))
                                                     : [];
 
                                         const selectedValue = selectedOptions.find(option => option.value === field.value) || null;

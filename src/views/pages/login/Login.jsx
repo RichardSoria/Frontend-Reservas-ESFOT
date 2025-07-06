@@ -92,7 +92,7 @@ const Login = () => {
         })
         setgeneralMessage('')
         toast.success('¡Inicio de sesión exitoso!')
-        navigate('/dashboard')
+        navigate('/modulos')
       } else if (data.role === 'estudiante') {
         await axios.post(`${import.meta.env.VITE_API_URL}/estudiante/login`, data, {
           withCredentials: true,

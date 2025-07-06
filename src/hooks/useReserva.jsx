@@ -14,6 +14,15 @@ const useReserva = () => {
         }
     }
 
+    const listarReservasGeneral = async () => {
+        try {
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/reserva/reservas/general`, { withCredentials: true })
+            dispatch(set({ reservasGenerales: data }))
+        } catch (err) {
+            console.error('Error al obtener reservas generales', err)
+        }
+    }
+
     const consultReserva = async (id) => {
         try {
             const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/reserva/reservas/${id}`, { withCredentials: true })
@@ -28,6 +37,7 @@ const useReserva = () => {
 
     return {
         listarReservas,
+        listarReservasGeneral,
         consultReserva
     }
 }

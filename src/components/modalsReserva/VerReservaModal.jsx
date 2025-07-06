@@ -50,6 +50,7 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
     const perfil = useSelector((state) => state.perfil)
     const { consultReserva } = useReserva();
     const { listarReservas } = useReserva();
+    const { listarReservasGeneral } = useReserva();
     const watchedFields = watch();
 
 
@@ -168,6 +169,7 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
             await axios.patch(`${import.meta.env.VITE_API_URL}/reserva/cancel/${elementConsult._id}`, data, { withCredentials: true })
             toast.success('Reserva cancelada con éxito')
             listarReservas()
+            listarReservasGeneral();
             resetForm();
             onClose();
         } catch (error) {
@@ -176,7 +178,7 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
             setIsLoading(false);
         }
     }
-    
+
     const getModalText = () => {
         switch (operation) {
             case 'approve':
@@ -223,7 +225,7 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
     };
 
     return (
-        <CModal backdrop="static" visible={visible} onClose={handleManualClose} alignment='center' style={{display: confirmVisible ? 'none' : 'block'}}>
+        <CModal backdrop="static" visible={visible} onClose={handleManualClose} alignment='center' style={{ display: (confirmVisible || isLoading) ? 'none' : 'block' }}>
             <CModalHeader>
                 <CModalTitle className='textos-esfot'> Ver Reserva </CModalTitle>
             </CModalHeader>
@@ -290,7 +292,7 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
                     </CCol>
 
                     {/* Motivo de aprobación o rechazo */}
-                    {elementConsult?.status === "Pendiente" && (
+                    {elementConsult?.status === "Pendiente" && elementConsult?.userID === perfil._id && (
                         <CInputGroup className={`${errors.reason ? 'is-invalid' : ''} mt-3`}>
                             <CInputGroupText className={`${errors.reason ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
                                 <FileText className={`${errors.reason ? 'text-white' : ''}`} />
@@ -323,25 +325,30 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
                 message={isLoadingMessage}
             />
 
-            {elementConsult?.status === "Pendiente" && (
+            {elementConsult?.status === "Pendiente" && elementConsult?.userID === perfil._id && (
                 <CModalFooter className="d-flex justify-content-center flex-nowrap">
-                    <CButton
-                        type="button"
-                        className="btn-esfot-form w-100 mb-2"
-                        onClick={handleSubmit(confirmAprove)}
-                    >
-                        Aprobar Reserva
-                    </CButton>
+                    {perfil.rol === 'Admin' && (
 
-                    <CButton
-                        type="button"
-                        className="btn-esfot-form w-100 mb-2"
-                        onClick={handleSubmit(confirmReject)}
-                    >
-                        Rechazar Reserva
-                    </CButton>
+                        <CButton
+                            type="button"
+                            className="btn-esfot-form w-100 mb-2"
+                            onClick={handleSubmit(confirmAprove)}
+                        >
+                            Aprobar Reserva
+                        </CButton>
+                    )}
 
-                    {elementConsult?.solicitante === `${perfil.name} ${perfil.lastName}` && (
+                    {perfil.rol === 'Admin' && (
+                        <CButton
+                            type="button"
+                            className="btn-esfot-form w-100 mb-2"
+                            onClick={handleSubmit(confirmReject)}
+                        >
+                            Rechazar Reserva
+                        </CButton>
+                    )}
+
+                    {elementConsult?.userID === perfil._id && (
                         <CButton
                             type="button"
                             className="btn-esfot-form w-100 mb-2"

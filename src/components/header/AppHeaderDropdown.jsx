@@ -60,6 +60,10 @@ const AppHeaderDropdown = () => {
           <CIcon icon={cilUser} className="me-2" />
           Perfil
         </CDropdownItem>
+        <CDropdownItem className='c-dropdown-item' onClick={() => navigate('/mis-reservas')}>
+          <CIcon icon={cilLockLocked} className="me-2" />
+          Mis Reservas
+        </CDropdownItem>
         <CDropdownDivider />
         <CDropdownItem className='c-dropdown-item' onClick={handleLogout}>
           <CIcon icon={cilLockLocked} className="me-2" />

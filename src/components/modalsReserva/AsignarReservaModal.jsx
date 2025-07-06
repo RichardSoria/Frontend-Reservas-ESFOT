@@ -272,7 +272,7 @@ export const AsignarReservaModal = ({ visible, onClose }) => {
                 message={isLoadingMessage}
             />
 
-            <CModal backdrop="static" visible={visible} onClose={handleManualClose} alignment='center' style={{ display: confirmVisible ? 'none' : 'block' }}>
+            <CModal backdrop="static" visible={visible} onClose={handleManualClose} alignment='center' style={{ display: (confirmVisible || isLoading) ? 'none' : 'block' }}>
                 <CModalHeader>
                     <CModalTitle className='textos-esfot'> Asignar Reserva </CModalTitle>
                 </CModalHeader>
@@ -308,9 +308,13 @@ export const AsignarReservaModal = ({ visible, onClose }) => {
                                     render={({ field }) => {
                                         const selectedOptions =
                                             watchedFields.placeType === 'Aula'
-                                                ? aulas.map(a => ({ value: a._id, label: a.name }))
+                                                ? aulas
+                                                    .filter(a => a.status === true)
+                                                    .map(a => ({ value: a._id, label: a.name }))
                                                 : watchedFields.placeType === 'Laboratorio'
-                                                    ? laboratorios.map(l => ({ value: l._id, label: l.name }))
+                                                    ? laboratorios
+                                                        .filter(l => l.status === true)
+                                                        .map(l => ({ value: l._id, label: l.name }))
                                                     : [];
 
                                         const selectedValue = selectedOptions.find(option => option.value === field.value) || null;

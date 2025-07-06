@@ -11,7 +11,8 @@ import { useSelector } from 'react-redux'
 import useReserva from '../../hooks/useReserva'
 import { CCardBody, CContainer, CRow, CCol } from '@coreui/react'
 import CustomToolbar from '../../components/reserva/CustomToolbar'  // <-- Importa aquí
-import { VerReservaModal } from '../modalsReserva/VerReservaModal'
+import { VerMiReservaModal } from '../modalsReserva/VerMiReservaModal'
+import { toast } from 'react-toastify'
 
 const locales = { es }
 
@@ -23,31 +24,34 @@ const localizer = dateFnsLocalizer({
     locales,
 })
 
-const CalendarioReservas = () => {
-    const { listarReservas } = useReserva()
-    const { reservas = [] } = useSelector((state) => state)
+const CalendarioMisReservas = () => {
+    const { listarReservasGeneral } = useReserva()
+    const perfil = useSelector((state) => state.perfil)
+    const { reservasGenerales = [] } = useSelector((state) => state)
     const [eventos, setEventos] = useState([])
     const [confirmVisibleWatchModal, setConfirmVisibleWatchModal] = useState(false)
     const [id, setId] = useState(null) // Estado para el ID de
 
-    const [vistaActual, setVistaActual] = useState('agenda')
+    const [vistaActual, setVistaActual] = useState('month')
     const [fechaActual, setFechaActual] = useState(new Date())
 
     useEffect(() => {
-        listarReservas()
+        listarReservasGeneral()
     }, [])
 
     useEffect(() => {
-        const eventosListos = reservas.map((e) => ({
-            id: e.id,
-            title: e.title,
-            start: new Date(e.start),
-            end: new Date(e.end),
-            allDay: false,
-            reserva: e,
-        }))
+        const eventosListos = reservasGenerales
+            .filter((e) => e.userID === perfil._id)
+            .map((e) => ({
+                id: e.id,
+                title: e.title,
+                start: new Date(e.start),
+                end: new Date(e.end),
+                allDay: false,
+                reserva: e,
+            }))
         setEventos(eventosListos)
-    }, [reservas])
+    }, [reservasGenerales])
 
     const eventStyleGetter = (event) => {
         let backgroundColor = '#0d6efd'
@@ -87,14 +91,18 @@ const CalendarioReservas = () => {
 
     // Mostrar modal con detalles de la reserva al seleccionar un evento
     const handleSelectEvent = (event) => {
-        const id = event.id
-        setId(id)
+        if (event.reserva.userID === perfil._id || perfil.rol === 'Admin') {
+            setId(event.id);
+            setConfirmVisibleWatchModal(true);
+        } else {
+            toast.error('No tienes permiso para ver esta reserva.');
+        }
     }
 
     return (
         <>
             {/*Visualizar modal de reserva*/}
-            <VerReservaModal
+            <VerMiReservaModal
                 id={id}
                 visible={!!id}
                 onClose={handleCancel}
@@ -103,34 +111,34 @@ const CalendarioReservas = () => {
             <CContainer fluid>
                 <CRow className="justify-content-center">
                     <CCol>
-                            <CCardBody>
-                                <Calendar
-                                    localizer={localizer}
-                                    events={eventos}
-                                    startAccessor="start"
-                                    endAccessor="end"
-                                    eventPropGetter={eventStyleGetter}
-                                    style={{ blockSize: '65vh' }}
-                                    views={['month', 'week', 'day', 'agenda']}
-                                    view={vistaActual}
-                                    onView={setVistaActual}
-                                    date={fechaActual}
-                                    onNavigate={setFechaActual}
-                                    popup={true}
-                                    culture="es"
-                                    showAllDayEvents={false}
-                                    min={new Date(1970, 1, 1, 7, 0)}
-                                    max={new Date(1970, 1, 1, 21, 0)}
-                                    onSelectEvent={handleSelectEvent}
-                                    messages={{
-                                        date: 'Fecha',
-                                        time: 'Hora',
-                                        event: 'Reservas',
-                                        noEventsInRange: 'No hay reservas registradas.',
-                                    }}
-                                    components={{ toolbar: CustomToolbar }}
-                                />
-                            </CCardBody>
+                        <CCardBody>
+                            <Calendar
+                                localizer={localizer}
+                                events={eventos}
+                                startAccessor="start"
+                                endAccessor="end"
+                                eventPropGetter={eventStyleGetter}
+                                style={{ blockSize: '70vh' }}
+                                views={['month', 'week', 'day', 'agenda']}
+                                view={vistaActual}
+                                onView={setVistaActual}
+                                date={fechaActual}
+                                onNavigate={setFechaActual}
+                                popup={true}
+                                culture="es"
+                                showAllDayEvents={false}
+                                min={new Date(1970, 1, 1, 7, 0)}
+                                max={new Date(1970, 1, 1, 21, 0)}
+                                onSelectEvent={handleSelectEvent}
+                                messages={{
+                                    date: 'Fecha',
+                                    time: 'Hora',
+                                    event: 'Reservas',
+                                    noEventsInRange: 'No hay reservas registradas.',
+                                }}
+                                components={{ toolbar: CustomToolbar }}
+                            />
+                        </CCardBody>
                     </CCol>
                 </CRow>
             </CContainer>
@@ -138,4 +146,4 @@ const CalendarioReservas = () => {
     )
 }
 
-export default CalendarioReservas
+export default CalendarioMisReservas
