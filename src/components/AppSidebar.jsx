@@ -34,21 +34,20 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarHeader className="border-bottom">
-
         <CSidebarBrand to="/">
-          <CSidebarBrand to="/">
-            {unfoldable ? (
-              <img src={logo_buho} alt="Logo ESFOT" width={40} className="sidebar-brand-narrow bg-white rounded p-2" />
-            ) : (
-              <img src={logo} alt="Logo ESFOT" width={218} className="sidebar-brand-full bg-white rounded p-2" />
-            )}
-          </CSidebarBrand>
+          <img
+            src={logo_buho}
+            alt="Logo ESFOT mini"
+            width={45}
+            className="sidebar-brand-narrow bg-white rounded p-2"
+          />
+          <img
+            src={logo}
+            alt="Logo ESFOT completo"
+            width={218}
+            className={`sidebar-brand-full bg-white rounded p-2`}
+          />
         </CSidebarBrand>
-        <CCloseButton
-          className="d-lg-none"
-          dark
-          onClick={() => dispatch({ type: 'set', sidebarShow: false })}
-        />
       </CSidebarHeader>
       <AppSidebarNavFiltered />
       <CSidebarFooter className="border-top d-none d-lg-flex">

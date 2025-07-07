@@ -292,7 +292,7 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
                     </CCol>
 
                     {/* Motivo de aprobación o rechazo */}
-                    {elementConsult?.status === "Pendiente" && elementConsult?.userID === perfil._id && (
+                    {elementConsult?.status === "Pendiente" && perfil.rol === 'Admin' && (
                         <CInputGroup className={`${errors.reason ? 'is-invalid' : ''} mt-3`}>
                             <CInputGroupText className={`${errors.reason ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
                                 <FileText className={`${errors.reason ? 'text-white' : ''}`} />
@@ -325,7 +325,7 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
                 message={isLoadingMessage}
             />
 
-            {elementConsult?.status === "Pendiente" && elementConsult?.userID === perfil._id && (
+            {elementConsult?.status === "Pendiente" && perfil.rol === 'Admin' && (
                 <CModalFooter className="d-flex justify-content-center flex-nowrap">
                     {perfil.rol === 'Admin' && (
 

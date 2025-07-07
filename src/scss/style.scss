@@ -33,6 +33,17 @@ body {
   min-block-size: calc(4rem + 1px); // stylelint-disable-line function-disallowed-list
 }
 
+/* Estilo optimizado para transiciones rápidas pero suaves */
+.sidebar {
+  transition:
+    margin-left 0.07s,
+    margin-right 0.07s,
+    box-shadow 0.035s,
+    transform 0.07s,
+    width 0.07s,
+    z-index 0s ease 0.07s;
+}
+
 .sidebar-dark {
   --cui-body-bg: #0e4c71;
   --cui-border-color: #0e4c71;
