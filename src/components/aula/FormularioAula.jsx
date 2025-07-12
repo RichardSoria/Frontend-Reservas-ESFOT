@@ -322,7 +322,7 @@ const FormularioAula = () => {
                                                 <Barcode className={`${errors.name ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
-                                                placeholder={errors.name ? errors.name.message : "Nombre"}
+                                                placeholder={errors.name ? errors.name.message : "Nombre (E00/PB0/E000)"}
                                                 className={`${errors.name ? 'border-danger text-danger' : ''}`}
                                                 invalid={!!errors.name}
                                                 {...register('name')}

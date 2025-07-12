@@ -375,7 +375,7 @@ const FormularioLaboratorio = () => {
                                                 <Barcode className={`${errors.codigo ? 'text-white' : ''}`} />
                                             </CInputGroupText>
                                             <CFormInput
-                                                placeholder={errors.codigo ? errors.codigo.message : "Código"}
+                                                placeholder={errors.codigo ? errors.codigo.message : "Código (E00/PB0/E000)"}
                                                 className={`${errors.codigo ? 'border-danger text-danger' : ''}`}
                                                 invalid={!!errors.codigo}
                                                 {...register('codigo')}

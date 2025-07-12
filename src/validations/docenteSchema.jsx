@@ -44,7 +44,7 @@ export const docenteSchema = {
             type: 'string',
             minLength: 10,
             maxLength: 10,
-            pattern: '^09[89][0-9]{7}$',
+            pattern: '^09[2-9][0-9]{7}$',
             errorMessage: {
                 pattern: 'El número debe empezar con 098 o 099 y tener 10 dígitos',
                 minLength: 'El teléfono debe tener 10 dígitos',

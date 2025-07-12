@@ -73,7 +73,7 @@ export const VerMiReservaModal = ({ id, visible, onClose }) => {
 
                     <CCol md={6}>
                         <h5 className="subtitulos-esfot mb-3">Detalles Temporales de la Reserva</h5>
-                        <p>|
+                        <p>
                             <strong>Fecha de registro:</strong><br />{new Date(elementConsult?.createdDate).toLocaleString('es-EC')}
                         </p>
                         <p>
