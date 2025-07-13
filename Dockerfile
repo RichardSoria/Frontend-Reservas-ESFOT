@@ -3,17 +3,23 @@ FROM node:18-alpine
 WORKDIR /app
 
 COPY package*.json ./
+
+# Asegura un entorno limpio
 RUN npm install
 
 COPY . .
 
-# Construir el frontend (Vite genera dist/)
+# Establece límite de memoria para prevenir errores de rollup
+ENV NODE_OPTIONS="--max-old-space-size=512"
+
+# Build de producción
 RUN npm run build
 
-# Instalar un servidor estático
+# Instala servidor estático como serve
 RUN npm install -g serve
 
-EXPOSE 5000
+# Expone el puerto por defecto de serve
+EXPOSE 3000
 
-# Servir la app desde la carpeta dist
-CMD ["serve", "-s", "dist", "-l", "5000"]
+# Sirve el frontend
+CMD ["serve", "-s", "dist", "-l", "3000"]
