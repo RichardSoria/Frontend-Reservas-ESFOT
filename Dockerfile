@@ -9,9 +9,6 @@ RUN npm install
 
 COPY . .
 
-# Establece límite de memoria para prevenir errores de rollup
-ENV NODE_OPTIONS="--max-old-space-size=512"
-
 # Build de producción
 RUN npm run build
 
