@@ -292,7 +292,7 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
                     </CCol>
 
                     {/* Motivo de aprobación o rechazo */}
-                    {elementConsult?.status === "Pendiente" && perfil.rol === 'Admin' && (
+                    {elementConsult?.status === "Pendiente" && (
                         <CInputGroup className={`${errors.reason ? 'is-invalid' : ''} mt-3`}>
                             <CInputGroupText className={`${errors.reason ? 'border-danger bg-danger' : 'text-white bg-esfot'}`}>
                                 <FileText className={`${errors.reason ? 'text-white' : ''}`} />
@@ -325,27 +325,26 @@ export const VerReservaModal = ({ id, visible, onClose }) => {
                 message={isLoadingMessage}
             />
 
-            {elementConsult?.status === "Pendiente" && perfil.rol === 'Admin' && (
+            {elementConsult?.status === "Pendiente" && (
                 <CModalFooter className="d-flex justify-content-center flex-nowrap">
                     {perfil.rol === 'Admin' && (
+                        <>
+                            <CButton
+                                type="button"
+                                className="btn-esfot-form w-100 mb-2"
+                                onClick={handleSubmit(confirmAprove)}
+                            >
+                                Aprobar Reserva
+                            </CButton>
 
-                        <CButton
-                            type="button"
-                            className="btn-esfot-form w-100 mb-2"
-                            onClick={handleSubmit(confirmAprove)}
-                        >
-                            Aprobar Reserva
-                        </CButton>
-                    )}
-
-                    {perfil.rol === 'Admin' && (
-                        <CButton
-                            type="button"
-                            className="btn-esfot-form w-100 mb-2"
-                            onClick={handleSubmit(confirmReject)}
-                        >
-                            Rechazar Reserva
-                        </CButton>
+                            <CButton
+                                type="button"
+                                className="btn-esfot-form w-100 mb-2"
+                                onClick={handleSubmit(confirmReject)}
+                            >
+                                Rechazar Reserva
+                            </CButton>
+                        </>
                     )}
 
                     {elementConsult?.userID === perfil._id && (
