@@ -377,11 +377,17 @@ export const AsignarReservaModal = ({ visible, onClose }) => {
                                     render={({ field }) => {
                                         const selectedOptions =
                                             watchedFields.userRol === 'Administrador'
-                                                ? administradores.map(a => ({ value: a._id, label: `${a.name} ${a.lastName}` }))
+                                                ? administradores
+                                                    .filter(a => a.status === true)
+                                                    .map(a => ({ value: a._id, label: `${a.name} ${a.lastName}` }))
                                                 : watchedFields.userRol === 'Docente'
-                                                    ? docentes.map(d => ({ value: d._id, label: `${d.name} ${d.lastName}` }))
+                                                    ? docentes
+                                                        .filter(d => d.status === true)
+                                                        .map(d => ({ value: d._id, label: `${d.name} ${d.lastName}` }))
                                                     : watchedFields.userRol === 'Estudiante'
-                                                        ? estudiantes.map(e => ({ value: e._id, label: `${e.name} ${e.lastName}` }))
+                                                        ? estudiantes
+                                                            .filter(e => e.status === true)
+                                                            .map(e => ({ value: e._id, label: `${e.name} ${e.lastName}` }))
                                                         : [];
 
                                         const selectedValue = selectedOptions.find(option => option.value === field.value) || null;
