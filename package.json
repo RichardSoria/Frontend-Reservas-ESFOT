@@ -1,8 +1,17 @@
 {
-  "name": "fronte-reservas-esfot",
+  "name": "@coreui/coreui-free-react-admin-template",
   "version": "5.4.0",
-  "description": "Frontend del sistema de reservas de aulas y laboratorios de la ESFOT",
+  "description": "CoreUI Free React Admin Template",
   "homepage": ".",
+  "bugs": {
+    "url": "https://github.com/coreui/coreui-free-react-admin-template/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coreui/coreui-free-react-admin-template.git"
+  },
+  "license": "MIT",
+  "author": "The CoreUI Team (https://github.com/orgs/coreui/people)",
   "scripts": {
     "build": "vite build",
     "lint": "eslint",
@@ -11,7 +20,7 @@
   },
   "dependencies": {
     "@coreui/chartjs": "^4.1.0",
-    "@coreui/coreui": "^5.3.1",
+    "@coreui/coreui": "^5.4.1",
     "@coreui/icons": "^3.0.1",
     "@coreui/icons-react": "^2.3.0",
     "@coreui/react": "^5.7.0",
@@ -19,31 +28,33 @@
     "ajv": "^8.17.1",
     "ajv-errors": "^3.0.0",
     "ajv-formats": "^3.0.1",
-    "axios": "^1.9.0",
+    "axios": "^1.10.0",
     "clsx": "^2.1.1",
-    "core-js": "^3.40.0",
+    "core-js": "^3.44.0",
     "date-fns": "^4.1.0",
-    "lucide-react": "^0.511.0",
+    "lucide-react": "^0.525.0",
     "prop-types": "^15.8.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-hook-form": "^7.56.3",
+    "react": "^19.1.0",
+    "react-big-calendar": "^1.19.4",
+    "react-dom": "^19.1.0",
+    "react-hook-form": "^7.60.0",
     "react-icons": "^5.5.0",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^6.17.0",
-    "react-select": "^5.10.1",
+    "react-router-dom": "^7.6.3",
+    "react-select": "^5.10.2",
     "react-toastify": "^11.0.5",
     "redux": "5.0.1",
-    "simplebar-react": "^3.3.0"
+    "simplebar-react": "^3.3.2"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
-    "autoprefixer": "^10.4.20",
-    "eslint": "^8.56.0",
-    "eslint-plugin-react": "^7.37.4",
-    "eslint-plugin-react-hooks": "^5.1.0",
-    "postcss": "^8.5.2",
-    "sass": "^1.85.0",
-    "vite": "^5.2.10"
+    "@vitejs/plugin-react": "^4.6.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.31.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "globals": "^16.3.0",
+    "postcss": "^8.5.6",
+    "sass": "^1.89.2",
+    "vite": "^7.0.4"
   }
 }

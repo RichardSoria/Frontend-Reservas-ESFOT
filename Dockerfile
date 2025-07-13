@@ -21,5 +21,5 @@ RUN npm install -g serve
 # Expone el puerto por defecto de serve
 EXPOSE 3000
 
-# Sirve el frontend
-CMD ["serve", "-s", "dist", "-l", "3000"]
+# Sirve el frontend desde /build
+CMD ["serve", "-s", "build", "-l", "3000"]

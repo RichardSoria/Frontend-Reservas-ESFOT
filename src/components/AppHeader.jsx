@@ -54,7 +54,9 @@ const AppHeader = () => {
         <CHeaderNav className="d-none d-md-flex">
           <CNavItem>
             <CNavLink>
-              Bienvenido <span style={{ color: '#e72f2b', fontWeight: 'bold' }}>{perfil.name} {perfil.lastName}</span> al Sistema de Reservas de Aulas y Laboratorios ESFOT
+              Bienvenido <span style={{ color: '#e72f2b', fontWeight: 'bold' }}>
+                {perfil?.name ?? 'Usuario'} {perfil?.lastName ?? ''}
+              </span> al Sistema de Reservas de Aulas y Laboratorios ESFOT
             </CNavLink>
           </CNavItem>
         </CHeaderNav>
